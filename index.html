@@ -32,7 +32,13 @@ textarea{min-height:80px;resize:vertical}
 svg{display:block}
 [hidden]{display:none!important}
 
-#app{padding:calc(var(--st) + 10px) 16px calc(var(--sb) + 32px);max-width:560px;margin:0 auto;transition:filter .15s}
+html,body{height:100%;overflow:hidden}
+#app{position:fixed;top:0;bottom:0;left:0;right:0;max-width:560px;margin:0 auto;display:flex;flex-direction:column;transition:filter .15s}
+.head{flex:none;padding:calc(var(--st) + 10px) 16px 2px;background:var(--bg);position:relative;z-index:2;transition:box-shadow .2s}
+.head.shadow{box-shadow:0 .5px 0 var(--line)}
+#scroller{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:4px 16px calc(var(--sb) + 40px)}
+.bell{position:relative;color:var(--amber)}
+.bell .count{position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;border-radius:10px;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center;padding:0 5px;border:2px solid var(--bg)}
 body.locked #app{visibility:hidden}
 body.privacy #app,body.privacy .overlay:not(#lock){filter:blur(28px)}
 
@@ -62,9 +68,10 @@ h1{font-size:34px;font-weight:700;margin:0;letter-spacing:.2px}
 .group h2{font-size:13px;text-transform:uppercase;color:var(--muted);letter-spacing:.6px;margin:22px 4px 10px;font-weight:600}
 .stack{display:flex;flex-direction:column}
 .card{position:relative;isolation:isolate;width:100%;aspect-ratio:1.586;border-radius:16px;padding:15px 18px;overflow:hidden;color:#fff;display:flex;flex-direction:column;
-  box-shadow:0 -1px 0 rgba(255,255,255,.18) inset,0 -6px 18px rgba(0,0,0,.45);transition:transform .18s ease}
+  box-shadow:0 -1px 0 rgba(255,255,255,.18) inset,0 -6px 18px rgba(0,0,0,.45);transition:transform .18s ease;-webkit-touch-callout:none;touch-action:manipulation}
 .card::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 100% 0%,rgba(255,255,255,.22),transparent 55%),radial-gradient(90% 80% at 0% 100%,rgba(0,0,0,.25),transparent 60%);pointer-events:none}
 .card:active{transform:scale(.985)}
+.card.holding{transform:scale(.95);transition:transform .45s ease}
 .stack .card+.card{margin-top:calc(-63.05% + 62px)}
 .stack.open .card+.card{margin-top:14px}
 .c-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;position:relative;z-index:1;height:32px}
@@ -72,13 +79,13 @@ h1{font-size:34px;font-weight:700;margin:0;letter-spacing:.2px}
 .c-sub{font-size:12.5px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
 .c-head{min-width:0;flex:1}
 .badge{flex:none;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.35);backdrop-filter:blur(6px)}
-.badge.red{background:var(--red)}
+.badge.red{background:var(--red);color:#fff}
 .badge.amber{background:var(--amber);color:#000}
 .c-body{flex:1;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;position:relative;z-index:1;margin-top:10px;min-height:0}
 .c-meta{font-size:13px;line-height:1.25}
 .c-k{opacity:.7;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-top:8px}
 .c-v{font-weight:600;font-size:15px;font-variant-numeric:tabular-nums;letter-spacing:.4px}
-.c-thumb{max-height:100%;max-width:44%;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.35);background:#fff;object-fit:contain}
+.c-thumb{pointer-events:none;-webkit-user-drag:none;max-height:100%;max-width:44%;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.35);background:#fff;object-fit:contain}
 
 .empty{text-align:center;padding:60px 20px 20px;color:var(--muted)}
 .empty .big{font-size:56px;margin-bottom:12px}
@@ -109,6 +116,30 @@ h1{font-size:34px;font-weight:700;margin:0;letter-spacing:.2px}
 .file button{color:var(--red);font-size:20px;line-height:1;padding:0 4px}
 .addfile{width:100%;background:var(--bg3);border-radius:10px;padding:13px;color:var(--accent);text-align:center;font-weight:600}
 .danger{width:100%;margin-top:10px;background:var(--bg3);border-radius:10px;padding:13px;color:var(--red);text-align:center}
+
+/* full-screen sheets */
+#editor,#settings{z-index:40}
+#alerts{z-index:35}
+.sheet.full{background:var(--bg2)}
+.sheet.full .panel{top:0;bottom:0;max-height:none;border-radius:0;padding-top:0}
+.sheet.full .bar{padding-top:calc(var(--st) + 14px)}
+.swatches{display:flex;flex-wrap:wrap;gap:10px}
+.sw-c{width:38px;height:38px;border-radius:50%;border:3px solid transparent;box-shadow:0 0 0 1px rgba(255,255,255,.15) inset}
+.sw-c.on{border-color:#fff}
+.sw-auto{width:auto;padding:0 14px;border-radius:19px;font-size:14px;font-weight:600;color:#fff}
+/* long-press preview */
+#peek{z-index:45;background:rgba(0,0,0,.35);-webkit-backdrop-filter:blur(24px) saturate(140%);backdrop-filter:blur(24px) saturate(140%);align-items:center;justify-content:center;padding:calc(var(--st) + 16px) 20px calc(var(--sb) + 16px)}
+#peek.show{display:flex}
+.pk{width:100%;max-width:420px;max-height:100%;display:flex;flex-direction:column;gap:12px;animation:pop .22s cubic-bezier(.2,.9,.3,1.15)}
+@keyframes pop{from{transform:scale(.88);opacity:0}to{transform:none;opacity:1}}
+.pk-title{font-weight:600;text-align:center;font-size:15px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.pk-img{border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 20px 50px rgba(0,0,0,.5);min-height:140px;display:flex;align-items:center;justify-content:center}
+.pk-img img{width:100%;max-height:52vh;object-fit:contain;display:block;-webkit-touch-callout:none}
+.pk-menu{background:rgba(44,44,46,.95);border-radius:14px;overflow:hidden;align-self:flex-start;min-width:250px}
+.pk-menu button{display:flex;justify-content:space-between;align-items:center;width:100%;padding:13px 16px;font-size:17px;gap:24px}
+.pk-menu button+button{border-top:.5px solid var(--line)}
+.pk-menu button:active{background:var(--bg4)}
+.pk-menu svg{width:20px;height:20px}
 
 /* settings */
 .set h3{font-size:13px;text-transform:uppercase;color:var(--muted);letter-spacing:.5px;font-weight:500;margin:22px 14px 7px}
@@ -176,21 +207,51 @@ select.mini{width:auto;background-color:transparent;padding:4px 26px 4px 4px;col
   <symbol id="i-share" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7.5 7.5L12 3l4.5 4.5"/><path d="M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2"/></g></symbol>
   <symbol id="i-edit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></g></symbol>
   <symbol id="i-face" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M8.5 9v1.5M15.5 9v1.5M12 9v4h-1M9 16.5c1.8 1.3 4.2 1.3 6 0"/></g></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.5a6 6 0 0 0-12 0c0 6.5-2.5 8.5-2.5 8.5h17S18 15 18 8.5z"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></g></symbol>
+  <symbol id="i-open" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></g></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></g></symbol>
   <symbol id="i-del" viewBox="0 0 24 24"><path d="M21 6H9l-6 6 6 6h12V6zM18 9l-6 6M12 9l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
 </svg>
 
 <div id="app">
+ <div class="head" id="head">
   <div class="top">
     <h1>Wallet</h1>
     <div class="actions">
+      <button class="iconbtn bell" id="btn-bell" aria-label="Expiring documents" hidden><svg><use href="#i-bell"/></svg><span class="count" id="bell-count"></span></button>
       <button class="iconbtn" id="btn-settings" aria-label="Settings"><svg><use href="#i-gear"/></svg></button>
       <button class="iconbtn" id="btn-add" aria-label="Add document"><svg><use href="#i-plus"/></svg></button>
     </div>
   </div>
   <div class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search documents" autocomplete="off"></div>
   <div class="chips" id="chips"></div>
+ </div>
+ <div id="scroller">
   <div id="notices"></div>
   <div id="list"></div>
+ </div>
+</div>
+
+<!-- long-press preview -->
+<div class="overlay" id="peek">
+  <div class="pk">
+    <div class="pk-title" id="pk-title"></div>
+    <div class="pk-img"><img id="pk-img" alt=""></div>
+    <div class="pk-menu">
+      <button data-pk="open">Open<svg><use href="#i-open"/></svg></button>
+      <button data-pk="share">Share / Open in Files<svg><use href="#i-share"/></svg></button>
+      <button data-pk="copy" id="pk-copy">Copy number<svg><use href="#i-copy"/></svg></button>
+      <button data-pk="edit">Edit<svg><use href="#i-edit"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- expiring documents -->
+<div class="overlay sheet" id="alerts">
+  <div class="panel set">
+    <div class="bar"><span></span><span class="t">Needs attention</span><button class="link b" id="a-done">Done</button></div>
+    <div id="a-body"></div>
+  </div>
 </div>
 
 <!-- viewer -->
@@ -209,7 +270,7 @@ select.mini{width:auto;background-color:transparent;padding:4px 26px 4px 4px;col
 </div>
 
 <!-- editor -->
-<div class="overlay sheet" id="editor">
+<div class="overlay sheet full" id="editor">
   <div class="panel">
     <div class="bar"><button class="link" id="e-cancel">Cancel</button><span class="t" id="e-heading">New document</span><button class="link b" id="e-save">Save</button></div>
     <div class="field"><label>Document</label>
@@ -221,6 +282,7 @@ select.mini{width:auto;background-color:transparent;padding:4px 26px 4px 4px;col
       <div class="field"><label for="e-member">Belongs to</label><select id="e-member"></select></div>
       <div class="field"><label for="e-type">Type</label><select id="e-type"></select></div>
     </div>
+    <div class="field"><label>Card colour</label><div class="swatches" id="e-colors"></div></div>
     <div class="field"><label for="e-title">Name on card</label><input id="e-title" placeholder="e.g. Passport" maxlength="60"></div>
     <div class="row2">
       <div class="field"><label for="e-number">Number</label><input id="e-number" placeholder="Optional" autocomplete="off" autocapitalize="characters"></div>
@@ -232,7 +294,7 @@ select.mini{width:auto;background-color:transparent;padding:4px 26px 4px 4px;col
 </div>
 
 <!-- settings -->
-<div class="overlay sheet" id="settings">
+<div class="overlay sheet full" id="settings">
   <div class="panel set">
     <div class="bar"><span></span><span class="t">Settings</span><button class="link b" id="s-done">Done</button></div>
     <div id="s-body"></div>
@@ -260,18 +322,23 @@ const PALETTE = [
   ['#0a84ff','#5e5ce6'],['#ff375f','#ff9f0a'],['#30d158','#0a7d6a'],['#bf5af2','#5e5ce6'],
   ['#ff9f0a','#d64a00'],['#64d2ff','#0a5bd6'],['#8e8e93','#3a3a3c'],['#e6b800','#a35f00'],['#ff6482','#a2195f']
 ];
+const COLORS = {
+  green:['#34c759','#0a7d55'], navy:['#3a5fd9','#151f5c'], teal:['#40c8e0','#0a5bd6'], orange:['#ff9f0a','#d14900'],
+  red:['#ff453a','#a3122a'], pink:['#ff6482','#a2195f'], purple:['#bf5af2','#5b3cc4'], blue:['#0a84ff','#3634a3'],
+  gold:['#e6b800','#9c5a00'], graphite:['#8e8e93','#3a3a3c'], slate:['#5e6b7d','#232a35'], black:['#48484a','#0d0d0f']
+};
 const TYPES = [
-  {id:'id',label:'ID card',icon:'🪪'},
-  {id:'passport',label:'Passport',icon:'🛂'},
-  {id:'residence',label:'Residence permit',icon:'🏠'},
-  {id:'driving',label:'Driving licence',icon:'🚗'},
-  {id:'health',label:'Health card',icon:'🏥'},
-  {id:'medical',label:'Medical record',icon:'💊'},
-  {id:'insurance',label:'Insurance',icon:'🛡️'},
-  {id:'vehicle',label:'Vehicle papers',icon:'📋'},
-  {id:'travel',label:'Travel / tickets',icon:'✈️'},
-  {id:'education',label:'Certificates',icon:'🎓'},
-  {id:'other',label:'Other',icon:'📄'}
+  {id:'id',label:'ID card',icon:'🪪',color:'green'},
+  {id:'passport',label:'Passport',icon:'🛂',color:'navy'},
+  {id:'residence',label:'Residence permit',icon:'🏠',color:'teal'},
+  {id:'driving',label:'Driving licence',icon:'🚗',color:'orange'},
+  {id:'health',label:'Health card',icon:'🏥',color:'red'},
+  {id:'medical',label:'Medical record',icon:'💊',color:'pink'},
+  {id:'insurance',label:'Insurance',icon:'🛡️',color:'purple'},
+  {id:'vehicle',label:'Vehicle papers',icon:'📋',color:'graphite'},
+  {id:'travel',label:'Travel / tickets',icon:'✈️',color:'blue'},
+  {id:'education',label:'Certificates',icon:'🎓',color:'gold'},
+  {id:'other',label:'Other',icon:'📄',color:'slate'}
 ];
 
 /* ---------- helpers ---------- */
@@ -282,6 +349,8 @@ const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString
 const typeOf = id => TYPES.find(t => t.id === id) || TYPES[TYPES.length - 1];
 const member = id => S.members.find(m => m.id === id);
 const grad = c => { const [a, b] = PALETTE[(c || 0) % PALETTE.length]; return `linear-gradient(135deg,${a},${b})`; };
+const cgrad = k => { const [a, b] = COLORS[k] || COLORS.slate; return `linear-gradient(135deg,${a},${b})`; };
+const cardGrad = d => cgrad(d.color && COLORS[d.color] ? d.color : typeOf(d.type).color);
 const fmtDate = d => { try { return new Date(d + 'T00:00:00').toLocaleDateString(undefined, {day:'2-digit', month:'short', year:'numeric'}); } catch { return d; } };
 const fmtSize = n => n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
 const mask = n => { n = String(n || '').trim(); return n.length > 4 ? '•••• ' + n.slice(-4) : n; };
@@ -394,7 +463,28 @@ function renderChips() {
   c.append(mk('all', 'All'));
   S.members.forEach(m => c.append(mk(m.id, m.name, m.color)));
 }
+function attentionDocs() { return S.docs.filter(d => expiryState(d.expiry)).sort((a, b) => a.expiry.localeCompare(b.expiry)); }
+function updateBell() {
+  const n = attentionDocs().length;
+  $('#btn-bell').hidden = !n; $('#bell-count').textContent = n > 9 ? '9+' : n;
+}
+function openAlerts() {
+  const list = attentionDocs(), body = $('#a-body'); body.innerHTML = '';
+  const box = el('div', 'box');
+  list.forEach(d => {
+    const ex = expiryState(d.expiry), m = member(d.memberId), past = daysUntil(d.expiry) < 0;
+    const r = el('button', 'row');
+    r.innerHTML = `<span class="dot" style="background:${cardGrad(d)}"></span><span class="grow">${esc(d.title || typeOf(d.type).label)}<small>${esc(m ? m.name : '')} · ${past ? 'expired' : 'expires'} ${esc(fmtDate(d.expiry))}</small></span><span class="badge ${ex.cls}">${ex.text}</span>`;
+    r.onclick = () => { hide('#alerts'); openViewer(d.id); };
+    box.append(r);
+  });
+  if (!list.length) box.append(el('div', 'row', 'Nothing expired or expiring in the next 60 days.'));
+  const foot = el('p', 'foot', 'Shown when a document is expired or expires within 60 days. After renewing, open it → Edit, attach the new file and update the expiry date.');
+  body.append(el('h3'), box, foot);
+  show('#alerts');
+}
 async function renderNotices() {
+  updateBell();
   const box = $('#notices'); box.innerHTML = '';
   const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
@@ -402,14 +492,6 @@ async function renderNotices() {
     const n = el('div', 'notice');
     n.innerHTML = `<span class="em">📲</span><div class="grow"><b>Install on Home Screen</b><small>Tap Share → Add to Home Screen, then open Wallet from the icon. Add documents there — Safari and the installed app keep separate storage.</small></div><button class="x" aria-label="Dismiss">✕</button>`;
     n.querySelector('.x').onclick = () => { try { sessionStorage.setItem('hideInstall', 1); } catch {} n.remove(); };
-    box.append(n);
-  }
-  const attention = S.docs.filter(d => expiryState(d.expiry));
-  if (attention.length) {
-    const n = el('button', 'notice');
-    const names = attention.slice(0, 3).map(d => `${d.title || typeOf(d.type).label} (${member(d.memberId)?.name || '?'})`).join(', ');
-    n.innerHTML = `<span class="em">⚠️</span><div class="grow"><b>${attention.length} document${attention.length > 1 ? 's' : ''} expired or expiring soon</b><small>${esc(names)}${attention.length > 3 ? '…' : ''}</small></div>`;
-    n.onclick = () => openViewer(attention[0].id);
     box.append(n);
   }
   if (S.docs.length) {
@@ -427,11 +509,57 @@ function cardEl(d) {
   const t = typeOf(d.type);
   const exp = expiryState(d.expiry);
   const b = el('button', 'card');
-  b.style.background = grad(m.color);
+  b.style.background = cardGrad(d);
   b.innerHTML = `<div class="c-top"><div class="c-head"><div class="c-title">${esc(d.title || t.label)}</div><div class="c-sub">${t.icon} ${esc(t.label)} · ${esc(m.name)}</div></div>${exp ? `<span class="badge ${exp.cls}">${exp.text}</span>` : ''}</div>
     <div class="c-body"><div class="c-meta">${d.number ? `<div class="c-k">Number</div><div class="c-v">${esc(mask(d.number))}</div>` : ''}${d.expiry ? `<div class="c-k">Expires</div><div class="c-v">${esc(fmtDate(d.expiry))}</div>` : ''}</div>${d.thumb ? `<img class="c-thumb" src="${d.thumb}" alt="">` : ''}</div>`;
-  b.onclick = () => openViewer(d.id);
+  attachPress(b, d.id);
   return b;
+}
+function attachPress(b, id) {
+  let t = null, fired = false, sx = 0, sy = 0;
+  const cancel = () => { if (t) { clearTimeout(t); t = null; } b.classList.remove('holding'); };
+  b.addEventListener('pointerdown', e => {
+    fired = false; sx = e.clientX; sy = e.clientY; b.classList.add('holding');
+    t = setTimeout(() => { t = null; fired = true; b.classList.remove('holding'); openPeek(id); }, 480);
+  });
+  b.addEventListener('pointermove', e => { if (t && Math.hypot(e.clientX - sx, e.clientY - sy) > 10) cancel(); });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => b.addEventListener(ev, cancel));
+  b.addEventListener('contextmenu', e => e.preventDefault());
+  b.addEventListener('click', e => { if (fired) { e.preventDefault(); fired = false; return; } openViewer(id); });
+}
+
+/* ---------- long-press preview ---------- */
+const P = {doc:null, url:null, token:0, at:0};
+async function openPeek(id) {
+  const d = S.docs.find(x => x.id === id); if (!d) return;
+  const tk = ++P.token; P.doc = d; P.at = Date.now();
+  if (navigator.vibrate) navigator.vibrate(10);
+  $('#pk-title').textContent = `${d.title || typeOf(d.type).label} · ${member(d.memberId)?.name || ''}`;
+  const img = $('#pk-img'); img.hidden = !d.thumb; img.src = d.thumb || '';
+  $('#pk-copy').hidden = !d.number;
+  show('#peek');
+  try {
+    const files = await getFiles(id); if (tk !== P.token || !files.length) return;
+    const f = files[0]; let url;
+    if (isPdf(f)) {
+      await loadPdfJs();
+      const pdf = await pdfjsLib.getDocument({data:new Uint8Array(f.data.slice(0))}).promise;
+      const c = await renderPage(await pdf.getPage(1), 1100); pdf.destroy();
+      const blob = await canvasToBlob(c, 0.88); c.width = c.height = 0; url = URL.createObjectURL(blob);
+    } else url = URL.createObjectURL(new Blob([f.data], {type:f.type}));
+    if (tk !== P.token) { URL.revokeObjectURL(url); return; }
+    if (P.url) URL.revokeObjectURL(P.url);
+    P.url = url; img.src = url; img.hidden = false;
+  } catch (e) { console.warn(e); }
+}
+function closePeek() { P.token++; hide('#peek'); if (P.url) { URL.revokeObjectURL(P.url); P.url = null; } }
+async function peekAction(act) {
+  const d = P.doc; if (!d) return;
+  if (act === 'share') return shareDoc(d);
+  if (act === 'copy') { try { await navigator.clipboard.writeText(d.number); toast('Number copied'); } catch { toast('Copy not available'); } closePeek(); return; }
+  closePeek();
+  if (act === 'open') openViewer(d.id);
+  if (act === 'edit') openEditor(d.id);
 }
 
 /* ---------- PDF rendering ---------- */
@@ -535,8 +663,8 @@ function setZoom(z, reset) {
   body.scrollLeft = cx * r - body.clientWidth / 2;
   body.scrollTop = cy * r - body.clientHeight / 2;
 }
-async function shareDoc() {
-  const d = V.doc; if (!d) return;
+async function shareDoc(d) {
+  d = d || V.doc; if (!d) return;
   const files = (await getFiles(d.id)).map(f => new File([f.data], f.name, {type:f.type}));
   if (!files.length) return toast('No file to share');
   try {
@@ -565,9 +693,28 @@ async function openEditor(id) {
   $('#e-expiry').value = d ? (d.expiry || '') : '';
   $('#e-notes').value = d ? (d.notes || '') : '';
   $('#e-delete').hidden = !d;
+  E.color = d && d.color ? d.color : null;
+  renderSwatches();
   renderEditorFiles();
+  E.snap = editorSnapshot();
   $('#editor .panel').scrollTop = 0;
   show('#editor');
+}
+function editorSnapshot() { return JSON.stringify(['#e-member','#e-type','#e-title','#e-number','#e-expiry','#e-notes'].map(s => $(s).value).concat(E.color || '')); }
+function editorDirty() { return E && (E.newFiles.length || E.removed.size || editorSnapshot() !== E.snap); }
+function cancelEditor() { if (editorDirty() && !confirm('Discard your changes?')) return; hide('#editor'); }
+function renderSwatches() {
+  const box = $('#e-colors'); box.innerHTML = '';
+  const auto = el('button', 'sw-c sw-auto' + (!E.color ? ' on' : ''), 'Auto');
+  auto.style.background = cgrad(typeOf($('#e-type').value).color);
+  auto.onclick = () => { E.color = null; renderSwatches(); };
+  box.append(auto);
+  Object.keys(COLORS).forEach(k => {
+    const s = el('button', 'sw-c' + (E.color === k ? ' on' : ''));
+    s.style.background = cgrad(k); s.setAttribute('aria-label', k);
+    s.onclick = () => { E.color = k; renderSwatches(); };
+    box.append(s);
+  });
 }
 function fillMemberSelect(selected) {
   const s = $('#e-member');
@@ -608,7 +755,7 @@ async function saveDoc() {
     if (!old || E.removed.size || !thumb) { const all = await getFiles(id); thumb = all.length ? await makeThumb(all[0]) : null; }
     await put('docs', {
       id, memberId, type: $('#e-type').value, title: $('#e-title').value.trim(),
-      number: $('#e-number').value.trim(), expiry: $('#e-expiry').value, notes: $('#e-notes').value.trim(),
+      number: $('#e-number').value.trim(), expiry: $('#e-expiry').value, notes: $('#e-notes').value.trim(), color: E.color || null,
       thumb, created: old ? old.created : now, updated: now
     });
     await load(); render(); hide('#editor'); toast('Saved');
@@ -650,7 +797,7 @@ async function renderSettings() {
         <button class="red" data-act="delmember" data-id="${m.id}">Remove</button></div>`).join('')}
       <button class="row link" data-act="addmember">＋ Add person</button>
     </div>
-    <p class="foot">Tap the coloured dot to change a person's card colour.</p>
+    <p class="foot">The dot colour is used for the person's filter button. Card colours follow the document type, or pick one per document under Edit → Card colour.</p>
     <h3>Security</h3>
     <div class="box">
       <div class="row"><span class="grow">Passcode lock</span><button class="sw ${S.hasPin ? 'on' : ''}" data-act="pin" aria-label="Passcode lock"></button></div>
@@ -831,8 +978,15 @@ function bindUI() {
   $('#q').oninput = e => { S.q = e.target.value; render(); };
   $('#v-close').onclick = closeViewer;
   $('#v-edit').onclick = () => openEditor(V.doc.id);
-  $('#v-share').onclick = shareDoc;
-  $('#e-cancel').onclick = () => hide('#editor');
+  $('#v-share').onclick = () => shareDoc(V.doc);
+  $('#btn-bell').onclick = openAlerts;
+  $('#a-done').onclick = () => hide('#alerts');
+  $('#peek').addEventListener('click', e => { if ((e.target.id === 'peek' || e.target.classList.contains('pk')) && Date.now() - P.at > 400) closePeek(); });
+  $('#peek .pk-menu').addEventListener('click', e => { const b = e.target.closest('[data-pk]'); if (b) peekAction(b.dataset.pk); });
+  $('#lock .lk').onclick = () => bioUnlock();
+  const sc = $('#scroller');
+  sc.addEventListener('scroll', () => $('#head').classList.toggle('shadow', sc.scrollTop > 4), {passive:true});
+  $('#e-cancel').onclick = cancelEditor;
   $('#e-save').onclick = saveDoc;
   $('#e-delete').onclick = deleteDoc;
   $('#e-pick').onclick = () => $('#e-input').click();
@@ -844,7 +998,7 @@ function bindUI() {
       if (base && !/^(img|image|scan|document|photo)\s*\d*$/i.test(base)) $('#e-title').value = base.slice(0, 60);
     }
   };
-  $('#e-type').onchange = e => { $('#e-title').placeholder = typeOf(e.target.value).label; };
+  $('#e-type').onchange = e => { $('#e-title').placeholder = typeOf(e.target.value).label; renderSwatches(); };
   $('#e-member').onchange = async e => {
     if (e.target.value !== '__new') { e.target.dataset.prev = e.target.value; return; }
     const m = await addMember(prompt('Name of the person'));
@@ -854,7 +1008,7 @@ function bindUI() {
   $('#s-body').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && b.tagName !== 'SELECT') settingsAction(b.dataset.act, b.dataset.id, b); });
   $('#s-body').addEventListener('change', e => { const b = e.target.closest('select[data-act]'); if (b) settingsAction(b.dataset.act, null, b); });
   $('#s-import').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) importBackup(f); };
-  document.querySelectorAll('.sheet').forEach(s => s.addEventListener('click', e => { if (e.target === s) hide('#' + s.id); }));
+  document.querySelectorAll('.sheet:not(.full)').forEach(s => s.addEventListener('click', e => { if (e.target === s) hide('#' + s.id); }));
 
   // zoom in viewer
   const vb = $('#v-body'); let z0 = 1, lastTap = 0;
