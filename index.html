@@ -309,6 +309,7 @@ select.mini{width:auto;background-color:transparent;padding:4px 26px 4px 4px;col
   <div id="lock-msg"></div>
   <div class="dots" id="lock-dots"></div>
   <div class="keys" id="lock-keys"></div>
+  <button id="lock-bio" class="link b" style="margin-top:26px;font-size:17px" hidden>Unlock with Face ID</button>
 </div>
 
 <div id="toast"></div>
@@ -464,23 +465,45 @@ function renderChips() {
   S.members.forEach(m => c.append(mk(m.id, m.name, m.color)));
 }
 function attentionDocs() { return S.docs.filter(d => expiryState(d.expiry)).sort((a, b) => a.expiry.localeCompare(b.expiry)); }
+function backupDue() {
+  if (!S.docs.length || S.backupReminders === false) return false;
+  if (S.backupSnooze && S.backupSnooze > Date.now()) return false;
+  return !S.lastBackup || Date.now() - S.lastBackup > 30 * 86400000;
+}
+async function snoozeBackup(days) {
+  if (days) { S.backupSnooze = Date.now() + days * 86400000; await kvSet('backupSnooze', S.backupSnooze); toast(`I'll remind you in ${days} days`); }
+  else { S.backupReminders = false; await kvSet('backupReminders', false); toast('Backup reminders off — turn on again in Settings'); }
+  updateBell(); openAlerts();
+}
 function updateBell() {
-  const n = attentionDocs().length;
+  const n = attentionDocs().length + (backupDue() ? 1 : 0);
   $('#btn-bell').hidden = !n; $('#bell-count').textContent = n > 9 ? '9+' : n;
 }
 function openAlerts() {
   const list = attentionDocs(), body = $('#a-body'); body.innerHTML = '';
-  const box = el('div', 'box');
-  list.forEach(d => {
-    const ex = expiryState(d.expiry), m = member(d.memberId), past = daysUntil(d.expiry) < 0;
-    const r = el('button', 'row');
-    r.innerHTML = `<span class="dot" style="background:${cardGrad(d)}"></span><span class="grow">${esc(d.title || typeOf(d.type).label)}<small>${esc(m ? m.name : '')} · ${past ? 'expired' : 'expires'} ${esc(fmtDate(d.expiry))}</small></span><span class="badge ${ex.cls}">${ex.text}</span>`;
-    r.onclick = () => { hide('#alerts'); openViewer(d.id); };
-    box.append(r);
-  });
-  if (!list.length) box.append(el('div', 'row', 'Nothing expired or expiring in the next 60 days.'));
-  const foot = el('p', 'foot', 'Shown when a document is expired or expires within 60 days. After renewing, open it → Edit, attach the new file and update the expiry date.');
-  body.append(el('h3'), box, foot);
+  if (list.length) {
+    const box = el('div', 'box');
+    list.forEach(d => {
+      const ex = expiryState(d.expiry), m = member(d.memberId), past = daysUntil(d.expiry) < 0;
+      const r = el('button', 'row');
+      r.innerHTML = `<span class="dot" style="background:${cardGrad(d)}"></span><span class="grow">${esc(d.title || typeOf(d.type).label)}<small>${esc(m ? m.name : '')} · ${past ? 'expired' : 'expires'} ${esc(fmtDate(d.expiry))}</small></span><span class="badge ${ex.cls}">${ex.text}</span>`;
+      r.onclick = () => { hide('#alerts'); openViewer(d.id); };
+      box.append(r);
+    });
+    body.append(el('h3', '', 'Expiring documents'), box,
+      el('p', 'foot', 'Shown when a document is expired or expires within 60 days. After renewing, open it → Edit, attach the new file and update the expiry date.'));
+  }
+  if (backupDue()) {
+    const box = el('div', 'box');
+    box.innerHTML = `<div class="row"><span style="font-size:24px">💾</span><span class="grow">${S.lastBackup ? 'Last backup ' + new Date(S.lastBackup).toLocaleDateString() : 'No backup yet'}<small>Documents live only in this app. A backup file in iCloud Drive or OneDrive lets you restore them.</small></span></div>
+      <button class="row link b" data-b="now">Back up now</button>
+      <button class="row link" data-b="30">Remind me in 30 days</button>
+      <button class="row red" data-b="off">Don't remind me again</button>`;
+    box.onclick = e => { const b = e.target.closest('[data-b]'); if (!b) return;
+      if (b.dataset.b === 'now') { hide('#alerts'); exportBackup(); } else snoozeBackup(b.dataset.b === 'off' ? 0 : 30); };
+    body.append(el('h3', '', 'Backup'), box);
+  }
+  if (!list.length && !backupDue()) body.append(el('p', 'none', '✅ All good — nothing needs attention.'));
   show('#alerts');
 }
 async function renderNotices() {
@@ -493,15 +516,6 @@ async function renderNotices() {
     n.innerHTML = `<span class="em">📲</span><div class="grow"><b>Install on Home Screen</b><small>Tap Share → Add to Home Screen, then open Wallet from the icon. Add documents there — Safari and the installed app keep separate storage.</small></div><button class="x" aria-label="Dismiss">✕</button>`;
     n.querySelector('.x').onclick = () => { try { sessionStorage.setItem('hideInstall', 1); } catch {} n.remove(); };
     box.append(n);
-  }
-  if (S.docs.length) {
-    const last = await kvGet('lastBackup');
-    if (!last || Date.now() - last > 30 * 86400000) {
-      const n = el('button', 'notice');
-      n.innerHTML = `<span class="em">💾</span><div class="grow"><b>${last ? 'Time for a backup' : 'Make a backup'}</b><small>Documents live only in this app. Save a backup file to iCloud Drive or OneDrive.</small></div>`;
-      n.onclick = exportBackup;
-      box.append(n);
-    }
   }
 }
 function cardEl(d) {
@@ -811,6 +825,7 @@ async function renderSettings() {
     <div class="box">
       <button class="row link" data-act="export">Export backup…</button>
       <button class="row link" data-act="import">Restore from backup…</button>
+      <div class="row"><span class="grow">Monthly backup reminder</span><button class="sw ${S.backupReminders !== false ? 'on' : ''}" data-act="bkrem" aria-label="Backup reminder"></button></div>
     </div>
     <p class="foot">Last backup: ${last ? new Date(last).toLocaleString() : 'never'}. Documents are stored only inside this app — if you delete the Home Screen icon they're gone. Keep a backup in iCloud Drive or OneDrive.</p>
     <h3>Storage</h3>
@@ -839,6 +854,7 @@ async function settingsAction(act, id, target) {
     case 'bio': S.bioId ? (await kvDel('bioId'), S.bioId = null, toast('Face ID unlock off')) : await enableBio(); renderSettings(); break;
     case 'lockafter': S.lockAfter = +target.value; await kvSet('lockAfter', S.lockAfter); break;
     case 'export': exportBackup(); break;
+    case 'bkrem': S.backupReminders = S.backupReminders === false; await kvSet('backupReminders', S.backupReminders); S.backupSnooze = 0; await kvSet('backupSnooze', 0); updateBell(); renderSettings(); break;
     case 'import': $('#s-import').click(); break;
     case 'erase':
       if (!confirm('Erase ALL documents, people and settings from this device?')) return;
@@ -869,7 +885,8 @@ async function exportBackup() {
       catch (e) { if (e.name === 'AbortError') return; }
     }
     if (!done) downloadFile(file);
-    await kvSet('lastBackup', Date.now());
+    S.lastBackup = Date.now(); await kvSet('lastBackup', S.lastBackup);
+    S.backupSnooze = 0; await kvSet('backupSnooze', 0);
     render(); if ($('#settings').classList.contains('show')) renderSettings();
     toast('Backup ready — choose “Save to Files”');
   } catch (e) { alert('Backup failed: ' + (e.message || e)); }
@@ -905,9 +922,10 @@ function pinPad(mode, title, msg) {
     PIN.mode = mode; PIN.entry = ''; PIN.resolve = res;
     $('#lock-title').textContent = title; $('#lock-msg').textContent = msg || '';
     const left = $('#lock-left');
-    if (mode === 'unlock' && S.bioId) { left.innerHTML = '<svg><use href="#i-face"/></svg>'; left.setAttribute('aria-label', 'Face ID'); left.onclick = bioUnlock; left.style.visibility = 'visible'; }
+    if (mode === 'unlock' && S.bioId) { left.innerHTML = '<svg><use href="#i-face"/></svg>'; left.setAttribute('aria-label', 'Face ID'); left.onclick = () => bioUnlock(false); left.style.visibility = 'visible'; }
     else if (mode !== 'unlock') { left.textContent = 'Cancel'; left.onclick = () => finishPin(null); left.style.visibility = 'visible'; }
     else { left.style.visibility = 'hidden'; left.onclick = null; }
+    $('#lock-bio').hidden = !(mode === 'unlock' && S.bioId);
     drawDots(); show('#lock');
   });
 }
@@ -954,18 +972,41 @@ async function enableBio() {
     S.bioId = abToB64(cred.rawId); await kvSet('bioId', S.bioId); toast('Face ID unlock on');
   } catch (e) { if (e.name !== 'NotAllowedError') alert('Face ID could not be set up: ' + (e.message || e.name)); }
 }
-async function bioUnlock() {
-  if (!S.bioId || PIN.mode !== 'unlock') return;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function waitForeground(ms) {
+  return new Promise(res => {
+    if (document.visibilityState === 'visible' && document.hasFocus()) return res();
+    let done = false; const fin = () => { if (done) return; done = true; window.removeEventListener('focus', chk); document.removeEventListener('visibilitychange', chk); res(); };
+    const chk = () => { if (document.visibilityState === 'visible' && document.hasFocus()) fin(); };
+    window.addEventListener('focus', chk); document.addEventListener('visibilitychange', chk);
+    setTimeout(fin, ms);
+  });
+}
+let bioBusy = false;
+async function bioUnlock(auto) {
+  if (!S.bioId || PIN.mode !== 'unlock' || bioBusy) return;
+  bioBusy = true; $('#lock-msg').textContent = '';
   try {
-    await navigator.credentials.get({publicKey:{challenge:rand(32), allowCredentials:[{type:'public-key', id:b64ToAb(S.bioId)}], userVerification:'required', timeout:60000}});
-    finishPin(true);
-  } catch (e) { $('#lock-msg').textContent = 'Use your passcode'; }
+    for (let i = 0; i < (auto ? 4 : 1); i++) {
+      if (auto) { await waitForeground(2000); await sleep(i ? 600 : 350); }
+      if (PIN.mode !== 'unlock') return;
+      const t0 = Date.now();
+      try {
+        await navigator.credentials.get({publicKey:{challenge:rand(32), allowCredentials:[{type:'public-key', id:b64ToAb(S.bioId)}], userVerification:'required', timeout:60000}});
+        finishPin(true); return;
+      } catch (e) {
+        // iOS rejects instantly if the app isn't fully in front yet — retry; a slower error means you cancelled.
+        if (!auto || Date.now() - t0 > 900) break;
+      }
+    }
+    if (PIN.mode === 'unlock') $('#lock-msg').textContent = 'Tap Face ID or enter passcode';
+  } finally { bioBusy = false; }
 }
 async function lockApp() {
   if (S.locked) return;
   S.locked = true; document.body.classList.add('locked');
   const p = pinPad('unlock', 'Enter passcode');
-  if (S.bioId) setTimeout(bioUnlock, 250);
+  if (S.bioId) bioUnlock(true);
   await p;
   S.locked = false; document.body.classList.remove('locked');
 }
@@ -983,7 +1024,8 @@ function bindUI() {
   $('#a-done').onclick = () => hide('#alerts');
   $('#peek').addEventListener('click', e => { if ((e.target.id === 'peek' || e.target.classList.contains('pk')) && Date.now() - P.at > 400) closePeek(); });
   $('#peek .pk-menu').addEventListener('click', e => { const b = e.target.closest('[data-pk]'); if (b) peekAction(b.dataset.pk); });
-  $('#lock .lk').onclick = () => bioUnlock();
+  $('#lock .lk').onclick = () => bioUnlock(false);
+  $('#lock-bio').onclick = () => bioUnlock(false);
   const sc = $('#scroller');
   sc.addEventListener('scroll', () => $('#head').classList.toggle('shadow', sc.scrollTop > 4), {passive:true});
   $('#e-cancel').onclick = cancelEditor;
@@ -1039,6 +1081,9 @@ async function init() {
   S.hasPin = !!(await kvGet('pinHash'));
   S.bioId = (await kvGet('bioId')) || null;
   const la = await kvGet('lockAfter'); if (la != null) S.lockAfter = la;
+  S.lastBackup = (await kvGet('lastBackup')) || 0;
+  S.backupSnooze = (await kvGet('backupSnooze')) || 0;
+  S.backupReminders = await kvGet('backupReminders');
   bindUI();
   if (S.hasPin) lockApp();
   render();
