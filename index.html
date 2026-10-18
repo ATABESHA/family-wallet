@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,6 +21,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body,button,.keys,.keys button{touch-action:manipulation}
 html,body{margin:0;background:var(--bg);color:var(--text);font:17px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
 body{min-height:100vh;overscroll-behavior-y:none;-webkit-user-select:none;user-select:none}
 input,textarea,.selectable{-webkit-user-select:text;user-select:text}
@@ -71,7 +72,12 @@ h1{font-size:34px;font-weight:700;margin:0;letter-spacing:.2px}
   box-shadow:0 -1px 0 rgba(255,255,255,.18) inset,0 -6px 18px rgba(0,0,0,.45);transition:transform .18s ease;-webkit-touch-callout:none;touch-action:manipulation}
 .card::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 100% 0%,rgba(255,255,255,.22),transparent 55%),radial-gradient(90% 80% at 0% 100%,rgba(0,0,0,.25),transparent 60%);pointer-events:none}
 .card:active{transform:scale(.985)}
-.card.holding{transform:scale(.95);transition:transform .45s ease}
+.card.holding{transform:scale(.97);transition:transform .45s ease}
+.card.lifted{z-index:50;transition:none;box-shadow:0 22px 44px rgba(0,0,0,.65),0 -1px 0 rgba(255,255,255,.18) inset}
+body.dragging .card:not(.lifted){transition:none}
+#viewer{box-shadow:-12px 0 30px rgba(0,0,0,.6)}
+#bio-offer{z-index:65}
+.pk-hint{color:rgba(255,255,255,.75);font-size:13px;text-align:center;text-shadow:0 1px 3px rgba(0,0,0,.6)}
 .stack .card+.card{margin-top:calc(-63.05% + 62px)}
 .stack.open .card+.card{margin-top:14px}
 .c-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;position:relative;z-index:1;height:32px}
@@ -243,6 +249,18 @@ select.mini{width:auto;background-color:transparent;padding:4px 26px 4px 4px;col
       <button data-pk="copy" id="pk-copy">Copy number<svg><use href="#i-copy"/></svg></button>
       <button data-pk="edit">Edit<svg><use href="#i-edit"/></svg></button>
     </div>
+    <div class="pk-hint">Tip: hold a card and drag it to change its position</div>
+  </div>
+</div>
+
+<!-- offer Face ID -->
+<div class="overlay sheet" id="bio-offer">
+  <div class="panel set" style="text-align:center;padding-top:26px">
+    <svg style="width:56px;height:56px;margin:0 auto;color:var(--green)"><use href="#i-face"/></svg>
+    <h2 style="margin:12px 0 6px;font-size:22px">Unlock with Face ID?</h2>
+    <p class="foot" style="margin:0 8px 22px;font-size:15px">Open Wallet with a glance instead of typing your passcode. iOS will ask to save a passkey for Wallet — tap Continue.</p>
+    <button class="btn" id="bo-yes" style="width:100%">Turn on Face ID</button>
+    <button class="link" id="bo-no" style="width:100%;padding:16px;text-align:center">Not now</button>
   </div>
 </div>
 
@@ -434,8 +452,9 @@ function render() {
   let docs = S.docs.filter(d => S.filter === 'all' || d.memberId === S.filter);
   if (q) docs = docs.filter(d => [d.title, typeOf(d.type).label, member(d.memberId)?.name, d.number, d.notes].join(' ').toLowerCase().includes(q));
   if (!docs.length) { list.append(el('p', 'none', q ? 'No documents match your search.' : 'No documents for this person yet.')); return; }
-  const order = d => TYPES.findIndex(t => t.id === d.type);
-  docs.sort((a, b) => order(a) - order(b) || (a.title || '').localeCompare(b.title || ''));
+  const tOrder = d => TYPES.findIndex(t => t.id === d.type);
+  const pos = d => (typeof d.pos === 'number' ? d.pos : 1e9);
+  docs.sort((a, b) => pos(a) - pos(b) || tOrder(a) - tOrder(b) || (a.title || '').localeCompare(b.title || ''));
   const groups = S.filter === 'all'
     ? S.members.map(m => ({m, docs: docs.filter(d => d.memberId === m.id)})).filter(g => g.docs.length)
     : [{m: member(S.filter), docs}];
@@ -446,6 +465,7 @@ function render() {
     if (S.filter === 'all' && groups.length > 1) sec.append(el('h2', '', g.m.name));
     else if (S.filter === 'all') sec.append(el('h2', '', g.m.name));
     const st = el('div', q || g.docs.length === 1 ? 'stack open' : 'stack');
+    st.dataset.drag = q ? '' : '1';
     g.docs.forEach(d => st.append(cardEl(d)));
     sec.append(st); list.append(sec);
   }
@@ -523,6 +543,7 @@ function cardEl(d) {
   const t = typeOf(d.type);
   const exp = expiryState(d.expiry);
   const b = el('button', 'card');
+  b.dataset.id = d.id;
   b.style.background = cardGrad(d);
   b.innerHTML = `<div class="c-top"><div class="c-head"><div class="c-title">${esc(d.title || t.label)}</div><div class="c-sub">${t.icon} ${esc(t.label)} · ${esc(m.name)}</div></div>${exp ? `<span class="badge ${exp.cls}">${exp.text}</span>` : ''}</div>
     <div class="c-body"><div class="c-meta">${d.number ? `<div class="c-k">Number</div><div class="c-v">${esc(mask(d.number))}</div>` : ''}${d.expiry ? `<div class="c-k">Expires</div><div class="c-v">${esc(fmtDate(d.expiry))}</div>` : ''}</div>${d.thumb ? `<img class="c-thumb" src="${d.thumb}" alt="">` : ''}</div>`;
@@ -530,17 +551,83 @@ function cardEl(d) {
   return b;
 }
 function attachPress(b, id) {
-  let t = null, fired = false, sx = 0, sy = 0;
-  const cancel = () => { if (t) { clearTimeout(t); t = null; } b.classList.remove('holding'); };
+  let t = null, sx = 0, sy = 0;
+  const pre = e => { if (Math.hypot(e.clientX - sx, e.clientY - sy) > 10) clear(); };
+  const clear = () => {
+    if (t) { clearTimeout(t); t = null; }
+    b.classList.remove('holding');
+    window.removeEventListener('pointermove', pre); window.removeEventListener('pointerup', clear); window.removeEventListener('pointercancel', clear);
+  };
   b.addEventListener('pointerdown', e => {
-    fired = false; sx = e.clientX; sy = e.clientY; b.classList.add('holding');
-    t = setTimeout(() => { t = null; fired = true; b.classList.remove('holding'); openPeek(id); }, 480);
+    if (e.button > 0 || DR.active) return;
+    delete b.dataset.lifted; sx = e.clientX; sy = e.clientY; b.classList.add('holding');
+    window.addEventListener('pointermove', pre); window.addEventListener('pointerup', clear); window.addEventListener('pointercancel', clear);
+    t = setTimeout(() => { t = null; clear(); b.dataset.lifted = '1'; startDrag(b, id, sy); }, 450);
   });
-  b.addEventListener('pointermove', e => { if (t && Math.hypot(e.clientX - sx, e.clientY - sy) > 10) cancel(); });
-  ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => b.addEventListener(ev, cancel));
   b.addEventListener('contextmenu', e => e.preventDefault());
-  b.addEventListener('click', e => { if (fired) { e.preventDefault(); fired = false; return; } openViewer(id); });
+  b.addEventListener('click', e => { if (b.dataset.lifted) { delete b.dataset.lifted; e.preventDefault(); return; } openViewer(id); });
 }
+
+/* ---------- hold → lift → drag to reorder (or release for menu) ---------- */
+const DR = {active:false};
+function natTop(c) { const tr = c.style.transform; c.style.transform = 'none'; const top = c.getBoundingClientRect().top; c.style.transform = tr; return top; }
+function startDrag(b, id, y) {
+  Object.assign(DR, {active:true, card:b, id, stack:b.parentElement, moved:false, sy:y, y});
+  DR.canMove = DR.stack.dataset.drag === '1' && DR.stack.children.length > 1;
+  DR.grab = y - natTop(b);
+  b.classList.add('lifted'); b.style.transform = 'scale(1.03)';
+  document.body.classList.add('dragging');
+  if (navigator.vibrate) navigator.vibrate(10);
+  window.addEventListener('pointermove', dragMove); window.addEventListener('pointerup', dragEnd); window.addEventListener('pointercancel', dragCancel);
+  DR.raf = requestAnimationFrame(autoScroll);
+}
+function dragMove(e) {
+  DR.y = e.clientY;
+  if (!DR.moved && Math.abs(DR.y - DR.sy) > 8) DR.moved = true;
+  if (DR.moved) placeDrag();
+}
+function placeDrag() {
+  const c = DR.card;
+  if (!DR.canMove) { c.style.transform = `translateY(${(DR.y - DR.sy) * 0.15}px) scale(1.03)`; return; }
+  const cards = [...DR.stack.children];
+  const first = natTop(cards[0]), step = Math.max(20, natTop(cards[1]) - first);
+  const target = Math.max(0, Math.min(cards.length - 1, Math.round((DR.y - DR.grab - first) / step)));
+  const cur = cards.indexOf(c);
+  if (target !== cur) {
+    const others = cards.filter(x => x !== c);
+    if (target >= others.length) DR.stack.append(c); else DR.stack.insertBefore(c, others[target]);
+  }
+  c.style.transform = `translateY(${DR.y - DR.grab - natTop(c)}px) scale(1.03)`;
+}
+function autoScroll() {
+  if (!DR.active) return;
+  if (DR.moved && DR.canMove) {
+    const sc = $('#scroller'), r = sc.getBoundingClientRect(); let v = 0;
+    if (DR.y < r.top + 70) v = -Math.min(14, (r.top + 70 - DR.y) / 4);
+    else if (DR.y > r.bottom - 70) v = Math.min(14, (DR.y - (r.bottom - 70)) / 4);
+    if (v) { sc.scrollTop += v; placeDrag(); }
+  }
+  DR.raf = requestAnimationFrame(autoScroll);
+}
+function finishDrag() {
+  DR.active = false; cancelAnimationFrame(DR.raf);
+  window.removeEventListener('pointermove', dragMove); window.removeEventListener('pointerup', dragEnd); window.removeEventListener('pointercancel', dragCancel);
+  DR.card.classList.remove('lifted'); DR.card.style.transform = '';
+  document.body.classList.remove('dragging');
+}
+async function dragEnd() {
+  const moved = DR.moved, id = DR.id, canMove = DR.canMove, stack = DR.stack;
+  finishDrag();
+  if (!moved) return openPeek(id);
+  if (!canMove) return;
+  const ids = [...stack.children].map(c => c.dataset.id);
+  for (let i = 0; i < ids.length; i++) {
+    const d = S.docs.find(x => x.id === ids[i]);
+    if (d && d.pos !== i) { d.pos = i; await put('docs', d); }
+  }
+  render();
+}
+function dragCancel() { finishDrag(); }
 
 /* ---------- long-press preview ---------- */
 const P = {doc:null, url:null, token:0, at:0};
@@ -689,6 +776,37 @@ async function shareDoc(d) {
 function downloadFile(file) {
   const url = URL.createObjectURL(file); const a = el('a'); a.href = url; a.download = file.name;
   document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+
+function bindSwipeBack() {
+  const v = $('#viewer'); let sx = 0, sy = 0, mode = null, dx = 0, t0 = 0;
+  v.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) { mode = 'no'; return; }
+    const t = e.touches[0]; sx = t.clientX; sy = t.clientY; dx = 0; t0 = Date.now();
+    mode = (V.zoom <= 1.01 || sx < 30) ? null : 'no';
+  }, {passive:true});
+  v.addEventListener('touchmove', e => {
+    if (mode === 'no' || e.touches.length !== 1) { mode = mode === 'swipe' ? 'swipe' : 'no'; return; }
+    const t = e.touches[0], mx = t.clientX - sx, my = t.clientY - sy;
+    if (mode === null) {
+      if (Math.abs(mx) < 10 && Math.abs(my) < 10) return;
+      mode = (mx > 0 && Math.abs(mx) > Math.abs(my) * 1.2) ? 'swipe' : 'no';
+      if (mode === 'no') return;
+      v.style.transition = 'none';
+    }
+    e.preventDefault(); dx = Math.max(0, mx); v.style.transform = `translateX(${dx}px)`;
+  }, {passive:false});
+  const end = () => {
+    if (mode !== 'swipe') { mode = null; return; }
+    mode = null;
+    const fast = dx / Math.max(1, Date.now() - t0) > 0.5;
+    v.style.transition = 'transform .22s ease-out';
+    if (dx > innerWidth * 0.33 || (fast && dx > 40)) {
+      v.style.transform = 'translateX(100%)';
+      setTimeout(() => { closeViewer(); v.style.transition = 'none'; v.style.transform = ''; }, 220);
+    } else v.style.transform = '';
+  };
+  v.addEventListener('touchend', end); v.addEventListener('touchcancel', end);
 }
 
 /* ---------- editor ---------- */
@@ -970,7 +1088,11 @@ async function enableBio() {
       authenticatorSelection:{authenticatorAttachment:'platform', userVerification:'required', residentKey:'discouraged'},
       timeout:60000, attestation:'none'}});
     S.bioId = abToB64(cred.rawId); await kvSet('bioId', S.bioId); toast('Face ID unlock on');
-  } catch (e) { if (e.name !== 'NotAllowedError') alert('Face ID could not be set up: ' + (e.message || e.name)); }
+  } catch (e) {
+    alert(e.name === 'NotAllowedError'
+      ? 'Face ID was not turned on (the request was cancelled or not allowed). Try again from Settings → Unlock with Face ID, and tap Continue when iOS asks to save a passkey.'
+      : 'Face ID could not be set up: ' + (e.message || e.name));
+  }
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function waitForeground(ms) {
@@ -1009,6 +1131,12 @@ async function lockApp() {
   if (S.bioId) bioUnlock(true);
   await p;
   S.locked = false; document.body.classList.remove('locked');
+  maybeOfferBio();
+}
+async function maybeOfferBio() {
+  if (S.bioId || !S.hasPin || (await kvGet('bioDeclined'))) return;
+  try { if (!window.PublicKeyCredential || !(await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable())) return; } catch { return; }
+  show('#bio-offer');
 }
 
 /* ---------- wiring ---------- */
@@ -1026,6 +1154,11 @@ function bindUI() {
   $('#peek .pk-menu').addEventListener('click', e => { const b = e.target.closest('[data-pk]'); if (b) peekAction(b.dataset.pk); });
   $('#lock .lk').onclick = () => bioUnlock(false);
   $('#lock-bio').onclick = () => bioUnlock(false);
+  $('#bo-yes').onclick = async () => { hide('#bio-offer'); await enableBio(); };
+  $('#bo-no').onclick = async () => { hide('#bio-offer'); await kvSet('bioDeclined', true); toast('You can turn it on later in Settings'); };
+  $('#lock').addEventListener('dblclick', e => e.preventDefault());
+  bindSwipeBack();
+  window.addEventListener('touchmove', e => { if (DR.active) e.preventDefault(); }, {passive:false});
   const sc = $('#scroller');
   sc.addEventListener('scroll', () => $('#head').classList.toggle('shadow', sc.scrollTop > 4), {passive:true});
   $('#e-cancel').onclick = cancelEditor;
