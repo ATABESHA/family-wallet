@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wallet">
+<meta name="theme-color" content="#000000">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<title>Family Wallet</title>
+<style>
+:root{
+  --bg:#000;--bg2:#1c1c1e;--bg3:#2c2c2e;--bg4:#3a3a3c;--line:rgba(84,84,88,.6);
+  --text:#fff;--muted:#8e8e93;--accent:#0a84ff;--red:#ff453a;--amber:#ffd60a;--green:#30d158;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:17px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+body{min-height:100vh;overscroll-behavior-y:none;-webkit-user-select:none;user-select:none}
+input,textarea,.selectable{-webkit-user-select:text;user-select:text}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+input,select,textarea{font:inherit;font-size:17px;color:var(--text);background:var(--bg3);border:0;border-radius:10px;padding:12px 14px;width:100%;outline:none;-webkit-appearance:none;appearance:none}
+input[type=date]{min-height:46px;display:block}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238e8e93' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+textarea{min-height:80px;resize:vertical}
+svg{display:block}
+[hidden]{display:none!important}
+
+#app{padding:calc(var(--st) + 10px) 16px calc(var(--sb) + 32px);max-width:560px;margin:0 auto;transition:filter .15s}
+body.locked #app{visibility:hidden}
+body.privacy #app,body.privacy .overlay:not(#lock){filter:blur(28px)}
+
+.top{display:flex;align-items:center;justify-content:space-between;margin:6px 0 10px}
+h1{font-size:34px;font-weight:700;margin:0;letter-spacing:.2px}
+.actions{display:flex;gap:10px}
+.iconbtn{width:38px;height:38px;border-radius:50%;background:var(--bg2);display:grid;place-items:center;flex:none}
+.iconbtn svg{width:20px;height:20px}
+.iconbtn:active{background:var(--bg4)}
+
+.search{position:relative;margin-bottom:12px}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+.search input{padding:9px 12px 9px 34px;background:var(--bg2);font-size:17px}
+
+.chips{display:flex;gap:8px;overflow-x:auto;margin:0 -16px 6px;padding:0 16px 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:7px 15px;border-radius:999px;background:var(--bg2);font-size:15px;font-weight:600;display:flex;align-items:center;gap:7px}
+.chip i{width:10px;height:10px;border-radius:50%}
+.chip.on{background:#fff;color:#000}
+
+.notice{display:flex;gap:12px;align-items:center;background:var(--bg2);border-radius:14px;padding:12px 14px;margin:10px 0;font-size:15px;width:100%}
+.notice .em{font-size:22px}
+.notice .grow{flex:1}
+.notice small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.notice .x{color:var(--muted);font-size:20px;padding:4px}
+
+.group h2{font-size:13px;text-transform:uppercase;color:var(--muted);letter-spacing:.6px;margin:22px 4px 10px;font-weight:600}
+.stack{display:flex;flex-direction:column}
+.card{position:relative;isolation:isolate;width:100%;aspect-ratio:1.586;border-radius:16px;padding:15px 18px;overflow:hidden;color:#fff;display:flex;flex-direction:column;
+  box-shadow:0 -1px 0 rgba(255,255,255,.18) inset,0 -6px 18px rgba(0,0,0,.45);transition:transform .18s ease}
+.card::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 100% 0%,rgba(255,255,255,.22),transparent 55%),radial-gradient(90% 80% at 0% 100%,rgba(0,0,0,.25),transparent 60%);pointer-events:none}
+.card:active{transform:scale(.985)}
+.stack .card+.card{margin-top:calc(-63.05% + 62px)}
+.stack.open .card+.card{margin-top:14px}
+.c-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;position:relative;z-index:1;height:32px}
+.c-title{font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.c-sub{font-size:12.5px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.c-head{min-width:0;flex:1}
+.badge{flex:none;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.35);backdrop-filter:blur(6px)}
+.badge.red{background:var(--red)}
+.badge.amber{background:var(--amber);color:#000}
+.c-body{flex:1;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;position:relative;z-index:1;margin-top:10px;min-height:0}
+.c-meta{font-size:13px;line-height:1.25}
+.c-k{opacity:.7;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-top:8px}
+.c-v{font-weight:600;font-size:15px;font-variant-numeric:tabular-nums;letter-spacing:.4px}
+.c-thumb{max-height:100%;max-width:44%;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.35);background:#fff;object-fit:contain}
+
+.empty{text-align:center;padding:60px 20px 20px;color:var(--muted)}
+.empty .big{font-size:56px;margin-bottom:12px}
+.empty h3{color:var(--text);margin:0 0 8px;font-size:22px}
+.empty p{margin:0 auto 22px;max-width:320px;font-size:15px}
+.btn{display:inline-block;background:var(--accent);color:#fff;font-weight:600;border-radius:12px;padding:13px 22px;text-align:center}
+.btn:active{opacity:.8}
+.none{color:var(--muted);text-align:center;padding:30px 10px;font-size:15px}
+
+/* overlays */
+.overlay{position:fixed;inset:0;z-index:20;display:none}
+.overlay.show{display:block}
+.sheet{background:rgba(0,0,0,.55)}
+.panel{position:absolute;left:0;right:0;bottom:0;max-height:calc(100% - var(--st) - 10px);overflow:auto;-webkit-overflow-scrolling:touch;background:var(--bg2);border-radius:14px 14px 0 0;padding:0 16px calc(var(--sb) + 28px);animation:up .28s cubic-bezier(.2,.8,.2,1);max-width:600px;margin:0 auto}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.bar{position:sticky;top:0;background:var(--bg2);display:flex;align-items:center;justify-content:space-between;padding:15px 0 12px;z-index:2}
+.bar .t{font-weight:600;position:absolute;left:50%;transform:translateX(-50%)}
+.link{color:var(--accent)}
+.link.b{font-weight:600}
+.red{color:var(--red)}
+.field{margin:0 0 16px}
+.field>label{display:block;font-size:13px;color:var(--muted);margin:0 4px 6px;text-transform:uppercase;letter-spacing:.4px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.files{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.file{display:flex;align-items:center;gap:10px;background:var(--bg3);border-radius:10px;padding:10px 12px;font-size:15px}
+.file .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file small{color:var(--muted)}
+.file button{color:var(--red);font-size:20px;line-height:1;padding:0 4px}
+.addfile{width:100%;background:var(--bg3);border-radius:10px;padding:13px;color:var(--accent);text-align:center;font-weight:600}
+.danger{width:100%;margin-top:10px;background:var(--bg3);border-radius:10px;padding:13px;color:var(--red);text-align:center}
+
+/* settings */
+.set h3{font-size:13px;text-transform:uppercase;color:var(--muted);letter-spacing:.5px;font-weight:500;margin:22px 14px 7px}
+.box{background:var(--bg3);border-radius:12px;overflow:hidden}
+.box>.row{display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:48px;width:100%;position:relative}
+.box>.row+.row::before{content:"";position:absolute;top:0;left:14px;right:0;border-top:.5px solid var(--line)}
+.row .grow{flex:1;min-width:0}
+.row small{display:block;color:var(--muted);font-size:13px}
+.dot{width:28px;height:28px;border-radius:50%;flex:none;border:2px solid rgba(255,255,255,.2)}
+.muted{color:var(--muted)}
+.foot{color:var(--muted);font-size:13px;margin:8px 14px 0;line-height:1.4}
+.sw{width:51px;height:31px;border-radius:16px;background:#39393d;position:relative;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.sw.on{background:var(--green)}
+.sw.on::after{left:22px}
+select.mini{width:auto;background-color:transparent;padding:4px 26px 4px 4px;color:var(--muted);background-position:right 6px center;text-align:right}
+
+/* viewer */
+#viewer{background:#000;flex-direction:column;z-index:30}
+#viewer.show{display:flex}
+.v-head{padding:calc(var(--st) + 6px) 12px 10px;display:flex;align-items:center;gap:8px;background:rgba(28,28,30,.94);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:.5px solid var(--line)}
+.v-titles{flex:1;min-width:0;padding:0 4px}
+.v-titles .a{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v-titles .b{font-size:13px;color:var(--muted)}
+#v-body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
+.v-info{position:sticky;left:0;width:100vw;max-width:100%;padding:12px 12px 0;display:flex;flex-wrap:wrap;gap:8px}
+#v-body.zoomed .v-info{max-width:none}
+.pill{background:var(--bg2);border-radius:10px;padding:8px 12px;font-size:15px;max-width:100%}
+.pill b{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:600;letter-spacing:.4px}
+.pill.note{white-space:pre-wrap;flex-basis:100%}
+#v-pages{padding:12px;display:flex;flex-direction:column;gap:12px;width:100%}
+#v-pages img.page{width:100%;display:block;border-radius:4px;background:#fff}
+.hint{color:var(--muted);font-size:12px;justify-content:center;padding:4px 0 calc(var(--sb) + 16px)}
+.spinner{width:28px;height:28px;border:3px solid var(--bg4);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin:60px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* lock */
+#lock{background:#000;z-index:60;flex-direction:column;align-items:center;justify-content:center;padding:calc(var(--st) + 20px) 24px calc(var(--sb) + 20px)}
+#lock.show{display:flex}
+#lock .lk{font-size:30px;margin-bottom:12px}
+#lock-title{font-size:20px;font-weight:500;text-align:center}
+#lock-msg{color:var(--muted);font-size:14px;min-height:20px;margin-top:6px;text-align:center}
+.dots{display:flex;gap:16px;margin:20px 0 34px}
+.dots i{width:13px;height:13px;border-radius:50%;border:1.5px solid #fff;transition:background .1s}
+.dots i.on{background:#fff}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-12px)}40%,80%{transform:translateX(12px)}}
+.keys{display:grid;grid-template-columns:repeat(3,78px);gap:16px 26px}
+.keys button{width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.14);font-size:34px;text-align:center;display:grid;place-items:center}
+.keys button:active{background:rgba(255,255,255,.4)}
+.keys button.ghost{background:none;font-size:16px}
+.keys button.ghost svg{width:34px;height:34px}
+
+#toast{position:fixed;left:50%;bottom:calc(var(--sb) + 28px);transform:translate(-50%,20px);background:rgba(58,58,60,.96);padding:11px 18px;border-radius:999px;font-size:15px;opacity:0;transition:.25s;z-index:80;pointer-events:none;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></g></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7.5 7.5L12 3l4.5 4.5"/><path d="M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2"/></g></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></g></symbol>
+  <symbol id="i-face" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M8.5 9v1.5M15.5 9v1.5M12 9v4h-1M9 16.5c1.8 1.3 4.2 1.3 6 0"/></g></symbol>
+  <symbol id="i-del" viewBox="0 0 24 24"><path d="M21 6H9l-6 6 6 6h12V6zM18 9l-6 6M12 9l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+</svg>
+
+<div id="app">
+  <div class="top">
+    <h1>Wallet</h1>
+    <div class="actions">
+      <button class="iconbtn" id="btn-settings" aria-label="Settings"><svg><use href="#i-gear"/></svg></button>
+      <button class="iconbtn" id="btn-add" aria-label="Add document"><svg><use href="#i-plus"/></svg></button>
+    </div>
+  </div>
+  <div class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" placeholder="Search documents" autocomplete="off"></div>
+  <div class="chips" id="chips"></div>
+  <div id="notices"></div>
+  <div id="list"></div>
+</div>
+
+<!-- viewer -->
+<div class="overlay" id="viewer">
+  <div class="v-head">
+    <button class="iconbtn" id="v-close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+    <div class="v-titles"><div class="a" id="v-title"></div><div class="b" id="v-sub"></div></div>
+    <button class="iconbtn" id="v-share" aria-label="Share or open in Files"><svg><use href="#i-share"/></svg></button>
+    <button class="iconbtn" id="v-edit" aria-label="Edit"><svg><use href="#i-edit"/></svg></button>
+  </div>
+  <div id="v-body">
+    <div class="v-info" id="v-info"></div>
+    <div id="v-pages"></div>
+    <div class="hint v-info" style="padding-top:0">Pinch or double-tap to zoom</div>
+  </div>
+</div>
+
+<!-- editor -->
+<div class="overlay sheet" id="editor">
+  <div class="panel">
+    <div class="bar"><button class="link" id="e-cancel">Cancel</button><span class="t" id="e-heading">New document</span><button class="link b" id="e-save">Save</button></div>
+    <div class="field"><label>Document</label>
+      <div class="files" id="e-files"></div>
+      <button class="addfile" id="e-pick">＋ Choose PDF or photo</button>
+      <input type="file" id="e-input" accept="application/pdf,image/*" multiple hidden>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="e-member">Belongs to</label><select id="e-member"></select></div>
+      <div class="field"><label for="e-type">Type</label><select id="e-type"></select></div>
+    </div>
+    <div class="field"><label for="e-title">Name on card</label><input id="e-title" placeholder="e.g. Passport" maxlength="60"></div>
+    <div class="row2">
+      <div class="field"><label for="e-number">Number</label><input id="e-number" placeholder="Optional" autocomplete="off" autocapitalize="characters"></div>
+      <div class="field"><label for="e-expiry">Expires</label><input id="e-expiry" type="date"></div>
+    </div>
+    <div class="field"><label for="e-notes">Notes</label><textarea id="e-notes" placeholder="Optional — issuer, policy phone number, etc."></textarea></div>
+    <button class="danger" id="e-delete" hidden>Delete document</button>
+  </div>
+</div>
+
+<!-- settings -->
+<div class="overlay sheet" id="settings">
+  <div class="panel set">
+    <div class="bar"><span></span><span class="t">Settings</span><button class="link b" id="s-done">Done</button></div>
+    <div id="s-body"></div>
+    <input type="file" id="s-import" accept="application/json,.json" hidden>
+  </div>
+</div>
+
+<!-- lock -->
+<div class="overlay" id="lock">
+  <div class="lk">🔒</div>
+  <div id="lock-title">Enter passcode</div>
+  <div id="lock-msg"></div>
+  <div class="dots" id="lock-dots"></div>
+  <div class="keys" id="lock-keys"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+'use strict';
+/* ---------- constants ---------- */
+const PIN_LEN = 6;
+const PDFJS = 'lib/pdf.min.js', PDFJS_WORKER = 'lib/pdf.worker.min.js';
+const PALETTE = [
+  ['#0a84ff','#5e5ce6'],['#ff375f','#ff9f0a'],['#30d158','#0a7d6a'],['#bf5af2','#5e5ce6'],
+  ['#ff9f0a','#d64a00'],['#64d2ff','#0a5bd6'],['#8e8e93','#3a3a3c'],['#e6b800','#a35f00'],['#ff6482','#a2195f']
+];
+const TYPES = [
+  {id:'id',label:'ID card',icon:'🪪'},
+  {id:'passport',label:'Passport',icon:'🛂'},
+  {id:'residence',label:'Residence permit',icon:'🏠'},
+  {id:'driving',label:'Driving licence',icon:'🚗'},
+  {id:'health',label:'Health card',icon:'🏥'},
+  {id:'medical',label:'Medical record',icon:'💊'},
+  {id:'insurance',label:'Insurance',icon:'🛡️'},
+  {id:'vehicle',label:'Vehicle papers',icon:'📋'},
+  {id:'travel',label:'Travel / tickets',icon:'✈️'},
+  {id:'education',label:'Certificates',icon:'🎓'},
+  {id:'other',label:'Other',icon:'📄'}
+];
+
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+const typeOf = id => TYPES.find(t => t.id === id) || TYPES[TYPES.length - 1];
+const member = id => S.members.find(m => m.id === id);
+const grad = c => { const [a, b] = PALETTE[(c || 0) % PALETTE.length]; return `linear-gradient(135deg,${a},${b})`; };
+const fmtDate = d => { try { return new Date(d + 'T00:00:00').toLocaleDateString(undefined, {day:'2-digit', month:'short', year:'numeric'}); } catch { return d; } };
+const fmtSize = n => n > 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB';
+const mask = n => { n = String(n || '').trim(); return n.length > 4 ? '•••• ' + n.slice(-4) : n; };
+const isPdf = f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name || '');
+function show(s) { $(s).classList.add('show'); }
+function hide(s) { $(s).classList.remove('show'); }
+let toastT;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2200); }
+function daysUntil(d) { const t = new Date(d + 'T00:00:00'); const n = new Date(); n.setHours(0,0,0,0); return Math.round((t - n) / 86400000); }
+function expiryState(d) {
+  if (!d) return null;
+  const n = daysUntil(d);
+  if (n < 0) return {cls:'red', text:'Expired'};
+  if (n === 0) return {cls:'amber', text:'Expires today'};
+  if (n <= 60) return {cls:'amber', text: n + (n === 1 ? ' day' : ' days')};
+  return null;
+}
+function abToB64(buf) { const u = new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); }
+function b64ToAb(b) { const s = atob(b); const u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u.buffer; }
+function rand(n) { return crypto.getRandomValues(new Uint8Array(n)); }
+async function sha(s) { const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(h)].map(b => b.toString(16).padStart(2, '0')).join(''); }
+function guessType(name) { return /\.pdf$/i.test(name) ? 'application/pdf' : /\.png$/i.test(name) ? 'image/png' : 'image/jpeg'; }
+
+/* ---------- storage (IndexedDB) ---------- */
+let db;
+function openDB() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('family-wallet', 1);
+    r.onupgradeneeded = () => {
+      const d = r.result;
+      d.createObjectStore('members', {keyPath:'id'});
+      d.createObjectStore('docs', {keyPath:'id'});
+      d.createObjectStore('files', {keyPath:'id'}).createIndex('docId', 'docId');
+      d.createObjectStore('kv', {keyPath:'key'});
+    };
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+function tx(store, mode, fn) {
+  return new Promise((res, rej) => {
+    const t = db.transaction(store, mode); const s = t.objectStore(store); let out;
+    const r = fn(s); if (r) r.onsuccess = () => { out = r.result; };
+    t.oncomplete = () => res(out); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error || new Error('Storage aborted'));
+  });
+}
+const getAll = s => tx(s, 'readonly', st => st.getAll());
+const put = (s, v) => tx(s, 'readwrite', st => st.put(v));
+const del = (s, k) => tx(s, 'readwrite', st => st.delete(k));
+const clearStore = s => tx(s, 'readwrite', st => st.clear());
+const kvGet = async k => { const r = await tx('kv', 'readonly', st => st.get(k)); return r ? r.value : undefined; };
+const kvSet = (k, v) => put('kv', {key:k, value:v});
+const kvDel = k => del('kv', k);
+async function getFiles(docId) {
+  const list = await tx('files', 'readonly', st => st.index('docId').getAll(docId));
+  return (list || []).sort((a, b) => (a.order || 0) - (b.order || 0));
+}
+
+/* ---------- state ---------- */
+const S = {members:[], docs:[], filter:'all', q:'', locked:false, hasPin:false, bioId:null, lockAfter:60000};
+async function load() {
+  S.members = (await getAll('members')).sort((a, b) => (a.order || 0) - (b.order || 0));
+  S.docs = await getAll('docs');
+  if (S.filter !== 'all' && !member(S.filter)) S.filter = 'all';
+}
+
+/* ---------- main render ---------- */
+function render() {
+  renderChips();
+  renderNotices();
+  const list = $('#list'); list.innerHTML = '';
+  if (!S.docs.length) {
+    list.innerHTML = `<div class="empty"><div class="big">🪪</div><h3>Add your first document</h3>
+      <p>Import IDs, passports and medical cards as PDF or photo. They're saved privately on this iPhone and open instantly — even offline.</p>
+      <button class="btn" id="empty-add">Add document</button></div>`;
+    $('#empty-add').onclick = () => openEditor();
+    return;
+  }
+  const q = S.q.trim().toLowerCase();
+  let docs = S.docs.filter(d => S.filter === 'all' || d.memberId === S.filter);
+  if (q) docs = docs.filter(d => [d.title, typeOf(d.type).label, member(d.memberId)?.name, d.number, d.notes].join(' ').toLowerCase().includes(q));
+  if (!docs.length) { list.append(el('p', 'none', q ? 'No documents match your search.' : 'No documents for this person yet.')); return; }
+  const order = d => TYPES.findIndex(t => t.id === d.type);
+  docs.sort((a, b) => order(a) - order(b) || (a.title || '').localeCompare(b.title || ''));
+  const groups = S.filter === 'all'
+    ? S.members.map(m => ({m, docs: docs.filter(d => d.memberId === m.id)})).filter(g => g.docs.length)
+    : [{m: member(S.filter), docs}];
+  const orphans = docs.filter(d => !member(d.memberId));
+  if (orphans.length && S.filter === 'all') groups.push({m:{name:'Unassigned', color:6}, docs:orphans});
+  for (const g of groups) {
+    const sec = el('section', 'group');
+    if (S.filter === 'all' && groups.length > 1) sec.append(el('h2', '', g.m.name));
+    else if (S.filter === 'all') sec.append(el('h2', '', g.m.name));
+    const st = el('div', q || g.docs.length === 1 ? 'stack open' : 'stack');
+    g.docs.forEach(d => st.append(cardEl(d)));
+    sec.append(st); list.append(sec);
+  }
+}
+function renderChips() {
+  const c = $('#chips'); c.innerHTML = '';
+  if (S.members.length < 2) { c.hidden = true; return; }
+  c.hidden = false;
+  const mk = (id, name, color) => {
+    const b = el('button', 'chip' + (S.filter === id ? ' on' : ''));
+    if (color != null) { const i = el('i'); i.style.background = grad(color); b.append(i); }
+    b.append(document.createTextNode(name));
+    b.onclick = () => { S.filter = id; render(); };
+    return b;
+  };
+  c.append(mk('all', 'All'));
+  S.members.forEach(m => c.append(mk(m.id, m.name, m.color)));
+}
+async function renderNotices() {
+  const box = $('#notices'); box.innerHTML = '';
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const standalone = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
+  if (ios && !standalone && !sessionStorage.getItem('hideInstall')) {
+    const n = el('div', 'notice');
+    n.innerHTML = `<span class="em">📲</span><div class="grow"><b>Install on Home Screen</b><small>Tap Share → Add to Home Screen, then open Wallet from the icon. Add documents there — Safari and the installed app keep separate storage.</small></div><button class="x" aria-label="Dismiss">✕</button>`;
+    n.querySelector('.x').onclick = () => { try { sessionStorage.setItem('hideInstall', 1); } catch {} n.remove(); };
+    box.append(n);
+  }
+  const attention = S.docs.filter(d => expiryState(d.expiry));
+  if (attention.length) {
+    const n = el('button', 'notice');
+    const names = attention.slice(0, 3).map(d => `${d.title || typeOf(d.type).label} (${member(d.memberId)?.name || '?'})`).join(', ');
+    n.innerHTML = `<span class="em">⚠️</span><div class="grow"><b>${attention.length} document${attention.length > 1 ? 's' : ''} expired or expiring soon</b><small>${esc(names)}${attention.length > 3 ? '…' : ''}</small></div>`;
+    n.onclick = () => openViewer(attention[0].id);
+    box.append(n);
+  }
+  if (S.docs.length) {
+    const last = await kvGet('lastBackup');
+    if (!last || Date.now() - last > 30 * 86400000) {
+      const n = el('button', 'notice');
+      n.innerHTML = `<span class="em">💾</span><div class="grow"><b>${last ? 'Time for a backup' : 'Make a backup'}</b><small>Documents live only in this app. Save a backup file to iCloud Drive or OneDrive.</small></div>`;
+      n.onclick = exportBackup;
+      box.append(n);
+    }
+  }
+}
+function cardEl(d) {
+  const m = member(d.memberId) || {name:'Unassigned', color:6};
+  const t = typeOf(d.type);
+  const exp = expiryState(d.expiry);
+  const b = el('button', 'card');
+  b.style.background = grad(m.color);
+  b.innerHTML = `<div class="c-top"><div class="c-head"><div class="c-title">${esc(d.title || t.label)}</div><div class="c-sub">${t.icon} ${esc(t.label)} · ${esc(m.name)}</div></div>${exp ? `<span class="badge ${exp.cls}">${exp.text}</span>` : ''}</div>
+    <div class="c-body"><div class="c-meta">${d.number ? `<div class="c-k">Number</div><div class="c-v">${esc(mask(d.number))}</div>` : ''}${d.expiry ? `<div class="c-k">Expires</div><div class="c-v">${esc(fmtDate(d.expiry))}</div>` : ''}</div>${d.thumb ? `<img class="c-thumb" src="${d.thumb}" alt="">` : ''}</div>`;
+  b.onclick = () => openViewer(d.id);
+  return b;
+}
+
+/* ---------- PDF rendering ---------- */
+let pdfjsReady;
+function loadPdfJs() {
+  if (window.pdfjsLib) return Promise.resolve();
+  if (!pdfjsReady) pdfjsReady = new Promise((res, rej) => {
+    const s = document.createElement('script'); s.src = PDFJS;
+    s.onload = () => { pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER; res(); };
+    s.onerror = () => { pdfjsReady = null; rej(new Error('PDF viewer could not load')); };
+    document.head.appendChild(s);
+  });
+  return pdfjsReady;
+}
+async function renderPage(page, width) {
+  const vp1 = page.getViewport({scale:1});
+  let scale = width / vp1.width;
+  const maxPx = 14e6; if (vp1.width * vp1.height * scale * scale > maxPx) scale = Math.sqrt(maxPx / (vp1.width * vp1.height));
+  const vp = page.getViewport({scale});
+  const c = document.createElement('canvas'); c.width = Math.floor(vp.width); c.height = Math.floor(vp.height);
+  const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+  await page.render({canvasContext:ctx, viewport:vp}).promise;
+  return c;
+}
+function canvasToBlob(c, q) { return new Promise(r => c.toBlob(r, 'image/jpeg', q)); }
+function loadImg(url) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('Image could not load')); i.src = url; }); }
+async function makeThumb(f) {
+  try {
+    let c;
+    if (isPdf(f)) {
+      await loadPdfJs();
+      const pdf = await pdfjsLib.getDocument({data:new Uint8Array(f.data.slice(0))}).promise;
+      c = await renderPage(await pdf.getPage(1), 420);
+      pdf.destroy();
+    } else {
+      const url = URL.createObjectURL(new Blob([f.data], {type:f.type}));
+      const img = await loadImg(url); URL.revokeObjectURL(url);
+      const w = 420, h = Math.round(img.naturalHeight * w / img.naturalWidth);
+      c = document.createElement('canvas'); c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+    }
+    const out = c.toDataURL('image/jpeg', 0.72); c.width = c.height = 0;
+    return out;
+  } catch (e) { console.warn('thumb', e); return null; }
+}
+
+/* ---------- viewer ---------- */
+const V = {doc:null, urls:[], zoom:1, token:0};
+async function openViewer(id) {
+  const d = S.docs.find(x => x.id === id); if (!d) return;
+  const token = ++V.token;
+  cleanupViewer(); V.doc = d; setZoom(1, true);
+  const m = member(d.memberId);
+  $('#v-title').textContent = d.title || typeOf(d.type).label;
+  $('#v-sub').textContent = `${typeOf(d.type).label}${m ? ' · ' + m.name : ''}`;
+  const info = $('#v-info'); info.innerHTML = '';
+  if (d.number) {
+    const p = el('button', 'pill selectable'); p.innerHTML = `<b>Number · tap to copy</b>${esc(d.number)}`;
+    p.onclick = async () => { try { await navigator.clipboard.writeText(d.number); toast('Number copied'); } catch { toast('Copy not available'); } };
+    info.append(p);
+  }
+  if (d.expiry) { const ex = expiryState(d.expiry); const p = el('div', 'pill'); p.innerHTML = `<b>Expires</b>${esc(fmtDate(d.expiry))}${ex ? ` <span class="badge ${ex.cls}" style="margin-left:6px">${ex.text}</span>` : ''}`; info.append(p); }
+  if (d.notes) { const p = el('div', 'pill note selectable'); p.innerHTML = `<b>Notes</b>${esc(d.notes)}`; info.append(p); }
+  const pages = $('#v-pages'); pages.innerHTML = '<div class="spinner"></div>';
+  $('#v-body').scrollTo(0, 0);
+  show('#viewer');
+  const files = await getFiles(id);
+  if (token !== V.token) return;
+  pages.innerHTML = '';
+  if (!files.length) { pages.append(el('p', 'none', 'No file attached.')); return; }
+  const width = Math.min(2200, Math.round(pages.clientWidth * (window.devicePixelRatio || 2) * 1.6));
+  for (const f of files) {
+    if (isPdf(f)) {
+      try {
+        await loadPdfJs();
+        const pdf = await pdfjsLib.getDocument({data:new Uint8Array(f.data.slice(0))}).promise;
+        for (let i = 1; i <= pdf.numPages; i++) {
+          if (token !== V.token) { pdf.destroy(); return; }
+          const c = await renderPage(await pdf.getPage(i), width);
+          const blob = await canvasToBlob(c, 0.9); c.width = c.height = 0;
+          addPageImg(URL.createObjectURL(blob));
+        }
+        pdf.destroy();
+      } catch (e) { console.warn(e); pages.append(el('p', 'none', `Couldn't display “${f.name}” here. Use the Share button to open it in Files.`)); }
+    } else {
+      addPageImg(URL.createObjectURL(new Blob([f.data], {type:f.type})));
+    }
+  }
+}
+function addPageImg(url) { V.urls.push(url); const img = el('img', 'page'); img.src = url; img.alt = ''; $('#v-pages').append(img); }
+function cleanupViewer() { V.urls.forEach(u => URL.revokeObjectURL(u)); V.urls = []; $('#v-pages').innerHTML = ''; }
+function closeViewer() { V.token++; hide('#viewer'); cleanupViewer(); V.doc = null; }
+function setZoom(z, reset) {
+  const body = $('#v-body'), pages = $('#v-pages');
+  z = Math.max(1, Math.min(5, z));
+  if (reset) { V.zoom = z; pages.style.width = '100%'; body.classList.remove('zoomed'); return; }
+  const r = z / V.zoom;
+  const cx = body.scrollLeft + body.clientWidth / 2, cy = body.scrollTop + body.clientHeight / 2;
+  V.zoom = z; pages.style.width = (z * 100) + '%';
+  body.classList.toggle('zoomed', z > 1);
+  body.scrollLeft = cx * r - body.clientWidth / 2;
+  body.scrollTop = cy * r - body.clientHeight / 2;
+}
+async function shareDoc() {
+  const d = V.doc; if (!d) return;
+  const files = (await getFiles(d.id)).map(f => new File([f.data], f.name, {type:f.type}));
+  if (!files.length) return toast('No file to share');
+  try {
+    if (navigator.canShare && navigator.canShare({files})) await navigator.share({files, title:d.title || typeOf(d.type).label});
+    else downloadFile(files[0]);
+  } catch (e) { if (e.name !== 'AbortError') downloadFile(files[0]); }
+}
+function downloadFile(file) {
+  const url = URL.createObjectURL(file); const a = el('a'); a.href = url; a.download = file.name;
+  document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+
+/* ---------- editor ---------- */
+let E = null;
+async function openEditor(id) {
+  const d = id ? S.docs.find(x => x.id === id) : null;
+  E = {id: d ? d.id : null, newFiles: [], removed: new Set(),
+       existing: d ? (await getFiles(d.id)).map(f => ({id:f.id, name:f.name, size:f.data.byteLength})) : []};
+  $('#e-heading').textContent = d ? 'Edit document' : 'New document';
+  fillMemberSelect(d ? d.memberId : (S.filter !== 'all' ? S.filter : S.members[0]?.id));
+  $('#e-type').innerHTML = TYPES.map(t => `<option value="${t.id}">${t.icon} ${esc(t.label)}</option>`).join('');
+  $('#e-type').value = d ? d.type : 'id';
+  $('#e-title').value = d ? (d.title || '') : '';
+  $('#e-title').placeholder = typeOf($('#e-type').value).label;
+  $('#e-number').value = d ? (d.number || '') : '';
+  $('#e-expiry').value = d ? (d.expiry || '') : '';
+  $('#e-notes').value = d ? (d.notes || '') : '';
+  $('#e-delete').hidden = !d;
+  renderEditorFiles();
+  $('#editor .panel').scrollTop = 0;
+  show('#editor');
+}
+function fillMemberSelect(selected) {
+  const s = $('#e-member');
+  s.innerHTML = S.members.map(m => `<option value="${m.id}">${esc(m.name)}</option>`).join('') + '<option value="__new">＋ Add person…</option>';
+  if (selected && member(selected)) s.value = selected;
+  s.dataset.prev = s.value;
+}
+function renderEditorFiles() {
+  const box = $('#e-files'); box.innerHTML = '';
+  const rows = [
+    ...E.existing.filter(f => !E.removed.has(f.id)).map(f => ({name:f.name, size:f.size, rm:() => E.removed.add(f.id)})),
+    ...E.newFiles.map((f, i) => ({name:f.name, size:f.size, rm:() => E.newFiles.splice(i, 1), isNew:true}))
+  ];
+  rows.forEach(r => {
+    const row = el('div', 'file');
+    row.innerHTML = `<span>${/\.pdf$/i.test(r.name) ? '📄' : '🖼️'}</span><div class="n">${esc(r.name)}<br><small>${fmtSize(r.size)}${r.isNew ? ' · new' : ''}</small></div><button aria-label="Remove">⊖</button>`;
+    row.querySelector('button').onclick = () => { r.rm(); renderEditorFiles(); };
+    box.append(row);
+  });
+  $('#e-pick').textContent = rows.length ? '＋ Add another page or file' : '＋ Choose PDF or photo';
+}
+async function saveDoc() {
+  const memberId = $('#e-member').value;
+  if (!member(memberId)) return toast('Choose who it belongs to');
+  const remaining = E.existing.filter(f => !E.removed.has(f.id));
+  if (!remaining.length && !E.newFiles.length && !confirm('Save without any file attached?')) return;
+  const btn = $('#e-save'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const id = E.id || uid(), now = Date.now();
+    const old = S.docs.find(x => x.id === id);
+    for (const fid of E.removed) await del('files', fid);
+    let i = 0;
+    for (const f of E.newFiles) {
+      const data = await f.arrayBuffer();
+      await put('files', {id:uid(), docId:id, name:f.name || 'document', type:f.type || guessType(f.name || ''), data, order:now + i++});
+    }
+    let thumb = old ? old.thumb : null;
+    if (!old || E.removed.size || !thumb) { const all = await getFiles(id); thumb = all.length ? await makeThumb(all[0]) : null; }
+    await put('docs', {
+      id, memberId, type: $('#e-type').value, title: $('#e-title').value.trim(),
+      number: $('#e-number').value.trim(), expiry: $('#e-expiry').value, notes: $('#e-notes').value.trim(),
+      thumb, created: old ? old.created : now, updated: now
+    });
+    await load(); render(); hide('#editor'); toast('Saved');
+    try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch {}
+    if (V.doc && V.doc.id === id) openViewer(id);
+  } catch (e) {
+    alert('Could not save: ' + (e.message || e) + (e.name === 'QuotaExceededError' ? '\nThe phone is out of space for this app.' : ''));
+  } finally { btn.disabled = false; btn.textContent = 'Save'; }
+}
+async function deleteDoc() {
+  if (!E.id || !confirm('Delete this document from the wallet?')) return;
+  for (const f of await getFiles(E.id)) await del('files', f.id);
+  await del('docs', E.id);
+  await load(); hide('#editor'); closeViewer(); render(); toast('Deleted');
+}
+async function addMember(name) {
+  name = (name || '').trim(); if (!name) return null;
+  const m = {id:uid(), name:name.slice(0, 30), color:S.members.length % PALETTE.length, order:Date.now()};
+  await put('members', m); await load(); render(); return m;
+}
+
+/* ---------- settings ---------- */
+async function openSettings() { await renderSettings(); $('#settings .panel').scrollTop = 0; show('#settings'); }
+async function renderSettings() {
+  S.hasPin = !!(await kvGet('pinHash'));
+  S.bioId = (await kvGet('bioId')) || null;
+  const last = await kvGet('lastBackup');
+  let usage = '—', persisted = false;
+  try { const e = await navigator.storage.estimate(); usage = fmtSize(e.usage || 0); } catch {}
+  try { persisted = await navigator.storage.persisted(); } catch {}
+  const count = id => S.docs.filter(d => d.memberId === id).length;
+  const opts = [[0,'Immediately'],[60000,'After 1 minute'],[300000,'After 5 minutes'],[900000,'After 15 minutes']];
+  $('#s-body').innerHTML = `
+    <h3>People</h3>
+    <div class="box">
+      ${S.members.map(m => `<div class="row">
+        <button class="dot" data-act="color" data-id="${m.id}" style="background:${grad(m.color)}" aria-label="Change colour"></button>
+        <button class="grow" data-act="rename" data-id="${m.id}">${esc(m.name)}<small>${count(m.id)} document${count(m.id) === 1 ? '' : 's'} · tap to rename</small></button>
+        <button class="red" data-act="delmember" data-id="${m.id}">Remove</button></div>`).join('')}
+      <button class="row link" data-act="addmember">＋ Add person</button>
+    </div>
+    <p class="foot">Tap the coloured dot to change a person's card colour.</p>
+    <h3>Security</h3>
+    <div class="box">
+      <div class="row"><span class="grow">Passcode lock</span><button class="sw ${S.hasPin ? 'on' : ''}" data-act="pin" aria-label="Passcode lock"></button></div>
+      ${S.hasPin ? `
+      <div class="row"><span class="grow">Unlock with Face ID</span><button class="sw ${S.bioId ? 'on' : ''}" data-act="bio" aria-label="Face ID"></button></div>
+      <div class="row"><span class="grow">Require passcode</span><select class="mini" data-act="lockafter">${opts.map(([v, l]) => `<option value="${v}" ${v === S.lockAfter ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <button class="row link" data-act="changepin">Change passcode</button>` : ''}
+    </div>
+    <p class="foot">The lock keeps the app private if someone picks up your unlocked phone. Files are protected by your iPhone's own encryption.</p>
+    <h3>Backup</h3>
+    <div class="box">
+      <button class="row link" data-act="export">Export backup…</button>
+      <button class="row link" data-act="import">Restore from backup…</button>
+    </div>
+    <p class="foot">Last backup: ${last ? new Date(last).toLocaleString() : 'never'}. Documents are stored only inside this app — if you delete the Home Screen icon they're gone. Keep a backup in iCloud Drive or OneDrive.</p>
+    <h3>Storage</h3>
+    <div class="box">
+      <div class="row"><span class="grow">Space used</span><span class="muted">${usage}</span></div>
+      <div class="row"><span class="grow">${S.docs.length} documents · ${S.members.length} people</span></div>
+    </div>
+    <h3></h3>
+    <div class="box"><button class="row red" data-act="erase">Erase all data on this device</button></div>
+    <p class="foot">Family Wallet 1.0${persisted ? ' · storage protected' : ''}</p>`;
+}
+async function settingsAction(act, id, target) {
+  const m = id ? member(id) : null;
+  switch (act) {
+    case 'addmember': { const n = prompt('Name (e.g. Me, Anna, Luka)'); if (await addMember(n)) renderSettings(); break; }
+    case 'rename': { const n = prompt('Rename', m.name); if (n && n.trim()) { m.name = n.trim().slice(0, 30); await put('members', m); await load(); render(); renderSettings(); } break; }
+    case 'color': { m.color = ((m.color || 0) + 1) % PALETTE.length; await put('members', m); await load(); render(); renderSettings(); break; }
+    case 'delmember': {
+      if (S.docs.some(d => d.memberId === id)) return alert(`${m.name} still has documents. Move them to someone else (Edit → Belongs to) or delete them first.`);
+      if (S.members.length === 1) return alert('Keep at least one person.');
+      if (confirm(`Remove ${m.name}?`)) { await del('members', id); await load(); render(); renderSettings(); }
+      break;
+    }
+    case 'pin': S.hasPin ? await disablePin() : await setPasscode(); renderSettings(); break;
+    case 'changepin': if (await pinPad('verify', 'Enter current passcode')) await setPasscode(); renderSettings(); break;
+    case 'bio': S.bioId ? (await kvDel('bioId'), S.bioId = null, toast('Face ID unlock off')) : await enableBio(); renderSettings(); break;
+    case 'lockafter': S.lockAfter = +target.value; await kvSet('lockAfter', S.lockAfter); break;
+    case 'export': exportBackup(); break;
+    case 'import': $('#s-import').click(); break;
+    case 'erase':
+      if (!confirm('Erase ALL documents, people and settings from this device?')) return;
+      if (!confirm('Are you sure? This cannot be undone unless you have a backup.')) return;
+      for (const s of ['members', 'docs', 'files', 'kv']) await clearStore(s);
+      location.reload();
+      break;
+  }
+}
+
+/* ---------- backup ---------- */
+async function exportBackup() {
+  try {
+    toast('Preparing backup…');
+    const files = await getAll('files');
+    const parts = ['{"app":"family-wallet","version":1,"exported":', JSON.stringify(new Date().toISOString()),
+      ',"members":', JSON.stringify(S.members), ',"docs":', JSON.stringify(S.docs), ',"files":['];
+    files.forEach((f, i) => {
+      const meta = JSON.stringify({id:f.id, docId:f.docId, name:f.name, type:f.type, order:f.order});
+      parts.push((i ? ',' : '') + meta.slice(0, -1) + ',"data":"' + abToB64(f.data) + '"}');
+    });
+    parts.push(']}');
+    const name = `family-wallet-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    const file = new File(parts, name, {type:'application/json'});
+    let done = false;
+    if (navigator.canShare && navigator.canShare({files:[file]})) {
+      try { await navigator.share({files:[file], title:name}); done = true; }
+      catch (e) { if (e.name === 'AbortError') return; }
+    }
+    if (!done) downloadFile(file);
+    await kvSet('lastBackup', Date.now());
+    render(); if ($('#settings').classList.contains('show')) renderSettings();
+    toast('Backup ready — choose “Save to Files”');
+  } catch (e) { alert('Backup failed: ' + (e.message || e)); }
+}
+async function importBackup(file) {
+  try {
+    const data = JSON.parse(await file.text());
+    if (data.app !== 'family-wallet') throw new Error('This is not a Family Wallet backup file.');
+    if (!confirm(`Restore ${data.docs.length} documents and ${data.members.length} people from this backup?\nItems already here are kept; matching ones are replaced.`)) return;
+    toast('Restoring…');
+    for (const m of data.members) await put('members', m);
+    for (const d of data.docs) await put('docs', d);
+    for (const f of data.files) await put('files', {...f, data:b64ToAb(f.data)});
+    await load(); render(); renderSettings(); toast('Backup restored');
+  } catch (e) { alert('Restore failed: ' + (e.message || e)); }
+}
+
+/* ---------- lock ---------- */
+const PIN = {mode:null, entry:'', resolve:null, busy:false};
+function drawDots() { $('#lock-dots').innerHTML = Array.from({length:PIN_LEN}, (_, i) => `<i class="${i < PIN.entry.length ? 'on' : ''}"></i>`).join(''); }
+function buildKeys() {
+  const k = $('#lock-keys'); k.innerHTML = '';
+  ['1','2','3','4','5','6','7','8','9','left','0','back'].forEach(v => {
+    const b = el('button');
+    if (v === 'left') { b.className = 'ghost'; b.id = 'lock-left'; }
+    else if (v === 'back') { b.className = 'ghost'; b.innerHTML = '<svg><use href="#i-del"/></svg>'; b.setAttribute('aria-label', 'Delete'); b.onclick = () => { PIN.entry = PIN.entry.slice(0, -1); drawDots(); }; }
+    else { b.textContent = v; b.onclick = () => pinKey(v); }
+    k.append(b);
+  });
+}
+function pinPad(mode, title, msg) {
+  return new Promise(res => {
+    PIN.mode = mode; PIN.entry = ''; PIN.resolve = res;
+    $('#lock-title').textContent = title; $('#lock-msg').textContent = msg || '';
+    const left = $('#lock-left');
+    if (mode === 'unlock' && S.bioId) { left.innerHTML = '<svg><use href="#i-face"/></svg>'; left.setAttribute('aria-label', 'Face ID'); left.onclick = bioUnlock; left.style.visibility = 'visible'; }
+    else if (mode !== 'unlock') { left.textContent = 'Cancel'; left.onclick = () => finishPin(null); left.style.visibility = 'visible'; }
+    else { left.style.visibility = 'hidden'; left.onclick = null; }
+    drawDots(); show('#lock');
+  });
+}
+function finishPin(val) { hide('#lock'); const r = PIN.resolve; PIN.resolve = null; PIN.mode = null; if (r) r(val); }
+function wrongPin() {
+  const d = $('#lock-dots'); d.classList.remove('shake'); void d.offsetWidth; d.classList.add('shake');
+  if (navigator.vibrate) navigator.vibrate(80);
+  $('#lock-msg').textContent = 'Wrong passcode';
+  setTimeout(() => { PIN.entry = ''; drawDots(); }, 350);
+}
+async function pinKey(v) {
+  if (PIN.busy || PIN.entry.length >= PIN_LEN) return;
+  PIN.entry += v; drawDots();
+  if (PIN.entry.length < PIN_LEN) return;
+  PIN.busy = true;
+  try {
+    if (PIN.mode === 'set') { const e = PIN.entry; setTimeout(() => finishPin(e), 120); return; }
+    const ok = (await sha((await kvGet('pinSalt')) + PIN.entry)) === (await kvGet('pinHash'));
+    if (ok) setTimeout(() => finishPin(true), 80); else wrongPin();
+  } finally { PIN.busy = false; }
+}
+async function setPasscode() {
+  const a = await pinPad('set', `Choose a ${PIN_LEN}-digit passcode`); if (!a) return false;
+  const b = await pinPad('set', 'Enter it again'); if (!b) return false;
+  if (a !== b) { toast("Passcodes didn't match"); return false; }
+  const salt = uid();
+  await kvSet('pinSalt', salt); await kvSet('pinHash', await sha(salt + a));
+  S.hasPin = true; toast('Passcode set'); return true;
+}
+async function disablePin() {
+  if (!(await pinPad('verify', 'Enter passcode to turn off'))) return;
+  await kvDel('pinHash'); await kvDel('pinSalt'); await kvDel('bioId');
+  S.hasPin = false; S.bioId = null; toast('Passcode lock off');
+}
+async function enableBio() {
+  if (!window.PublicKeyCredential) return alert('Face ID unlock is not available here. Open Wallet from the Home Screen icon on your iPhone.');
+  try {
+    const cred = await navigator.credentials.create({publicKey:{
+      challenge:rand(32), rp:{name:'Family Wallet', id:location.hostname},
+      user:{id:rand(16), name:'Family Wallet unlock', displayName:'Family Wallet'},
+      pubKeyCredParams:[{type:'public-key', alg:-7}, {type:'public-key', alg:-257}],
+      authenticatorSelection:{authenticatorAttachment:'platform', userVerification:'required', residentKey:'discouraged'},
+      timeout:60000, attestation:'none'}});
+    S.bioId = abToB64(cred.rawId); await kvSet('bioId', S.bioId); toast('Face ID unlock on');
+  } catch (e) { if (e.name !== 'NotAllowedError') alert('Face ID could not be set up: ' + (e.message || e.name)); }
+}
+async function bioUnlock() {
+  if (!S.bioId || PIN.mode !== 'unlock') return;
+  try {
+    await navigator.credentials.get({publicKey:{challenge:rand(32), allowCredentials:[{type:'public-key', id:b64ToAb(S.bioId)}], userVerification:'required', timeout:60000}});
+    finishPin(true);
+  } catch (e) { $('#lock-msg').textContent = 'Use your passcode'; }
+}
+async function lockApp() {
+  if (S.locked) return;
+  S.locked = true; document.body.classList.add('locked');
+  const p = pinPad('unlock', 'Enter passcode');
+  if (S.bioId) setTimeout(bioUnlock, 250);
+  await p;
+  S.locked = false; document.body.classList.remove('locked');
+}
+
+/* ---------- wiring ---------- */
+function bindUI() {
+  buildKeys();
+  $('#btn-add').onclick = () => openEditor();
+  $('#btn-settings').onclick = openSettings;
+  $('#q').oninput = e => { S.q = e.target.value; render(); };
+  $('#v-close').onclick = closeViewer;
+  $('#v-edit').onclick = () => openEditor(V.doc.id);
+  $('#v-share').onclick = shareDoc;
+  $('#e-cancel').onclick = () => hide('#editor');
+  $('#e-save').onclick = saveDoc;
+  $('#e-delete').onclick = deleteDoc;
+  $('#e-pick').onclick = () => $('#e-input').click();
+  $('#e-input').onchange = e => {
+    const files = [...e.target.files]; e.target.value = '';
+    E.newFiles.push(...files); renderEditorFiles();
+    if (!$('#e-title').value && files[0] && E.existing.length === 0 && E.newFiles.length === files.length) {
+      const base = files[0].name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim();
+      if (base && !/^(img|image|scan|document|photo)\s*\d*$/i.test(base)) $('#e-title').value = base.slice(0, 60);
+    }
+  };
+  $('#e-type').onchange = e => { $('#e-title').placeholder = typeOf(e.target.value).label; };
+  $('#e-member').onchange = async e => {
+    if (e.target.value !== '__new') { e.target.dataset.prev = e.target.value; return; }
+    const m = await addMember(prompt('Name of the person'));
+    fillMemberSelect(m ? m.id : e.target.dataset.prev);
+  };
+  $('#s-done').onclick = () => hide('#settings');
+  $('#s-body').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && b.tagName !== 'SELECT') settingsAction(b.dataset.act, b.dataset.id, b); });
+  $('#s-body').addEventListener('change', e => { const b = e.target.closest('select[data-act]'); if (b) settingsAction(b.dataset.act, null, b); });
+  $('#s-import').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) importBackup(f); };
+  document.querySelectorAll('.sheet').forEach(s => s.addEventListener('click', e => { if (e.target === s) hide('#' + s.id); }));
+
+  // zoom in viewer
+  const vb = $('#v-body'); let z0 = 1, lastTap = 0;
+  vb.addEventListener('gesturestart', e => { e.preventDefault(); z0 = V.zoom; });
+  vb.addEventListener('gesturechange', e => { e.preventDefault(); setZoom(z0 * e.scale); });
+  vb.addEventListener('gestureend', e => e.preventDefault());
+  $('#v-pages').addEventListener('click', () => { const t = Date.now(); if (t - lastTap < 320) { setZoom(V.zoom > 1.2 ? 1 : 2.5); lastTap = 0; } else lastTap = t; });
+  // stop whole-page pinch zoom elsewhere (keeps the app feel)
+  document.addEventListener('gesturestart', e => { if (!e.target.closest('#v-body')) e.preventDefault(); });
+
+  // auto-lock + privacy blur in app switcher
+  let hiddenAt = 0;
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { hiddenAt = Date.now(); if (S.hasPin) document.body.classList.add('privacy'); }
+    else {
+      if (S.hasPin && !S.locked && Date.now() - hiddenAt >= S.lockAfter) lockApp();
+      document.body.classList.remove('privacy');
+    }
+  });
+  window.addEventListener('pagehide', () => { if (S.hasPin) document.body.classList.add('privacy'); });
+}
+
+async function init() {
+  try { db = await openDB(); }
+  catch (e) { document.body.innerHTML = '<p class="none" style="padding:60px 20px">This browser blocked local storage, so the wallet can\'t run. On iPhone, open it in Safari (not Private mode).</p>'; return; }
+  await load();
+  if (!S.members.length) { await put('members', {id:uid(), name:'Me', color:0, order:0}); await load(); }
+  S.hasPin = !!(await kvGet('pinHash'));
+  S.bioId = (await kvGet('bioId')) || null;
+  const la = await kvGet('lockAfter'); if (la != null) S.lockAfter = la;
+  bindUI();
+  if (S.hasPin) lockApp();
+  render();
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+init();
+</script>
+</body>
+</html>
