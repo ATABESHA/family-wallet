@@ -1,10 +1,10 @@
 // Family Wallet service worker — makes the app open offline.
 // Your documents are NOT here; they live in the app's private IndexedDB storage.
-const CACHE = 'family-wallet-v1';
+const CACHE = 'family-wallet-v2';
 const CORE = [
   './', './index.html', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './apple-touch-icon.png',
-  './lib/pdf.min.js', './lib/pdf.worker.min.js'
+  './pdf.min.js', './pdf.worker.min.js'
 ];
 
 self.addEventListener('install', e => {
