@@ -1,10 +1,11 @@
 // Family Wallet service worker — makes the app open offline.
 // Your documents are NOT here; they live in the app's private IndexedDB storage.
-const CACHE = 'family-wallet-v6';
+const CACHE = 'family-wallet-v7';
 const CORE = [
   './', './index.html', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './apple-touch-icon.png',
-  './pdf.min.js', './pdf.worker.min.js'
+  './pdf.min.js', './pdf.worker.min.js',
+  './finances.html'
 ];
 
 self.addEventListener('install', e => {
@@ -23,12 +24,12 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
 
-  // The page itself: try the network first so updates arrive, fall back to cache offline.
+  // Pages (wallet, finances): network first so updates arrive; each page is cached under its own URL.
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req)
-        .then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put('./index.html', copy)); return res; })
-        .catch(() => caches.match('./index.html'))
+        .then(res => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); } return res; })
+        .catch(() => caches.match(req, { ignoreSearch: true }).then(hit => hit || caches.match('./index.html')))
     );
     return;
   }
