@@ -186,7 +186,7 @@ en:{
   monthlyAvg:'Monthly commitments (average)',dueIn:'Due in {m}',stillMonth:'Still to pay this month ({n})',
   next12:'Next 12 months',leftFixed:'Left to pay (fixed-term)',active:'Active payments',
   whereGoes:'Where it goes',perMonth:'per month',actualDates:'actual due dates',
-  upcoming:'Upcoming',next30:'next 30 days',nothing30:'Nothing due in the next 30 days.',
+  upcoming:'Upcoming',next25:'next 25 days',nothing25:'Nothing due in the next 25 days.',
   progress:'Progress',fixedTerm:'fixed-term payments',leftEnds:'{n} left · ends {d}',pctPaid:'{p}% paid',
   byMethod:'By payment method',noMethod:'Not set',loans:'Loans',pendingCapital:'Pending capital',interestLeft:'Interest left',
   insuranceLeft:'Insurance left',saved:'{n} saved',finishedOn:'Finished {d}',leftUntil:'{n} left · until {d}',
@@ -245,7 +245,7 @@ es:{
   monthlyAvg:'Compromisos mensuales (media)',dueIn:'A pagar en {m}',stillMonth:'Pendiente este mes ({n})',
   next12:'Próximos 12 meses',leftFixed:'Pendiente (a plazo)',active:'Pagos activos',
   whereGoes:'A dónde va',perMonth:'al mes',actualDates:'fechas reales',
-  upcoming:'Próximos pagos',next30:'próximos 30 días',nothing30:'Nada pendiente en los próximos 30 días.',
+  upcoming:'Próximos pagos',next25:'próximos 25 días',nothing25:'Nada pendiente en los próximos 25 días.',
   progress:'Progreso',fixedTerm:'pagos a plazo',leftEnds:'Quedan {n} · fin {d}',pctPaid:'{p}% pagado',
   byMethod:'Por método de pago',noMethod:'Sin asignar',loans:'Préstamos',pendingCapital:'Capital pendiente',interestLeft:'Intereses pendientes',
   insuranceLeft:'Seguro pendiente',saved:'{n} guardados',finishedOn:'Terminado {d}',leftUntil:'Quedan {n} · hasta {d}',
@@ -304,7 +304,7 @@ ka:{
   monthlyAvg:'ყოველთვიური ვალდებულებები (საშუალო)',dueIn:'გადასახდელი: {m}',stillMonth:'ამ თვეში დარჩა ({n})',
   next12:'მომდევნო 12 თვე',leftFixed:'დარჩენილი (ვადიანი)',active:'აქტიური გადახდები',
   whereGoes:'ხარჯების განაწილება',perMonth:'თვეში',actualDates:'რეალური თარიღებით',
-  upcoming:'მოახლოებული',next30:'მომდევნო 30 დღე',nothing30:'მომდევნო 30 დღეში გადასახდელი არაფერია.',
+  upcoming:'მოახლოებული',next25:'მომდევნო 25 დღე',nothing25:'მომდევნო 25 დღეში გადასახდელი არაფერია.',
   progress:'პროგრესი',fixedTerm:'ვადიანი გადახდები',leftEnds:'დარჩა {n} · მთავრდება {d}',pctPaid:'{p}% გადახდილი',
   byMethod:'გადახდის მეთოდის მიხედვით',noMethod:'არ არის მითითებული',loans:'სესხები',pendingCapital:'დარჩენილი ძირი',interestLeft:'დარჩენილი პროცენტი',
   insuranceLeft:'დარჩენილი დაზღვევა',saved:'შენახულია {n}',finishedOn:'დასრულდა {d}',leftUntil:'დარჩა {n} · {d}-მდე',
@@ -689,7 +689,7 @@ function dashViewCur(curs){
     ${insl?`<div class="kv"><span>${t('insuranceLeft')}</span><b>${money(insl)}</b></div>`:''}</div></div>`}
 
   // upcoming (grouped per item+date)
-  const upMap={};items.forEach(p=>events(p,tt,addDays(tt,30)).forEach(e=>{const k=p.id+'|'+iso(e.d);(upMap[k]=upMap[k]||{p,d:e.d,amt:0}).amt+=e.amt}));
+  const upMap={};items.forEach(p=>events(p,tt,addDays(tt,25)).forEach(e=>{const k=p.id+'|'+iso(e.d);(upMap[k]=upMap[k]||{p,d:e.d,amt:0}).amt+=e.amt}));
   const up=Object.values(upMap).sort((a,b)=>a.d-b.d);
   h+=`<div class="card"><h2>${t('upcoming')} <small>${t('next30')} · ${money0(up.reduce((a,u)=>a+u.amt,0))}</small></h2><div class="list">`+
    (up.length?up.slice(0,12).map(u=>{const c=catOf(u.p);return `<button class="it" data-act="open" data-id="${u.p.id}">${icBox(c)}
