@@ -182,7 +182,7 @@ svg.chart{width:100%;height:auto;display:block}
    ===================================================================== */
 const T={
 en:{
-  langName:'English',paidWord:'paid',overview:'Overview',payments:'Payments',settings:'Settings',language:'Language',
+  langName:'English',m_simple:'Fixed payment (no calculation)',m_french:'French — equal payments',m_german:'German — equal capital',m_american:'American — interest only',m_flat:'Flat interest (on initial amount)',mh_simple:'No interest calculation: just enter what you pay.',mh_german:'German system: you repay the same part of capital every period; the payment falls over time because interest shrinks.',mh_american:'American system: you pay only interest each period and the whole capital is repaid with the last payment.',mh_flat:'Flat interest: interest is always charged on the initial amount, so the payment is constant but the real cost is higher than with the French system.',calcMethodLbl:'Calculation',payment1:'1st payment',pvVar:'1st payment <b>{a}</b> → last <b>{b}</b> · {n} payments · total interest <b>{i}</b>',extras:'Early repayments',addExtra:'+ Add early repayment',extraTitle:'Early repayment',month:'Month',xMode:'Effect',xReduceTerm:'Shorter term',xReducePay:'Lower payment',xTermRes:'Ends <b>{d}</b> instead of {d0} · {k} fewer payments · saves <b>{i}</b> in interest',xPayRes:'New payment ≈ <b>{a}</b> (was {b}) · saves <b>{i}</b> in interest',xAmerRes:'Interest drops · saves <b>{i}</b>',xNoFlat:'Early repayments are not available with flat interest.',xOutside:'That month is outside the loan schedule.',savedInt:'Early repayments save {i} in interest · ends {d} instead of {d0}.',extraRow:'Early repayment',xHint:'Applied right after that month\'s installment.',extraLbl:'Early repayment',confirmRmExtra:'Remove this early repayment?',noExtras:'None yet. Add one when you pay off part of the loan early.',paidWord:'paid',overview:'Overview',payments:'Payments',settings:'Settings',language:'Language',
   monthlyAvg:'Monthly commitments (average)',dueIn:'Due in {m}',stillMonth:'Still to pay this month ({n})',
   next12:'Next 12 months',leftFixed:'Left to pay (fixed-term)',active:'Active payments',
   whereGoes:'Where it goes',perMonth:'per month',actualDates:'actual due dates',
@@ -241,7 +241,7 @@ en:{
   sm_car:'Car loan',sm_mort:'Mortgage',sm_home:'Home insurance',sm_health:'Health insurance',sm_park:'Parking space',sm_phone:'Phone & internet',sm_stream:'Streaming',sm_card:'Bank card',sm_acc:'Bank account'
 },
 es:{
-  langName:'Español',paidWord:'pagado',overview:'Resumen',payments:'Pagos',settings:'Ajustes',language:'Idioma',
+  langName:'Español',m_simple:'Cuota fija (sin cálculo)',m_french:'Francés — cuota constante',m_german:'Alemán — amortización constante',m_american:'Americano — solo intereses',m_flat:'Interés plano (sobre el inicial)',mh_simple:'Sin cálculo de intereses: introduce la cuota que pagas.',mh_german:'Sistema alemán: amortizas la misma parte de capital cada mes; la cuota baja con el tiempo porque los intereses disminuyen.',mh_american:'Sistema americano: cada mes pagas solo intereses y todo el capital se devuelve en la última cuota.',mh_flat:'Interés plano: el interés se calcula siempre sobre el importe inicial, así que la cuota es fija pero el coste real es mayor que con el sistema francés.',calcMethodLbl:'Cálculo',payment1:'1ª cuota',pvVar:'1ª cuota <b>{a}</b> → última <b>{b}</b> · {n} cuotas · intereses totales <b>{i}</b>',extras:'Amortizaciones anticipadas',addExtra:'+ Añadir amortización anticipada',extraTitle:'Amortización anticipada',month:'Mes',xMode:'Efecto',xReduceTerm:'Reducir plazo',xReducePay:'Reducir cuota',xTermRes:'Termina el <b>{d}</b> en vez del {d0} · {k} cuotas menos · ahorras <b>{i}</b> en intereses',xPayRes:'Nueva cuota ≈ <b>{a}</b> (antes {b}) · ahorras <b>{i}</b> en intereses',xAmerRes:'Bajan los intereses · ahorras <b>{i}</b>',xNoFlat:'Con interés plano no se pueden añadir amortizaciones anticipadas.',xOutside:'Ese mes está fuera del calendario del préstamo.',savedInt:'Las amortizaciones te ahorran {i} en intereses · termina el {d} en vez del {d0}.',extraRow:'Amort. anticipada',xHint:'Se aplica justo después de la cuota de ese mes.',extraLbl:'Amortización',confirmRmExtra:'¿Quitar esta amortización?',noExtras:'Ninguna todavía. Añade una cuando adelantes parte del préstamo.',paidWord:'pagado',overview:'Resumen',payments:'Pagos',settings:'Ajustes',language:'Idioma',
   monthlyAvg:'Compromisos mensuales (media)',dueIn:'A pagar en {m}',stillMonth:'Pendiente este mes ({n})',
   next12:'Próximos 12 meses',leftFixed:'Pendiente (a plazo)',active:'Pagos activos',
   whereGoes:'A dónde va',perMonth:'al mes',actualDates:'fechas reales',
@@ -300,7 +300,7 @@ es:{
   sm_car:'Préstamo coche',sm_mort:'Hipoteca',sm_home:'Seguro hogar',sm_health:'Seguro médico',sm_park:'Plaza de parking',sm_phone:'Móvil e internet',sm_stream:'Streaming',sm_card:'Tarjeta',sm_acc:'Cuenta bancaria'
 },
 ka:{
-  langName:'ქართული',paidWord:'გადახდილი',overview:'მიმოხილვა',payments:'გადახდები',settings:'პარამეტრები',language:'ენა',
+  langName:'ქართული',m_simple:'ფიქსირებული (გამოთვლის გარეშე)',m_french:'ფრანგული — თანაბარი შენატანი',m_german:'გერმანული — თანაბარი ძირი',m_american:'ამერიკული — მხოლოდ პროცენტი',m_flat:'ფიქსირებული % (საწყის თანხაზე)',mh_simple:'პროცენტის გამოთვლის გარეშე: შეიყვანეთ თქვენი შენატანი.',mh_german:'გერმანული სისტემა: ყოველ პერიოდში იფარება ძირის თანაბარი ნაწილი; შენატანი დროთა განმავლობაში მცირდება, რადგან პროცენტი კლებულობს.',mh_american:'ამერიკული სისტემა: ყოველ პერიოდში იხდით მხოლოდ პროცენტს, ხოლო მთელი ძირი ბრუნდება ბოლო შენატანით.',mh_flat:'ფიქსირებული პროცენტი: პროცენტი ყოველთვის საწყის თანხაზე ითვლება, ამიტომ შენატანი თანაბარია, მაგრამ რეალური ღირებულება ფრანგულზე მაღალია.',calcMethodLbl:'გამოთვლა',payment1:'1-ლი შენატანი',pvVar:'1-ლი შენატანი <b>{a}</b> → ბოლო <b>{b}</b> · {n} შენატანი · სულ პროცენტი <b>{i}</b>',extras:'წინსწრებით დაფარვა',addExtra:'+ წინსწრებით დაფარვის დამატება',extraTitle:'წინსწრებით დაფარვა',month:'თვე',xMode:'შედეგი',xReduceTerm:'ვადის შემცირება',xReducePay:'შენატანის შემცირება',xTermRes:'დასრულდება <b>{d}</b> ({d0}-ის ნაცვლად) · {k} შენატანით ნაკლები · დაზოგავთ <b>{i}</b> პროცენტს',xPayRes:'ახალი შენატანი ≈ <b>{a}</b> (იყო {b}) · დაზოგავთ <b>{i}</b> პროცენტს',xAmerRes:'პროცენტი მცირდება · დაზოგავთ <b>{i}</b>',xNoFlat:'ფიქსირებული პროცენტით წინსწრებით დაფარვა მიუწვდომელია.',xOutside:'ეს თვე სესხის გრაფიკის გარეთაა.',savedInt:'წინსწრებით დაფარვა ზოგავს {i} პროცენტს · დასრულდება {d} ({d0}-ის ნაცვლად).',extraRow:'წინსწრ. დაფარვა',xHint:'გამოიყენება ამ თვის შენატანის შემდეგ.',extraLbl:'წინსწრ. დაფარვა',confirmRmExtra:'წავშალოთ ეს დაფარვა?',noExtras:'ჯერ არ არის. დაამატეთ, როცა სესხის ნაწილს ვადამდე დაფარავთ.',paidWord:'გადახდილი',overview:'მიმოხილვა',payments:'გადახდები',settings:'პარამეტრები',language:'ენა',
   monthlyAvg:'ყოველთვიური ვალდებულებები (საშუალო)',dueIn:'გადასახდელი: {m}',stillMonth:'ამ თვეში დარჩა ({n})',
   next12:'მომდევნო 12 თვე',leftFixed:'დარჩენილი (ვადიანი)',active:'აქტიური გადახდები',
   whereGoes:'ხარჯების განაწილება',perMonth:'თვეში',actualDates:'რეალური თარიღებით',
@@ -458,46 +458,77 @@ function shiftP(d,k,p){if(p.freq==='weekly')return addDays(d,7*k);
   const x=new Date(d.getFullYear(),d.getMonth()+stepM(p)*k,1);const dim=new Date(x.getFullYear(),x.getMonth()+1,0).getDate();x.setDate(Math.min(d.getDate(),dim));return x}
 function countBetween(S,E,p){const q=Object.assign({},p,{start:iso(S),dom:''});let n=0;while(n<5000&&occN(q,n)<=E)n++;return n}
 function remainingFromToday(E,p){const tt=today();let k=0;while(k<5000&&shiftP(E,-k,p)>tt)k++;return k}
-const isFrench=p=>isLoanCat(p.cat)&&p.calcMode==='french'&&p.freq!=='once';
-const hasEnd=p=>isFrench(p)||p.freq==='once'||p.endType==='count'||(p.endType==='date'&&!!pd(p.end));
-function maxCount(p){if(p.freq==='once')return 1;if(isFrench(p)||p.endType==='count')return Math.max(0,parseInt(p.count)||0);return Infinity}
+/* ---- Loan calculation methods ----
+   To add a new formula later: add an entry here, a branch in amort(), and its labels m_<id> / mh_<id> in T. */
+const METHODS={
+  simple:{},                        // plain fixed payment, no interest maths
+  french:{solve:true,extras:true},  // equal payments (annuity)
+  german:{extras:true},             // equal capital, falling payments
+  american:{extras:true},           // interest only, capital at the end
+  flat:{extras:false}               // flat interest on the initial amount
+};
+const isAmort=p=>!!p.calcMode&&p.calcMode!=='simple'&&!!METHODS[p.calcMode]&&p.freq!=='once';
+const isFrench=p=>isAmort(p)&&p.calcMode==='french';
+const isLoanLike=p=>isLoanCat(p.cat)||isAmort(p);
+const hasEnd=p=>isAmort(p)||p.freq==='once'||p.endType==='count'||(p.endType==='date'&&!!pd(p.end));
+function maxCount(p){if(p.freq==='once')return 1;if(isAmort(p)||p.endType==='count')return Math.max(0,parseInt(p.count)||0);return Infinity}
 function occ(p,from,to){
   const out=[];if(!pd(p.start))return out;
-  const mc=maxCount(p),ed=(!isFrench(p)&&p.endType==='date')?pd(p.end):null;
+  const mc=maxCount(p),ed=(!isAmort(p)&&p.endType==='date')?pd(p.end):null;
   if(!to&&!ed&&mc===Infinity)return out;
   for(let i=0;i<mc&&i<8000;i++){const d=occN(p,i);if(ed&&d>ed)break;if(to&&d>to)break;if(!from||d>=from)out.push(d)}
   return out;
 }
 
-/* ---- French amortization ---- */
 function frenchPayment(P,r,n){if(!(P>0&&n>0))return 0;return r?r2(P*r/(1-Math.pow(1+r,-n))):r2(P/n)}
 function frenchTerm(P,r,A){if(!(P>0&&A>0))return 0;if(!r)return Math.ceil(P/A-1e-9);if(A<=P*r)return -1;return Math.ceil(-Math.log(1-P*r/A)/Math.log(1+r)-1e-9)}
 function frenchPrincipal(A,r,n){if(!(A>0&&n>0))return 0;return r?r2(A*(1-Math.pow(1+r,-n))/r):r2(A*n)}
+const ymOf=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+function extrasList(p){return (p.extras||[]).filter(x=>x&&x.ym&&num(x.amt)>0).slice().sort((a,b)=>a.ym<b.ym?-1:a.ym>b.ym?1:0)}
 const AMC=new Map();
+/* rows: {d, pay, it (interest), cap (capital), bal (after), extra (early repayment after this payment)} */
 function amort(p){
-  const key=[p.principal,p.rate,p.count,p.amount,p.start,p.freq,p.every].join('|');
+  const m=p.calcMode;
+  const key=JSON.stringify([m,p.principal,p.rate,p.count,m==='french'?p.amount:0,p.start,p.freq,p.every,p.dom,METHODS[m]&&METHODS[m].extras?p.extras:0]);
   if(AMC.has(key))return AMC.get(key);
-  const P=num(p.principal),r=num(p.rate)/100/ppy(p),n=parseInt(p.count)||0,A=num(p.amount);const rows=[];
-  let bal=P;
-  if(pd(p.start)&&P>0&&A>0)for(let k=0;k<n&&bal>0.004&&k<2000;k++){
-    const it=r2(bal*r);let cap=r2(A-it),pay=A;
-    if(k===n-1||cap>=bal){cap=bal;pay=r2(cap+it)}
-    bal=r2(bal-cap);rows.push({d:occN(p,k),pay,it,cap,bal});
+  const rows=[],P=num(p.principal),r=num(p.rate)/100/ppy(p),n=parseInt(p.count)||0;
+  if(pd(p.start)&&P>0&&n>0&&METHODS[m]&&m!=='simple'){
+    let A=m==='french'?(num(p.amount)||frenchPayment(P,r,n)):0,c=P/n,nEnd=n,bal=P;const flatI=r2(P*r);
+    const ex=METHODS[m].extras?extrasList(p):[];let xi=0;
+    for(let k=0;k<nEnd&&bal>0.004&&k<3000;k++){
+      const d=occN(p,k);let it=m==='flat'?flatI:r2(bal*r),cap;
+      if(m==='french')cap=r2(A-it);else if(m==='american')cap=0;else cap=r2(c);
+      if(k===nEnd-1||cap>=bal)cap=bal;if(cap<0)cap=0;
+      bal=r2(bal-cap);
+      const row={d,pay:r2(cap+it),it,cap,bal,extra:0};
+      while(xi<ex.length&&ex[xi].ym<=ymOf(d)){
+        if(bal>0){const a=Math.min(num(ex[xi].amt),bal);bal=r2(bal-a);row.extra=r2(row.extra+a);row.bal=bal;
+          const rem=nEnd-(k+1);
+          if(bal>0&&rem>0){
+            if(ex[xi].mode==='payment'){if(m==='french')A=frenchPayment(bal,r,rem);else if(m==='german')c=bal/rem}
+            else{if(m==='french'){const nt=frenchTerm(bal,r,A);if(nt>0)nEnd=k+1+nt}else if(m==='german')nEnd=k+1+Math.ceil(bal/c-1e-9)}
+          }}
+        xi++;
+      }
+      rows.push(row);
+    }
   }
   AMC.set(key,rows);return rows;
 }
+function currentPay(p){if(!isAmort(p))return num(p.amount);const rows=amort(p),tt=today();const nx=rows.find(x=>x.d>tt)||rows[rows.length-1];return nx?nx.pay:0}
 
 /* ---- events: every money movement of an item ---- */
-function loanEndDate(p){if(isFrench(p)){const a=amort(p);return a.length?a[a.length-1].d:null}
+function loanEndDate(p){if(isAmort(p)){const a=amort(p);return a.length?a[a.length-1].d:null}
   if(!hasEnd(p))return null;const o=occ(p);return o.length?o[o.length-1]:null}
 function events(p,from,to){
   const out=[];const inR=d=>(!from||d>=from)&&(!to||d<=to);
   let pays;
-  if(isFrench(p))pays=amort(p).map(r=>({d:r.d,amt:r.pay,k:'pay',it:r.it,cap:r.cap,bal:r.bal}));
+  if(isAmort(p)){const rows=amort(p);pays=rows.map(r=>({d:r.d,amt:r.pay,k:'pay',it:r.it,cap:r.cap,bal:r.bal}));
+    rows.forEach(r=>{if(r.extra&&inR(r.d))out.push({d:r.d,amt:r.extra,k:'extra'})})}
   else pays=occ(p,null,to).map(d=>({d,amt:num(p.amount),k:'pay'}));
   pays.forEach(e=>{if(inR(e.d))out.push(e)});
   const ins=num(p.insAmount);
-  if(isLoanCat(p.cat)&&ins>0&&p.insFreq&&p.insFreq!=='none'&&pd(p.start)){
+  if(isLoanLike(p)&&ins>0&&p.insFreq&&p.insFreq!=='none'&&pd(p.start)){
     if(p.insFreq==='each')pays.forEach(e=>{if(inR(e.d))out.push({d:e.d,amt:ins,k:'ins'})});
     else if(p.insFreq==='once'){const d=pd(p.start);if(inR(d))out.push({d,amt:ins,k:'ins'})}
     else if(p.insFreq==='annual'){const s=pd(p.start),end=loanEndDate(p)||to;
@@ -519,27 +550,29 @@ function stats(p){
     r.leftN=futPays.length;r.leftSum=sumAmt(fut);r.totalN=r.paidN+r.leftN;r.totalSum=r.paidSum+r.leftSum;
     r.end=futPays.length?futPays[futPays.length-1].d:r.lastPaid;r.pct=r.totalN?r.paidN/r.totalN:0;r.done=r.leftN===0;
   }else{r.done=false;r.pct=null}
-  if(isFrench(p)){
+  if(isAmort(p)){
     const rows=amort(p),P=num(p.principal);
     const pr=rows.filter(x=>x.d<=tt),fr=rows.filter(x=>x.d>tt);
-    r.french=true;r.rows=rows;
-    r.intPaid=pr.reduce((s,x)=>s+x.it,0);r.capPaid=pr.reduce((s,x)=>s+x.cap,0);
+    r.amort=true;r.rows=rows;
+    r.intPaid=pr.reduce((s,x)=>s+x.it,0);r.capPaid=pr.reduce((s,x)=>s+x.cap+x.extra,0);
+    r.extraTotal=rows.reduce((s,x)=>s+x.extra,0);
+    if(r.extraTotal){const base=amort(Object.assign({},p,{extras:[]}));r.baseEnd=base.length?base[base.length-1].d:null;r.intSaved=base.reduce((s,x)=>s+x.it,0)-rows.reduce((s,x)=>s+x.it,0)}
     r.intLeft=fr.reduce((s,x)=>s+x.it,0);r.intTotal=r.intPaid+r.intLeft;
     r.balance=pr.length?pr[pr.length-1].bal:P;r.capPct=P?r.capPaid/P:0;
     r.nextRow=fr[0]||null;
   }
   return r;
 }
-function insPerMonth(p){const a=num(p.insAmount);if(!isLoanCat(p.cat)||!a)return 0;
+function insPerMonth(p){const a=num(p.insAmount);if(!isLoanLike(p)||!a)return 0;
   if(p.insFreq==='each')return p.freq==='once'?0:a*ppy(p)/12;if(p.insFreq==='annual')return a/12;return 0}
-function perMonth(p){let a=num(p.amount);if(p.freq==='once')return 0;
+function perMonth(p){let a=currentPay(p);if(p.freq==='once')return 0;
   return (p.freq==='weekly'?a*52/12:a/stepM(p))+insPerMonth(p)}
 
 /* TAE / effective annual rate, incl. opening fee & insurance (IRR by bisection) */
 function taeOf(p){
-  if(!isFrench(p))return null;const rows=amort(p);if(!rows.length)return null;
+  if(!isAmort(p))return null;const rows=amort(p);if(!rows.length)return null;
   const P=num(p.principal),fee=num(p.fee),ins=num(p.insAmount),f=ppy(p);
-  const flows=rows.map(x=>x.pay);let t0=P-fee;
+  const flows=rows.map(x=>x.pay+x.extra);let t0=P-fee;
   if(ins>0){if(p.insFreq==='each')flows.forEach((v,i)=>flows[i]+=ins);
     else if(p.insFreq==='once')t0-=ins;
     else if(p.insFreq==='annual'){const step=Math.max(1,Math.round(f));for(let k=0;k<flows.length;k+=step){if(k===0)t0-=ins;else flows[k-1]+=ins}}}
@@ -631,7 +664,7 @@ function dashView(){
   h+=`<div class="card"><h2>${t('next12')} <small>${t('actualDates')}</small></h2>${barChart(bars)}</div>`;
 
   // loans summary
-  const fr=active.filter(r=>r.s.french);
+  const fr=active.filter(r=>r.s.amort);
   if(fr.length){const bal=fr.reduce((a,r)=>a+r.s.balance,0),il=fr.reduce((a,r)=>a+r.s.intLeft,0),insl=fr.reduce((a,r)=>a+r.s.insLeft,0);
     h+=`<div class="card"><h2>${t('loans')} <small>${fr.length}</small></h2><div class="grid2">
     <div class="kv"><span>${t('pendingCapital')}</span><b>${money(bal)}</b></div>
@@ -659,7 +692,7 @@ function dashView(){
     return `<button class="it" data-act="open" data-id="${p.id}">${icBox(c)}
     <div class="mid"><div class="nm">${esc(p.name)}</div><div class="meta">${t('leftEnds',{n:s.leftN,d:fd(s.end)})}</div>
     <div class="bar"><i style="width:${(s.pct*100).toFixed(1)}%;background:${c.color}"></i></div></div>
-    <div class="rt">${money0(s.french?s.balance:s.leftSum)}<small>${t('pctPaid',{p:Math.round(s.pct*100)})}</small></div></button>`}).join('')+`</div></div>`;
+    <div class="rt">${money0(s.amort?s.balance:s.leftSum)}<small>${t('pctPaid',{p:Math.round(s.pct*100)})}</small></div></button>`}).join('')+`</div></div>`;
   }
   return h;
 }
@@ -674,7 +707,7 @@ function listView(){
     return `<button class="it" data-act="open" data-id="${p.id}">${icBox(c)}
     <div class="mid"><div class="nm">${esc(p.name)}</div><div class="meta">${meta}${m?' · '+esc(m):''}</div>
     ${s.hasEnd&&!s.done&&p.freq!=='once'?`<div class="bar"><i style="width:${(s.pct*100).toFixed(1)}%;background:${c.color}"></i></div>`:''}</div>
-    <div class="rt">${money(num(p.amount)+(p.insFreq==='each'&&isLoanCat(p.cat)?num(p.insAmount):0))}<small>${freqShort(p)}</small></div></button>`};
+    <div class="rt">${money(currentPay(p)+(p.insFreq==='each'&&isLoanLike(p)?num(p.insAmount):0))}<small>${freqShort(p)}</small></div></button>`};
   Object.keys(C).forEach(cat=>{
     const g=rows.filter(r=>(C[r.p.cat]?r.p.cat:'other')===cat&&!r.s.done).sort((a,b)=>(a.s.next||Infinity)-(b.s.next||Infinity));
     if(!g.length)return;
@@ -687,12 +720,12 @@ function listView(){
 }
 
 function detailView(p){
-  const s=stats(p),c=catOf(p),tt=today(),amt=num(p.amount),m=methodName(p.method);
+  const s=stats(p),c=catOf(p),tt=today(),amt=currentPay(p),m=methodName(p.method);
   let h=`<div class="dhead"><button class="back" data-act="back">${t('back')}</button><div style="flex:1"></div>
   <button class="back" data-act="edit" data-id="${p.id}">${t('edit')}</button></div>
   <div class="dtitle">${icBox(c,true)}<h1>${esc(p.name)}</h1><span class="chip" style="background:${c.color}22;color:${c.color}">${esc(c.label)}</span>${m?`<span class="chip m">💳 ${esc(m)}</span>`:''}</div>`;
 
-  if(s.french){
+  if(s.amort){
     const P=num(p.principal),fee=num(p.fee),tae=taeOf(p),insTot=s.insPaid+s.insLeft;
     h+=`<div class="ringwrap">${donut([{v:s.capPaid,color:c.color}],P||1,Math.round(s.capPct*100)+'%',t('capRepaid'),190,18)}</div>
     <div class="card"><div class="grid2">
@@ -708,11 +741,13 @@ function detailView(p){
       h+=`<div class="note" style="margin-top:10px">${t('nextSplit',{d:fds(s.nextRow.d),i:money(s.nextRow.it),c:money(s.nextRow.cap),ins:insNext?t('insPart',{v:money(insNext)}):''})}
 ${t('loanEnds',{d:fd(s.end),r:relDays(days(tt,s.end))})}</div>`}
     if(!s.done)h+=`<div class="note" style="margin-top:8px">${t('payoffNote',{b:money(s.balance)})}</div>`;
+    if(s.extraTotal&&s.baseEnd)h+=`<div class="note" style="margin-top:8px;color:var(--ok)">${t('savedInt',{i:money(s.intSaved),d:fd(s.end),d0:fd(s.baseEnd)})}</div>`;
     h+=`</div>`;
 
     h+=`<div class="card"><h2>${t('loanCost')}</h2><div class="grid2">
     <div class="kv"><span>${p.partial?t('pendingAtStart'):t('borrowed')}</span><b>${money(P)}</b></div>
     <div class="kv"><span>${t('tin')}</span><b>${pct(num(p.rate))}</b></div>
+    <div class="kv"><span>${t('calcMethodLbl')}</span><b>${t('m_'+p.calcMode)}</b></div>
     <div class="kv red"><span>${t('totalInterest')}</span><b>${money(s.intTotal)}</b></div>
     ${insTot?`<div class="kv"><span>${t('insTotal')}</span><b>${money(insTot)}</b></div>`:''}
     ${fee?`<div class="kv"><span>${t('feeLbl')}</span><b>${money(fee)}</b></div>`:''}
@@ -721,13 +756,21 @@ ${t('loanEnds',{d:fd(s.end),r:relDays(days(tt,s.end))})}</div>`}
     ${tae!=null?`<div class="kv"><span>${t('tae')}</span><b>${pct(tae)}</b></div>`:''}</div>
     ${p.partial?`<div class="note" style="margin-top:10px">${t('partialNote',{d:fd(pd(p.start))})}</div>`:''}</div>`;
 
+    // early repayments
+    if(METHODS[p.calcMode].extras){const xs=extrasList(p);
+      h+=`<div class="card"><h2>${t('extras')} ${xs.length?`<small>${money(xs.reduce((a,x)=>a+num(x.amt),0))}</small>`:''}</h2><div class="list">`+
+      (xs.length?xs.map(x=>`<div class="it"><div class="ic" style="background:#30b15822">⤓</div><div class="mid"><div class="nm">${money(num(x.amt))}</div>
+       <div class="meta">${ymLabel(x.ym)} · ${t(x.mode==='payment'?'xReducePay':'xReduceTerm')}</div></div>
+       <button class="link" style="color:var(--danger);padding:0" data-act="rmExtra" data-id="${p.id}" data-x="${x.id}">${t('remove')}</button></div>`).join(''):`<div class="note">${t('noExtras')}</div>`)+
+      `</div><button class="btn sec" data-act="addExtra" data-id="${p.id}">${t('addExtra')}</button></div>`}
+
     // yearly chart
-    const ys={};s.rows.forEach(r=>{const y=r.d.getFullYear();(ys[y]=ys[y]||{i:0,c:0,n:0}).i+=r.it;ys[y].c+=r.cap});
-    events(p).filter(e=>e.k==='ins').forEach(e=>{const y=e.d.getFullYear();(ys[y]=ys[y]||{i:0,c:0,n:0}).n+=e.amt});
+    const ys={};s.rows.forEach(r=>{const y=r.d.getFullYear();(ys[y]=ys[y]||{i:0,c:0,n:0,x:0}).i+=r.it;ys[y].c+=r.cap;ys[y].x+=r.extra});
+    events(p).filter(e=>e.k==='ins').forEach(e=>{const y=e.d.getFullYear();(ys[y]=ys[y]||{i:0,c:0,n:0,x:0}).n+=e.amt});
     const yk=Object.keys(ys).sort();
     h+=`<div class="card"><h2>${t('yearChart')}</h2>${barChart(yk.map(y=>({label:yk.length>8?"'"+String(y).slice(2):y,cur:+y===tt.getFullYear(),
-      parts:[{v:ys[y].i,color:'#ff5a5f'},{v:ys[y].c,color:'#3a86ff'},{v:ys[y].n,color:'#f4b400'}]})))}
-    <div class="hleg"><span><i style="background:#ff5a5f"></i>${t('interest')}</span><span><i style="background:#3a86ff"></i>${t('capital')}</span>${insTot?`<span><i style="background:#f4b400"></i>${t('ins')}</span>`:''}</div></div>`;
+      parts:[{v:ys[y].i,color:'#ff5a5f'},{v:ys[y].c,color:'#3a86ff'},{v:ys[y].x,color:'#30b158'},{v:ys[y].n,color:'#f4b400'}]})))}
+    <div class="hleg"><span><i style="background:#ff5a5f"></i>${t('interest')}</span><span><i style="background:#3a86ff"></i>${t('capital')}</span>${s.extraTotal?`<span><i style="background:#30b158"></i>${t('extraLbl')}</span>`:''}${insTot?`<span><i style="background:#f4b400"></i>${t('ins')}</span>`:''}</div></div>`;
   }else if(s.hasEnd){
     h+=`<div class="ringwrap">${donut([{v:s.paidSum,color:c.color}],s.totalSum||1,Math.round(s.pct*100)+'%',s.done?t('finished').toLowerCase():t('paidWord'),190,18)}</div>
     <div class="card"><div class="grid2">
@@ -764,20 +807,21 @@ ${t('loanEnds',{d:fd(s.end),r:relDays(days(tt,s.end))})}</div>`}
   h+=`<div class="card"><h2>${t('details')}</h2><div class="grid2">
   <div class="kv"><span>${t('amount')}</span><b>${money(amt)}</b></div><div class="kv"><span>${t('frequency')}</span><b>${freqLabel(p)}</b></div>
   <div class="kv"><span>${t('firstPayment')}</span><b>${fd(pd(p.start))}</b></div><div class="kv"><span>${t('ends')}</span><b>${s.hasEnd?fd(s.end):t('noEnd')}</b></div>
-  ${isLoanCat(p.cat)&&num(p.insAmount)&&p.insFreq!=='none'?`<div class="kv"><span>${t('insurance')}</span><b>${money(num(p.insAmount))} · ${t({each:'insEach',annual:'insAnnual',once:'insOnce'}[p.insFreq]||'insNone')}</b></div>`:''}
+  ${isLoanLike(p)&&num(p.insAmount)&&p.insFreq!=='none'?`<div class="kv"><span>${t('insurance')}</span><b>${money(num(p.insAmount))} · ${t({each:'insEach',annual:'insAnnual',once:'insOnce'}[p.insFreq]||'insNone')}</b></div>`:''}
   ${m?`<div class="kv"><span>${t('method')}</span><b>${esc(m)}</b></div>`:''}</div>
-  ${p.partial&&!s.french?`<div class="note" style="margin-top:10px">${t('partialSimple')}</div>`:''}
+  ${p.partial&&!s.amort?`<div class="note" style="margin-top:10px">${t('partialSimple')}</div>`:''}
   ${p.notes?`<div class="note" style="margin-top:10px">${esc(p.notes)}</div>`:''}</div>`;
 
   // schedule
-  if(s.french){
+  if(s.amort){
     const rows=s.rows;let ff=rows.findIndex(r=>r.d>tt);if(ff<0)ff=rows.length;
     let view=rows,more=false;if(!ui.showAll&&rows.length>12){const a=Math.max(0,ff-2);view=rows.slice(a,a+12);more=true}
     const insEach=p.insFreq==='each'?num(p.insAmount):0;
     h+=`<div class="card amt"><h2>${t('schedule')} <small>${t('nPayments',{n:rows.length})}</small></h2>
     <div class="r h"><span>${t('date')}</span><span>${t('payment')}</span><span>${t('interest')}</span><span>${t('capital')}</span><span>${t('balance')}</span></div>`+
     view.map(r=>{const paid=r.d<=tt,nx=s.nextRow&&+r.d===+s.nextRow.d;
-      return `<div class="r${paid?' paid':''}${nx?' nx':''}"><span>${fdn(r.d)}</span><span>${money(r.pay+insEach)}</span><span>${money(r.it)}</span><span>${money(r.cap)}</span><span>${money(r.bal,r.bal>=1000?0:2)}</span></div>`}).join('')+
+      return `<div class="r${paid?' paid':''}${nx?' nx':''}"><span>${fdn(r.d)}</span><span>${money(r.pay+insEach)}</span><span>${money(r.it)}</span><span>${money(r.cap)}</span><span>${money(r.extra?r2(r.bal+r.extra):r.bal,r.bal>=1000?0:2)}</span></div>`+
+      (r.extra?`<div class="r" style="color:var(--ok)"><span>⤓ ${t('extraRow')}</span><span>${money(r.extra)}</span><span></span><span>${money(r.extra)}</span><span>${money(r.bal,r.bal>=1000?0:2)}</span></div>`:'')}).join('')+
     (more?`<button class="link" data-act="showall">${t('showAll',{n:rows.length})}</button>`:ui.showAll&&rows.length>12?`<button class="link" data-act="showall">${t('showLess')}</button>`:'')+`</div>`;
   }else{
     const evs=s.hasEnd?events(p):events(p,null,new Date(tt.getFullYear()+1,tt.getMonth(),tt.getDate()));
@@ -815,7 +859,7 @@ function editor(p){
 
   <div id="loanBlock">
    <div class="lbl2">${t('loanCalc')}</div>
-   <div class="seg" id="f_mode">${[['simple',t('simple')],['french',t('french')]].map(([k,l])=>`<button type="button" data-act="mode" data-v="${k}">${l}</button>`).join('')}</div>
+   <div class="fg tight"><div class="fr"><label>${t('calcMethodLbl')}</label><select id="f_mode">${Object.keys(METHODS).map(k=>`<option value="${k}" ${e.calcMode===k?'selected':''}>${t('m_'+k)}</option>`).join('')}</select></div></div>
   </div>
 
   <div class="fg">
@@ -827,14 +871,14 @@ function editor(p){
   <div class="hint">${t('firstHint')}</div>
 
   <div id="frenchBlock">
-   <div class="lbl2">${t('calcWhat')}</div>
+   <div class="lbl2" id="h_calcLbl">${t('calcWhat')}</div>
    <div class="seg" id="f_calc">${[['payment',t('calcPayment')],['term',t('calcTerm')],['principal',t('calcPrincipal')],['pending',t('calcPending')]].map(([k,l])=>`<button type="button" data-act="calc" data-v="${k}">${l}</button>`).join('')}</div>
    <div class="fg tight">
     <div class="fr"><label id="l_fprincipal">${t('borrowed')}</label><input id="f_fprincipal" inputmode="decimal" placeholder="0,00" value="${esc(e.principal)}"></div>
     <div class="fr"><label>${t('rate')}</label><input id="f_rate" inputmode="decimal" placeholder="0,00" value="${esc(e.rate)}"><span class="unit">%</span></div>
     <div class="fr"><label>${t('lastPayF')}</label><input id="f_fend" type="date" value="${esc(e.fend||'')}"><button type="button" class="plus" data-act="clearFend" aria-label="×">×</button></div>
     <div class="fr"><label>${t('term')}</label><input id="f_term" inputmode="numeric" placeholder="48" value="${esc(e.count)}"><span class="unit">${t('termUnit')}</span></div>
-    <div class="fr"><label>${t('monthlyPay')}</label><input id="f_fpay" inputmode="decimal" placeholder="0,00" value="${esc(e.amount)}"></div>
+    <div class="fr"><label id="l_fpay">${t('monthlyPay')}</label><input id="f_fpay" inputmode="decimal" placeholder="0,00" value="${esc(e.amount)}"></div>
     <div class="fr"><label>${t('openFee')}</label><input id="f_fee" inputmode="decimal" placeholder="${t('optional')}" value="${esc(e.fee)}"></div>
    </div>
    <div class="hint" style="margin-top:0" id="h_french">${t('frenchHint')}</div>
@@ -869,9 +913,16 @@ function readForm(){
   const e=ui.edit;if(!e)return;const g=id=>$('#'+id).value;
   e.name=g('f_name').trim();e.cat=g('f_cat');e.method=g('f_method');e.freq=g('f_freq');e.every=g('f_every');const S0=pd(g('f_start'));e.startKnown=!!S0;e.start=S0?iso(S0):'';e.dom='';e.partial=false;e.derived=false;
   e.notes=g('f_notes');e.insFreq=g('f_insFreq');e.insAmount=g('f_insAmount').trim();
-  const loan=isLoanCat(e.cat);if(!loan)e.calcMode='simple';
-  const fr=loan&&e.calcMode==='french'&&e.freq!=='once';
-  if(fr){
+  const loan=isLoanCat(e.cat);
+  const nm=g('f_mode');
+  if(nm!==e.calcMode){ // carry values over when switching between fixed payment and a calculation
+    if(e.calcMode==='simple'||!e.calcMode){if(!$('#f_fprincipal').value)$('#f_fprincipal').value=$('#f_principal').value;if(!$('#f_term').value)$('#f_term').value=$('#f_count').value;if(!$('#f_fpay').value)$('#f_fpay').value=$('#f_amount').value;
+      if(!$('#f_fend').value&&$('#f_end').value)$('#f_fend').value=$('#f_end').value}
+    else if(nm==='simple'){if(!$('#f_amount').value)$('#f_amount').value=e.amount;$('#f_count').value=e.count;$('#f_principal').value=e.principal;if(e.count)e.endType='count'}
+    e.calcMode=nm}
+  const am=e.calcMode!=='simple'&&e.freq!=='once',french=am&&e.calcMode==='french';
+  if(!french&&e.calc==='pending')e.calc='payment';
+  if(am){
     e.rate=g('f_rate').trim();e.fee=g('f_fee').trim();e.endType='count';
     const r=num(e.rate)/100/ppy(e);
     const E0=pd(g('f_fend'));e.fend=E0?iso(E0):'';
@@ -879,12 +930,14 @@ function readForm(){
     if(e.calc==='pending'&&S0){e.calc='payment'}
     let P=num(g('f_fprincipal')),n=parseInt(g('f_term'))||0,A=num(g('f_fpay'));e.calcErr=null;
     if(S0&&E0){n=E0>=S0?countBetween(S0,E0,e):0;$('#f_term').value=n||''}
-    if(e.calc==='pending'){n=E0?remainingFromToday(E0,e):0;$('#f_term').value=n||'';P=frenchPrincipal(A,r,n);$('#f_fprincipal').value=P?String(P):'';e.partial=true}
+    if(!french){/* other formulas: borrowed + rate + term/dates → schedule */}
+    else if(e.calc==='pending'){n=E0?remainingFromToday(E0,e):0;$('#f_term').value=n||'';P=frenchPrincipal(A,r,n);$('#f_fprincipal').value=P?String(P):'';e.partial=true}
     else if(e.calc==='payment'){A=frenchPayment(P,r,n);$('#f_fpay').value=A?String(A):''}
     else if(e.calc==='term'){n=frenchTerm(P,r,A);if(n<0){e.calcErr='payTooLow';n=0}$('#f_term').value=n||''}
     else{P=frenchPrincipal(A,r,n);$('#f_fprincipal').value=P?String(P):''}
-    e.principal=P||'';e.count=n||'';e.amount=A||'';
+    e.principal=P||'';e.count=n||'';if(french)e.amount=A||'';
     if(!S0&&E0&&n>0){e.start=iso(shiftP(E0,-(n-1),e));e.dom=E0.getDate();e.derived=true}
+    if(!french){const rows=amort(e);e.amount=rows.length?rows[0].pay:'';$('#f_fpay').value=e.amount||''}
   }else{
     e.amount=g('f_amount').trim();e.end=g('f_end');e.count=g('f_count');e.principal=g('f_principal').trim();
     const E=pd(e.end);
@@ -894,30 +947,34 @@ function readForm(){
   }
   // visibility
   const vis=(id,on)=>$('#'+id).classList.toggle('hide',!on);
-  vis('loanBlock',loan&&e.freq!=='once');vis('frenchBlock',fr);vis('r_amount',!fr);vis('endBlock',!fr&&e.freq!=='once');
+  vis('loanBlock',e.freq!=='once');vis('frenchBlock',am);vis('r_amount',!am);vis('endBlock',!am&&e.freq!=='once');
+  vis('f_calc',french);vis('h_calcLbl',french);
   vis('endFields',e.endType!=='none');vis('r_end',e.endType==='date');vis('r_count',e.endType==='count'||(e.endType==='date'&&!S0));
   $('#l_count').textContent=e.endType==='date'?t('totalOpt'):t('totalPayments');
-  if(fr){const E0=pd(g('f_fend'));
+  if(am){const E0=pd(g('f_fend'));
     document.querySelector('#f_calc [data-v=term]').classList.toggle('hide',!!(S0&&E0));
     document.querySelector('#f_calc [data-v=pending]').classList.toggle('hide',!!S0);
-    $('#h_french').textContent=e.calc==='pending'?t('pendingHint'):t('frenchHint');$('#l_fprincipal').textContent=e.calc==='pending'?t('pendingCapital'):t('borrowed')}
-  vis('r_principal',loan);vis('insBlock',loan);vis('r_insAmount',e.insFreq!=='none');vis('r_every',e.freq==='custom');
+    $('#h_french').textContent=french?(e.calc==='pending'?t('pendingHint'):t('frenchHint')):t('mh_'+e.calcMode);
+    $('#l_fprincipal').textContent=e.calc==='pending'&&french?t('pendingCapital'):t('borrowed');
+    $('#l_fpay').textContent=french?t('monthlyPay'):t('payment1')}
+  vis('r_principal',loan&&!am);vis('insBlock',loan||am);vis('r_insAmount',e.insFreq!=='none');vis('r_every',e.freq==='custom');
   $('#l_start').textContent=e.freq==='once'?t('payDate'):t('firstPayment');
   document.querySelectorAll('#f_mode button').forEach(b=>b.classList.toggle('on',b.dataset.v===e.calcMode));
   document.querySelectorAll('#f_calc button').forEach(b=>b.classList.toggle('on',b.dataset.v===e.calc));
   document.querySelectorAll('#f_endType button').forEach(b=>b.classList.toggle('on',b.dataset.v===e.endType));
-  if(fr){const both=!!(S0&&pd(g('f_fend')));$('#f_fpay').readOnly=e.calc==='payment';$('#f_term').readOnly=e.calc==='term'||e.calc==='pending'||both;
-    $('#f_fprincipal').readOnly=e.calc==='principal'||e.calc==='pending'}
+  if(am){const both=!!(S0&&pd(g('f_fend')));
+    if(french){$('#f_fpay').readOnly=e.calc==='payment';$('#f_term').readOnly=e.calc==='term'||e.calc==='pending'||both;$('#f_fprincipal').readOnly=e.calc==='principal'||e.calc==='pending'}
+    else{$('#f_fpay').readOnly=true;$('#f_term').readOnly=both;$('#f_fprincipal').readOnly=false}}
   preview();
 }
 function derivedLine(e){if(!e.derived)return '';return '<br>'+t('startCalc',{d:fd(pd(e.start))})+(e.partial?'<br>'+t('partialSimple'):'')}
 function preview(){
   const e=ui.edit,pv=$('#preview');
-  if(isFrench(e)){
+  if(isAmort(e)){
     if(e.calcErr){pv.textContent=t('payTooLow');return}
     if(!(num(e.principal)>0&&num(e.amount)>0&&parseInt(e.count)>0&&pd(e.start))){pv.textContent=t('needFrench');return}
-    const s=stats(e),tae=taeOf(e),insT=s.insPaid+s.insLeft,fee=num(e.fee);
-    pv.innerHTML=t('pvFrench',{a:money(num(e.amount)),n:s.rows.length,i:money(s.intTotal)})+(insT?'<br>'+t('pvIns',{v:money(insT)}):'')+
+    const s=stats(e),tae=taeOf(e),insT=s.insPaid+s.insLeft,fee=num(e.fee),rw=s.rows;
+    pv.innerHTML=(isFrench(e)&&!s.extraTotal?t('pvFrench',{a:money(num(e.amount)),n:rw.length,i:money(s.intTotal)}):t('pvVar',{a:money(rw[0].pay),b:money(rw[rw.length-1].pay),n:rw.length,i:money(s.intTotal)}))+(insT?'<br>'+t('pvIns',{v:money(insT)}):'')+
       '<br>'+t('pvTotalCost',{v:money(s.intTotal+insT+fee),tae:tae!=null?pct(tae):'—'})+'<br>'+t('pvPaidLeft',{p:s.paidN,b:money(s.balance)})+derivedLine(e);
     return;
   }
@@ -932,8 +989,8 @@ function preview(){
 function saveItem(){
   readForm();const e=ui.edit;
   if(!e.name)return toast(t('errName'));
-  if(!pd(e.start))return toast(e.freq!=='once'&&(isFrench(e)||e.endType==='date')?t('errDates'):t('errStart'));
-  if(isFrench(e)){if(e.calcErr||!(num(e.principal)>0&&num(e.amount)>0&&parseInt(e.count)>0))return toast(t('errCalc'))}
+  if(!pd(e.start))return toast(e.freq!=='once'&&(isAmort(e)||e.endType==='date')?t('errDates'):t('errStart'));
+  if(isAmort(e)){if(e.calcErr||!(num(e.principal)>0&&num(e.amount)>0&&parseInt(e.count)>0))return toast(t('errCalc'))}
   else{
     if(!(num(e.amount)>0))return toast(t('errAmount'));
     if(e.freq!=='once'&&e.endType==='date'&&!pd(e.end))return toast(t('errEnd'));
@@ -941,14 +998,49 @@ function saveItem(){
     if(e.endType==='date'&&pd(e.end)<pd(e.start))return toast(t('errEndBefore'));
   }
   e.amount=num(e.amount);e.principal=e.principal?num(e.principal):'';e.insAmount=e.insAmount?num(e.insAmount):'';e.fee=e.fee?num(e.fee):'';
-  if(!isLoanCat(e.cat)){e.insFreq='none';e.insAmount='';e.calcMode='simple'}
+  if(!isLoanLike(e)){e.insFreq='none';e.insAmount=''}
+  if(isAmort(e))e.endType='count';
   delete e.calcErr;
   if(e.partial){e.startKnown=true;e.fend='';if(e.calc==='pending')e.calc='payment'} // freeze so 'from today' doesn't shift later
   const i=state.items.findIndex(x=>x.id===e.id);if(i>=0)state.items[i]=e;else state.items.push(e);
   save();closeSheet();ui.detail=e.id;ui.showAll=false;render();toast(t('tSaved'));window.scrollTo(0,0);
 }
+const ymLabel=ym=>{const [y,m]=ym.split('-').map(Number);return new Date(y,m-1,1).toLocaleDateString(loc(),{month:'long',year:'numeric'})};
+function extraSheet(id){
+  const p=state.items.find(x=>x.id===id);if(!p)return;
+  if(!METHODS[p.calcMode].extras)return toast(t('xNoFlat'));
+  ui.xe={id,ym:ymOf(today()),amt:'',mode:'term'};
+  openSheet(`<div class="bar0"><button data-act="close">${t('cancel')}</button><b>${t('extraTitle')}</b><button class="done" data-act="saveExtra">${t('save')}</button></div><div class="wrap">
+  <div class="fg"><div class="fr"><label>${t('month')}</label><input id="x_ym" type="month" value="${ui.xe.ym}"></div>
+   <div class="fr"><label>${t('amount')}</label><input id="x_amt" inputmode="decimal" placeholder="1000"></div></div>
+  <div class="lbl2">${t('xMode')}</div>
+  <div class="seg" id="x_mode"><button type="button" data-act="xmode" data-v="term" class="on">${t('xReduceTerm')}</button><button type="button" data-act="xmode" data-v="payment">${t('xReducePay')}</button></div>
+  <div class="hint" style="margin-top:6px">${t('xHint')}</div>
+  <div class="preview" id="x_pv"></div></div>`);
+  if(p.calcMode==='american')$('#x_mode').classList.add('hide');
+  ['x_ym','x_amt'].forEach(i=>{$('#'+i).addEventListener('input',xPreview);$('#'+i).addEventListener('change',xPreview)});xPreview();
+}
+function xRead(){const x=ui.xe;x.ym=($('#x_ym').value||'').slice(0,7);x.amt=num($('#x_amt').value);return x}
+function xPreview(){
+  const x=xRead(),p=state.items.find(i=>i.id===x.id),pv=$('#x_pv');
+  document.querySelectorAll('#x_mode button').forEach(b=>b.classList.toggle('on',b.dataset.v===x.mode));
+  if(!p||!/^\d{4}-\d{2}$/.test(x.ym)||!(x.amt>0)){pv.textContent=t('previewEmpty');return}
+  const r0=amort(p);if(!r0.some(r=>ymOf(r.d)>=x.ym)){pv.textContent=t('xOutside');return}
+  const q=Object.assign({},p,{extras:(p.extras||[]).concat({id:'tmp',ym:x.ym,amt:x.amt,mode:x.mode})}),r1=amort(q);
+  const saved=r0.reduce((s,r)=>s+r.it,0)-r1.reduce((s,r)=>s+r.it,0);
+  if(p.calcMode==='american')pv.innerHTML=t('xAmerRes',{i:money(saved)});
+  else if(x.mode==='term')pv.innerHTML=t('xTermRes',{d:fd(r1[r1.length-1].d),d0:fd(r0[r0.length-1].d),k:r0.length-r1.length,i:money(saved)});
+  else{const a=r1.find(r=>ymOf(r.d)>x.ym),b=r0.find(r=>ymOf(r.d)>x.ym);pv.innerHTML=t('xPayRes',{a:money(a?a.pay:0),b:money(b?b.pay:0),i:money(saved)})}
+}
+function saveExtra(){
+  const x=xRead(),p=state.items.find(i=>i.id===x.id);if(!p)return;
+  if(!/^\d{4}-\d{2}$/.test(x.ym)||!(x.amt>0))return toast(t('errAmount'));
+  if(!amort(p).some(r=>ymOf(r.d)>=x.ym))return toast(t('xOutside'));
+  p.extras=(p.extras||[]).concat({id:uid(),ym:x.ym,amt:r2(x.amt),mode:p.calcMode==='american'?'payment':x.mode});
+  save();closeSheet();render();toast(t('tSaved'));
+}
 function addMethod(){const n=(prompt(t('promptMethod'))||'').trim();if(!n)return null;const m={id:uid(),name:n};state.methods=(state.methods||[]).concat(m);save();return m}
-function addCat(){const n=(prompt(t('promptCat'))||'').trim();if(!n)return null;let ic=(prompt(t('promptIcon'),'🏷️')||'').trim()||'🏷️';
+function addCat(){const n=(prompt(t('promptCat'))||'').trim();if(!n)return null;let ic=(prompt(t('promptIcon'),'🏷️')||'').trim();if(!/\p{Extended_Pictographic}/u.test(ic))ic='🏷️';
   const c={id:'c_'+uid(),label:n,icon:[...ic].slice(0,2).join(''),color:EXTRA_COLORS[(state.cats||[]).length%EXTRA_COLORS.length]};
   state.cats=(state.cats||[]).concat(c);save();return c}
 
@@ -1025,7 +1117,11 @@ document.addEventListener('click',ev=>{
     case'close':closeSheet();break;
     case'saveItem':saveItem();break;
     case'showall':ui.showAll=!ui.showAll;render();break;
-    case'mode':e.calcMode=b.dataset.v;
+    case'addExtra':extraSheet(id);break;
+    case'xmode':ui.xe.mode=b.dataset.v;xPreview();break;
+    case'saveExtra':saveExtra();break;
+    case'rmExtra':{const p=state.items.find(x=>x.id===id);if(p&&confirm(t('confirmRmExtra'))){p.extras=(p.extras||[]).filter(x=>x.id!==b.dataset.x);save();render()}break}
+    case'modeOld':e.calcMode=b.dataset.v;
       if(e.calcMode==='french'){$('#f_fprincipal').value=$('#f_principal').value;if(!$('#f_term').value)$('#f_term').value=$('#f_count').value;$('#f_fpay').value=$('#f_amount').value}
       else{$('#f_amount').value=e.amount;$('#f_count').value=e.count;$('#f_principal').value=e.principal;if(e.count){e.endType='count'}}
       readForm();break;
