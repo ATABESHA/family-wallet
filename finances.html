@@ -691,10 +691,10 @@ function dashViewCur(curs){
   // upcoming (grouped per item+date)
   const upMap={};items.forEach(p=>events(p,tt,addDays(tt,25)).forEach(e=>{const k=p.id+'|'+iso(e.d);(upMap[k]=upMap[k]||{p,d:e.d,amt:0}).amt+=e.amt}));
   const up=Object.values(upMap).sort((a,b)=>a.d-b.d);
-  h+=`<div class="card"><h2>${t('upcoming')} <small>${t('next30')} · ${money0(up.reduce((a,u)=>a+u.amt,0))}</small></h2><div class="list">`+
+  h+=`<div class="card"><h2>${t('upcoming')} <small>${t('next25')} · ${money0(up.reduce((a,u)=>a+u.amt,0))}</small></h2><div class="list">`+
    (up.length?up.slice(0,12).map(u=>{const c=catOf(u.p);return `<button class="it" data-act="open" data-id="${u.p.id}">${icBox(c)}
    <div class="mid"><div class="nm">${esc(u.p.name)}</div><div class="meta">${fds(u.d)} · ${relDays(days(tt,u.d))}</div></div>
-   <div class="rt">${money(u.amt)}</div></button>`}).join(''):`<div class="note">${t('nothing30')}</div>`)+`</div></div>`;
+   <div class="rt">${money(u.amt)}</div></button>`}).join(''):`<div class="note">${t('nothing25')}</div>`)+`</div></div>`;
 
   // by method
   if((state.methods||[]).length){const bm={};active.forEach(r=>{const k=methodName(r.p.method)?r.p.method:'';bm[k]=(bm[k]||0)+perMonth(r.p)});
