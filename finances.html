@@ -841,8 +841,8 @@ function dashViewCur(curs){
 
   const byCat={};active.forEach(r=>{const v=perMonth(r.p);const c=C[r.p.cat]?r.p.cat:'other';if(v)byCat[c]=(byCat[c]||0)+v});
   const parts=Object.keys(byCat).map(c=>({c,v:byCat[c],color:C[c].color})).sort((a,b)=>b.v-a.v);
-  h+=`<div class="card"><h2>${t('whereGoes')} <small>${t('perMonth')}</small></h2><div class="donutwrap">${donut(parts,monthly,money0(monthly),t('perMonth'))}
-  <div class="legend">${parts.map(p=>`<div><i style="background:${p.color}"></i><span class="nm">${esc(C[p.c].label)}</span><em>${Math.round(p.v/monthly*100)}%</em></div>`).join('')||`<div class="note">${t('nothingActive')}</div>`}</div></div></div>`;
+  h+=`<div class="card" data-act="wgtog" style="cursor:pointer"><h2>${t('whereGoes')} <small>${t('perMonth')} ⇄</small></h2><div class="donutwrap">${donut(parts,monthly,money0(monthly),t('perMonth'))}
+  <div class="legend">${parts.map(p=>`<div><i style="background:${p.color}"></i><span class="nm">${esc(C[p.c].label)}</span><em>${state.wgAmt?money0(p.v):Math.round(p.v/monthly*100)+'%'}</em></div>`).join('')||`<div class="note">${t('nothingActive')}</div>`}</div></div></div>`;
 
   h+=timelineCard(items,C);
 
@@ -1406,6 +1406,7 @@ document.addEventListener('click',ev=>{
     case'rmlog':if(confirm(t('confirmRmLog'))){state.savings.log=slog().filter(x=>x.id!==id);save();render()}break;
     case'lockTog':lockToggle();break;
     case'lockAfter':state.lock.after=+b.dataset.v;save();document.querySelectorAll('#s_after button').forEach(x=>x.classList.toggle('on',x===b));break;
+    case'wgtog':state.wgAmt=!state.wgAmt;save();render();break;
     case'tlsel':ui.tlSel=b.dataset.v;ui.tlKeep=true;render();break;
     case'saveCat':saveCat();break;
     case'resetCat':if(state.catEdit){delete state.catEdit[ui.cat];save();render()}settings();break;
@@ -1730,7 +1731,7 @@ function splash(force){
   setTimeout(()=>{if(done)return;el.classList.add('s2');
     const pg=el.querySelector('.pg');requestAnimationFrame(()=>{pg.style.strokeDashoffset=String(C*(1-Math.max(frac,0.02)))});
     const v=$('#sp_v'),t0=performance.now(),D=950;
-    const step=now=>{const k=Math.min(1,(now-t0)/D),e=1-Math.pow(1-k,3);v.textContent=money(monthly*e,2,cur);if(k<1&&!done)requestAnimationFrame(step)};requestAnimationFrame(step);
+    const step=now=>{if(!v||!v.isConnected)return;const k=Math.min(1,(now-t0)/D),e=1-Math.pow(1-k,3);v.textContent=money(monthly*e,2,cur);if(k<1&&!done)requestAnimationFrame(step)};requestAnimationFrame(step);
   },750);
   setTimeout(finish,2350);
 }
