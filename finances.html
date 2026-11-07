@@ -1689,7 +1689,7 @@ function greeting(){const h=new Date().getHours(),g=t(h>=5&&h<12?'gMorning':h>=1
 function splash(force){
   const rm=matchMedia('(prefers-reduced-motion: reduce)').matches,td=iso(today());
   const first=!state.onboarded&&!state.items.length;
-  if(!first&&!force&&(rm||state.lastSplash===td)){$('#view').classList.add('fadein');return}
+  if(!first&&rm){$('#view').classList.add('fadein');return}   // full intro on every fresh open and after 5+ min away (see visibilitychange)
   if(!first){state.lastSplash=td;state.onboarded=true;save()}
   window.scrollTo(0,0);
   const el=document.createElement('div');el.className='spl';
@@ -1758,7 +1758,7 @@ async function lockVerify(any){
   const ad=new Uint8Array(a.response.authenticatorData);if(!(ad[32]&0x04))throw new Error('not verified'); // UV flag: Face ID or passcode was really checked
   return true;
 }
-let booted=false,authBusy=false,hiddenAt=0;
+let booted=false,authBusy=false,hiddenAt=0,pendingIntro=false;
 function lockScreen(){
   let el=$('#lockScr');if(el)return el;
   el=document.createElement('div');el.id='lockScr';el.className='lck';
@@ -1775,11 +1775,15 @@ async function tryUnlock(auto,any){
   finally{authBusy=false}
 }
 function unlockDone(){const el=$('#lockScr');if(el){el.style.transition='opacity .25s';el.style.opacity='0';setTimeout(()=>el.remove(),260)}
-  if(!booted){booted=true;render();splash()}}
+  if(!booted){booted=true;render();splash()}else if(pendingIntro){pendingIntro=false;render();splash()}}
+const INTRO_AFTER=300; // seconds away before the intro plays again
 document.addEventListener('visibilitychange',()=>{
-  if(!lockCfg().on||!booted||authBusy)return;
-  if(document.hidden){hiddenAt=Date.now();if(!(lockCfg().after>0))lockScreen()}   // cover right away so the app switcher shows nothing
-  else if(hiddenAt&&(Date.now()-hiddenAt)/1000>=(lockCfg().after||0)){lockScreen();tryUnlock(true)}
+  if(!booted||authBusy)return;
+  if(document.hidden){hiddenAt=Date.now();if(lockCfg().on&&!(lockCfg().after>0))lockScreen();return}   // cover right away so the app switcher shows nothing
+  if(!hiddenAt)return;
+  const away=(Date.now()-hiddenAt)/1000,intro=away>=INTRO_AFTER;hiddenAt=0;
+  if(lockCfg().on&&away>=(lockCfg().after||0)){pendingIntro=intro;lockScreen();tryUnlock(true)}
+  else{const ls=$('#lockScr');if(ls)ls.remove();if(intro){closeSheet();render();splash()}}
 });
 async function lockToggle(){
   try{
