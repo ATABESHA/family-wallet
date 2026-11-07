@@ -75,6 +75,37 @@ svg.chart{width:100%;height:auto;display:block}
 .bar{height:6px;border-radius:3px;background:var(--track);overflow:hidden;margin-top:6px}
 .bar i{display:block;height:100%;border-radius:3px}
 .sect{color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.4px;margin:22px 4px 6px}
+.plist{display:flex;flex-direction:column;gap:8px}
+.prow{position:relative;overflow:hidden;display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 12px;border-radius:14px;
+  background:var(--card-solid);box-shadow:0 1px 2px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.05);animation:pin .45s ease both;transition:transform .15s}
+.prow:active{transform:scale(.985)}
+.prow>span{position:relative;z-index:1}
+.prow .pfill{position:absolute;z-index:0;left:0;top:0;bottom:0;width:var(--p);background:linear-gradient(90deg,var(--c1),var(--c2));
+  border-right:2px solid var(--ce);overflow:hidden;animation:pgrow 1.1s cubic-bezier(.2,.8,.2,1) both}
+.prow .pfill::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);
+  transform:translateX(-100%);animation:shine 3.6s ease-in-out 1.3s infinite}
+.pic{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-size:17px;flex:none}
+.prow .mid{flex:1;min-width:0}
+.prow .nm{display:block;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .meta{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .rt{flex:none;text-align:right;font-variant-numeric:tabular-nums;font-weight:600;font-size:15px}
+.prow .rt em{font-style:normal;font-weight:400;color:var(--muted);font-size:12px;margin-left:2px}
+.prow .rt small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+@keyframes pgrow{from{width:0}}
+@keyframes shine{0%{transform:translateX(-100%)}55%,100%{transform:translateX(100%)}}
+@keyframes pin{from{opacity:0;transform:translateY(6px)}}
+.tl{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -16px;padding:0 8px}
+.tl::-webkit-scrollbar{display:none}
+.tl svg{display:block}
+.tlinfo{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:12px 0 4px}
+.tlinfo b{font-size:17px}
+.tlinfo span{font-variant-numeric:tabular-nums;font-weight:700;font-size:17px}
+.tlr{display:flex;align-items:center;gap:8px;width:100%;padding:8px 0;border-top:1px solid var(--line);font-size:14px;text-align:left}
+.tlr .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tlr .d{color:var(--muted);font-size:12px;flex:none}
+.tlr .v{font-variant-numeric:tabular-nums;flex:none;min-width:76px;text-align:right}
+@media (prefers-color-scheme: dark){.prow{box-shadow:none}.prow .pfill::after{background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.16) 50%,transparent 70%)}}
+@media (prefers-reduced-motion: reduce){.prow,.prow .pfill,.prow .pfill::after{animation:none}}
 .empty{text-align:center;padding:36px 16px}
 .empty .e1{font-size:46px}
 .empty p{color:var(--muted)}
@@ -133,7 +164,7 @@ svg.chart{width:100%;height:auto;display:block}
 .fr label{flex:none;width:132px;font-size:16px}
 .fr input,.fr select,.fr textarea{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:16px;color:var(--text);text-align:right;padding:12px 0;outline:none;-webkit-appearance:none;appearance:none}
 .fr select{text-align-last:right}
-.fr input[readonly]{color:var(--accent);font-weight:600}
+.fr input[readonly],.fr input.calc{color:var(--accent);font-weight:600}
 .fr textarea{text-align:left;min-height:70px;resize:vertical}
 .fr.col{flex-direction:column;align-items:stretch;padding:10px 14px}
 .fr.col label{width:auto;color:var(--muted);font-size:13px}
@@ -182,11 +213,11 @@ svg.chart{width:100%;height:auto;display:block}
    ===================================================================== */
 const T={
 en:{
-  langName:'English',categories:'Categories',editCat:'Edit category',icon:'Icon',color:'Colour',resetCat:'Reset to default',currencies:'Currencies',mainCurrency:'Default currency',alsoMonthly:'Other currencies per month:',currency:'Currency',addCurrency:'Add currency',otherCur:'Other…',promptCur:'Currency code (3 letters, e.g. GEL):',updateRates:'Update rates online',ratesUpdated:'Rates updated {d}',ratesManual:'Rates entered manually',ratesFail:'Could not get rates online — type them in manually.',errCur:'Invalid currency code',curInUse:'{c} is used by {n} payments — change them first.',ratesHint:'Each payment keeps its own currency. Amounts are never converted: the Overview shows totals and charts for each currency separately.',approxMain:'≈ {v} per month in {c}',missingRate:'Set the exchange rate for {c} in Settings so totals are right.',m_simple:'Fixed payment (no calculation)',m_french:'French — equal payments',m_german:'German — equal capital',m_american:'American — interest only',m_flat:'Flat interest (on initial amount)',mh_simple:'No interest calculation: just enter what you pay.',mh_german:'German system: you repay the same part of capital every period; the payment falls over time because interest shrinks.',mh_american:'American system: you pay only interest each period and the whole capital is repaid with the last payment.',mh_flat:'Flat interest: interest is always charged on the initial amount, so the payment is constant but the real cost is higher than with the French system.',calcMethodLbl:'Calculation',payment1:'1st payment',pvVar:'1st payment <b>{a}</b> → last <b>{b}</b> · {n} payments · total interest <b>{i}</b>',extras:'Early repayments',addExtra:'+ Add early repayment',extraTitle:'Early repayment',month:'Month',xMode:'Effect',xReduceTerm:'Shorter term',xReducePay:'Lower payment',xTermRes:'Ends <b>{d}</b> instead of {d0} · {k} fewer payments · saves <b>{i}</b> in interest',xPayRes:'New payment ≈ <b>{a}</b> (was {b}) · saves <b>{i}</b> in interest',xAmerRes:'Interest drops · saves <b>{i}</b>',xNoFlat:'Early repayments are not available with flat interest.',xOutside:'That month is outside the loan schedule.',savedInt:'Early repayments save {i} in interest · ends {d} instead of {d0}.',extraRow:'Early repayment',xHint:'Applied right after that month\'s installment.',extraLbl:'Early repayment',confirmRmExtra:'Remove this early repayment?',noExtras:'None yet. Add one when you pay off part of the loan early.',paidWord:'paid',overview:'Overview',payments:'Payments',settings:'Settings',language:'Language',
+  langName:'English',anyHint:'Fill in any 3 of: amount borrowed, interest, term (or last payment date) and payment. The missing one is calculated and shown in blue.',rateImpossible:'Payment × term is lower than the amount borrowed — check the numbers.',termNeeded:'With interest-only, enter the term or the last payment date.',leftShort:'Left {v}',timeline:'Payments by month',swipe:'← swipe →',categories:'Categories',editCat:'Edit category',icon:'Icon',color:'Colour',resetCat:'Reset to default',currencies:'Currencies',mainCurrency:'Default currency',alsoMonthly:'Other currencies per month:',currency:'Currency',addCurrency:'Add currency',otherCur:'Other…',promptCur:'Currency code (3 letters, e.g. GEL):',updateRates:'Update rates online',ratesUpdated:'Rates updated {d}',ratesManual:'Rates entered manually',ratesFail:'Could not get rates online — type them in manually.',errCur:'Invalid currency code',curInUse:'{c} is used by {n} payments — change them first.',ratesHint:'Each payment keeps its own currency. Amounts are never converted: the Overview shows totals and charts for each currency separately.',approxMain:'≈ {v} per month in {c}',missingRate:'Set the exchange rate for {c} in Settings so totals are right.',m_simple:'Fixed payment (no calculation)',m_french:'French — equal payments',m_german:'German — equal capital',m_american:'American — interest only',m_flat:'Flat interest (on initial amount)',mh_simple:'No interest calculation: just enter what you pay.',mh_german:'German system: you repay the same part of capital every period; the payment falls over time because interest shrinks.',mh_american:'American system: you pay only interest each period and the whole capital is repaid with the last payment.',mh_flat:'Flat interest: interest is always charged on the initial amount, so the payment is constant but the real cost is higher than with the French system.',calcMethodLbl:'Calculation',payment1:'1st payment',pvVar:'1st payment <b>{a}</b> → last <b>{b}</b> · {n} payments · total interest <b>{i}</b>',extras:'Early repayments',addExtra:'+ Add early repayment',extraTitle:'Early repayment',month:'Month',xMode:'Effect',xReduceTerm:'Shorter term',xReducePay:'Lower payment',xTermRes:'Ends <b>{d}</b> instead of {d0} · {k} fewer payments · saves <b>{i}</b> in interest',xPayRes:'New payment ≈ <b>{a}</b> (was {b}) · saves <b>{i}</b> in interest',xAmerRes:'Interest drops · saves <b>{i}</b>',xNoFlat:'Early repayments are not available with flat interest.',xOutside:'That month is outside the loan schedule.',savedInt:'Early repayments save {i} in interest · ends {d} instead of {d0}.',extraRow:'Early repayment',xHint:'Applied right after that month\'s installment.',extraLbl:'Early repayment',confirmRmExtra:'Remove this early repayment?',noExtras:'None yet. Add one when you pay off part of the loan early.',paidWord:'paid',overview:'Overview',payments:'Payments',settings:'Settings',language:'Language',
   monthlyAvg:'Monthly commitments (average)',dueIn:'Due in {m}',stillMonth:'Still to pay this month ({n})',
   next12:'Next 12 months',leftFixed:'Left to pay (fixed-term)',active:'Active payments',
   whereGoes:'Where it goes',perMonth:'per month',actualDates:'actual due dates',
-  upcoming:'Upcoming',next25:'next 25 days',nothing25:'Nothing due in the next 25 days.',
+  upcoming:'Upcoming',next25:'next 29 days',nothing25:'Nothing due in the next 29 days.',
   progress:'Progress',fixedTerm:'fixed-term payments',leftEnds:'{n} left · ends {d}',pctPaid:'{p}% paid',
   byMethod:'By payment method',noMethod:'Not set',loans:'Loans',pendingCapital:'Pending capital',interestLeft:'Interest left',
   insuranceLeft:'Insurance left',saved:'{n} saved',finishedOn:'Finished {d}',leftUntil:'{n} left · until {d}',
@@ -217,7 +248,7 @@ en:{
   insurance:'Loan insurance',insAmount:'Amount',insFreq:'Paid',insEach:'With each payment',insAnnual:'Yearly',insOnce:'Once at start',insNone:'No insurance',
   pvFrench:'Payment <b>{a}</b> × {n} · total interest <b>{i}</b>',pvIns:'Insurance total <b>{v}</b>',pvTotalCost:'Total cost of loan <b>{v}</b> · TAE ≈ <b>{tae}</b>',
   pvPaidLeft:'{p} already paid · pending capital today <b>{b}</b>',
-  needFrench:'Enter borrowed amount, interest and term/payment to calculate.',payTooLow:'Payment is too low to ever cover the interest.',
+  needFrench:'Fill in any 3 of: amount borrowed, interest, term, payment.',payTooLow:'Payment is too low to ever cover the interest.',
   capRepaid:'capital repaid',interestPaid:'Interest paid',totalInterest:'Total interest',insPaid:'Insurance paid',insTotal:'Insurance total',
   totalCost:'Total cost of loan',tin:'Interest TIN',tae:'TAE incl. fees & ins.',feeLbl:'Opening fee',capitalPaid:'Capital repaid',
   nextSplit:'Next payment {d}: {i} interest + {c} capital{ins}.',insPart:' + {v} insurance',
@@ -241,11 +272,11 @@ en:{
   sm_car:'Car loan',sm_mort:'Mortgage',sm_home:'Home insurance',sm_health:'Health insurance',sm_park:'Parking space',sm_phone:'Phone & internet',sm_stream:'Streaming',sm_card:'Bank card',sm_acc:'Bank account'
 },
 es:{
-  langName:'Español',categories:'Categorías',editCat:'Editar categoría',icon:'Icono',color:'Color',resetCat:'Restablecer',currencies:'Monedas',mainCurrency:'Moneda por defecto',alsoMonthly:'Otras monedas al mes:',currency:'Moneda',addCurrency:'Añadir moneda',otherCur:'Otra…',promptCur:'Código de moneda (3 letras, ej. GEL):',updateRates:'Actualizar cambios online',ratesUpdated:'Cambios actualizados {d}',ratesManual:'Cambios introducidos a mano',ratesFail:'No se pudieron obtener los cambios online: introdúcelos a mano.',errCur:'Código de moneda no válido',curInUse:'{c} se usa en {n} pagos: cámbialos primero.',ratesHint:'Cada pago mantiene su moneda. Nunca se convierten importes: el Resumen muestra totales y gráficos por separado para cada moneda.',approxMain:'≈ {v} al mes en {c}',missingRate:'Indica el cambio de {c} en Ajustes para que los totales sean correctos.',m_simple:'Cuota fija (sin cálculo)',m_french:'Francés — cuota constante',m_german:'Alemán — amortización constante',m_american:'Americano — solo intereses',m_flat:'Interés plano (sobre el inicial)',mh_simple:'Sin cálculo de intereses: introduce la cuota que pagas.',mh_german:'Sistema alemán: amortizas la misma parte de capital cada mes; la cuota baja con el tiempo porque los intereses disminuyen.',mh_american:'Sistema americano: cada mes pagas solo intereses y todo el capital se devuelve en la última cuota.',mh_flat:'Interés plano: el interés se calcula siempre sobre el importe inicial, así que la cuota es fija pero el coste real es mayor que con el sistema francés.',calcMethodLbl:'Cálculo',payment1:'1ª cuota',pvVar:'1ª cuota <b>{a}</b> → última <b>{b}</b> · {n} cuotas · intereses totales <b>{i}</b>',extras:'Amortizaciones anticipadas',addExtra:'+ Añadir amortización anticipada',extraTitle:'Amortización anticipada',month:'Mes',xMode:'Efecto',xReduceTerm:'Reducir plazo',xReducePay:'Reducir cuota',xTermRes:'Termina el <b>{d}</b> en vez del {d0} · {k} cuotas menos · ahorras <b>{i}</b> en intereses',xPayRes:'Nueva cuota ≈ <b>{a}</b> (antes {b}) · ahorras <b>{i}</b> en intereses',xAmerRes:'Bajan los intereses · ahorras <b>{i}</b>',xNoFlat:'Con interés plano no se pueden añadir amortizaciones anticipadas.',xOutside:'Ese mes está fuera del calendario del préstamo.',savedInt:'Las amortizaciones te ahorran {i} en intereses · termina el {d} en vez del {d0}.',extraRow:'Amort. anticipada',xHint:'Se aplica justo después de la cuota de ese mes.',extraLbl:'Amortización',confirmRmExtra:'¿Quitar esta amortización?',noExtras:'Ninguna todavía. Añade una cuando adelantes parte del préstamo.',paidWord:'pagado',overview:'Resumen',payments:'Pagos',settings:'Ajustes',language:'Idioma',
+  langName:'Español',anyHint:'Rellena 3 cualesquiera: capital, interés, plazo (o fecha del último pago) y cuota. El que falta se calcula y aparece en azul.',rateImpossible:'Cuota × plazo es menor que el capital: revisa los datos.',termNeeded:'Con solo intereses, indica el plazo o la fecha del último pago.',leftShort:'Pendiente {v}',timeline:'Pagos por mes',swipe:'← desliza →',categories:'Categorías',editCat:'Editar categoría',icon:'Icono',color:'Color',resetCat:'Restablecer',currencies:'Monedas',mainCurrency:'Moneda por defecto',alsoMonthly:'Otras monedas al mes:',currency:'Moneda',addCurrency:'Añadir moneda',otherCur:'Otra…',promptCur:'Código de moneda (3 letras, ej. GEL):',updateRates:'Actualizar cambios online',ratesUpdated:'Cambios actualizados {d}',ratesManual:'Cambios introducidos a mano',ratesFail:'No se pudieron obtener los cambios online: introdúcelos a mano.',errCur:'Código de moneda no válido',curInUse:'{c} se usa en {n} pagos: cámbialos primero.',ratesHint:'Cada pago mantiene su moneda. Nunca se convierten importes: el Resumen muestra totales y gráficos por separado para cada moneda.',approxMain:'≈ {v} al mes en {c}',missingRate:'Indica el cambio de {c} en Ajustes para que los totales sean correctos.',m_simple:'Cuota fija (sin cálculo)',m_french:'Francés — cuota constante',m_german:'Alemán — amortización constante',m_american:'Americano — solo intereses',m_flat:'Interés plano (sobre el inicial)',mh_simple:'Sin cálculo de intereses: introduce la cuota que pagas.',mh_german:'Sistema alemán: amortizas la misma parte de capital cada mes; la cuota baja con el tiempo porque los intereses disminuyen.',mh_american:'Sistema americano: cada mes pagas solo intereses y todo el capital se devuelve en la última cuota.',mh_flat:'Interés plano: el interés se calcula siempre sobre el importe inicial, así que la cuota es fija pero el coste real es mayor que con el sistema francés.',calcMethodLbl:'Cálculo',payment1:'1ª cuota',pvVar:'1ª cuota <b>{a}</b> → última <b>{b}</b> · {n} cuotas · intereses totales <b>{i}</b>',extras:'Amortizaciones anticipadas',addExtra:'+ Añadir amortización anticipada',extraTitle:'Amortización anticipada',month:'Mes',xMode:'Efecto',xReduceTerm:'Reducir plazo',xReducePay:'Reducir cuota',xTermRes:'Termina el <b>{d}</b> en vez del {d0} · {k} cuotas menos · ahorras <b>{i}</b> en intereses',xPayRes:'Nueva cuota ≈ <b>{a}</b> (antes {b}) · ahorras <b>{i}</b> en intereses',xAmerRes:'Bajan los intereses · ahorras <b>{i}</b>',xNoFlat:'Con interés plano no se pueden añadir amortizaciones anticipadas.',xOutside:'Ese mes está fuera del calendario del préstamo.',savedInt:'Las amortizaciones te ahorran {i} en intereses · termina el {d} en vez del {d0}.',extraRow:'Amort. anticipada',xHint:'Se aplica justo después de la cuota de ese mes.',extraLbl:'Amortización',confirmRmExtra:'¿Quitar esta amortización?',noExtras:'Ninguna todavía. Añade una cuando adelantes parte del préstamo.',paidWord:'pagado',overview:'Resumen',payments:'Pagos',settings:'Ajustes',language:'Idioma',
   monthlyAvg:'Compromisos mensuales (media)',dueIn:'A pagar en {m}',stillMonth:'Pendiente este mes ({n})',
   next12:'Próximos 12 meses',leftFixed:'Pendiente (a plazo)',active:'Pagos activos',
   whereGoes:'A dónde va',perMonth:'al mes',actualDates:'fechas reales',
-  upcoming:'Próximos pagos',next25:'próximos 25 días',nothing25:'Nada pendiente en los próximos 25 días.',
+  upcoming:'Próximos pagos',next25:'próximos 29 días',nothing25:'Nada pendiente en los próximos 29 días.',
   progress:'Progreso',fixedTerm:'pagos a plazo',leftEnds:'Quedan {n} · fin {d}',pctPaid:'{p}% pagado',
   byMethod:'Por método de pago',noMethod:'Sin asignar',loans:'Préstamos',pendingCapital:'Capital pendiente',interestLeft:'Intereses pendientes',
   insuranceLeft:'Seguro pendiente',saved:'{n} guardados',finishedOn:'Terminado {d}',leftUntil:'Quedan {n} · hasta {d}',
@@ -276,7 +307,7 @@ es:{
   insurance:'Seguro del préstamo',insAmount:'Importe',insFreq:'Se paga',insEach:'Con cada cuota',insAnnual:'Anual',insOnce:'Único al inicio',insNone:'Sin seguro',
   pvFrench:'Cuota <b>{a}</b> × {n} · intereses totales <b>{i}</b>',pvIns:'Seguro total <b>{v}</b>',pvTotalCost:'Coste total del préstamo <b>{v}</b> · TAE ≈ <b>{tae}</b>',
   pvPaidLeft:'{p} pagadas · capital pendiente hoy <b>{b}</b>',
-  needFrench:'Introduce capital, interés y plazo o cuota para calcular.',payTooLow:'La cuota es demasiado baja para cubrir los intereses.',
+  needFrench:'Rellena 3 de estos: capital, interés, plazo, cuota.',payTooLow:'La cuota es demasiado baja para cubrir los intereses.',
   capRepaid:'capital amortizado',interestPaid:'Intereses pagados',totalInterest:'Intereses totales',insPaid:'Seguro pagado',insTotal:'Seguro total',
   totalCost:'Coste total del préstamo',tin:'Interés TIN',tae:'TAE con comisión y seguro',feeLbl:'Comisión apertura',capitalPaid:'Capital amortizado',
   nextSplit:'Próxima cuota {d}: {i} de intereses + {c} de capital{ins}.',insPart:' + {v} de seguro',
@@ -300,11 +331,11 @@ es:{
   sm_car:'Préstamo coche',sm_mort:'Hipoteca',sm_home:'Seguro hogar',sm_health:'Seguro médico',sm_park:'Plaza de parking',sm_phone:'Móvil e internet',sm_stream:'Streaming',sm_card:'Tarjeta',sm_acc:'Cuenta bancaria'
 },
 ka:{
-  langName:'ქართული',categories:'კატეგორიები',editCat:'კატეგორიის შეცვლა',icon:'ხატულა',color:'ფერი',resetCat:'საწყისზე დაბრუნება',currencies:'ვალუტები',mainCurrency:'ნაგულისხმევი ვალუტა',alsoMonthly:'სხვა ვალუტები თვეში:',currency:'ვალუტა',addCurrency:'ვალუტის დამატება',otherCur:'სხვა…',promptCur:'ვალუტის კოდი (3 ასო, მაგ. GEL):',updateRates:'კურსების განახლება ონლაინ',ratesUpdated:'კურსები განახლდა {d}',ratesManual:'კურსები შეყვანილია ხელით',ratesFail:'კურსების მიღება ვერ მოხერხდა — შეიყვანეთ ხელით.',errCur:'ვალუტის კოდი არასწორია',curInUse:'{c} გამოიყენება {n} გადახდაში — ჯერ ისინი შეცვალეთ.',ratesHint:'ყველა გადახდა ინარჩუნებს თავის ვალუტას. თანხები არ კონვერტირდება: მიმოხილვაში ჯამები და დიაგრამები თითოეული ვალუტისთვის ცალკეა.',approxMain:'≈ {v} თვეში ({c})',missingRate:'მიუთითეთ {c}-ის კურსი პარამეტრებში, რომ ჯამები სწორი იყოს.',m_simple:'ფიქსირებული (გამოთვლის გარეშე)',m_french:'ფრანგული — თანაბარი შენატანი',m_german:'გერმანული — თანაბარი ძირი',m_american:'ამერიკული — მხოლოდ პროცენტი',m_flat:'ფიქსირებული % (საწყის თანხაზე)',mh_simple:'პროცენტის გამოთვლის გარეშე: შეიყვანეთ თქვენი შენატანი.',mh_german:'გერმანული სისტემა: ყოველ პერიოდში იფარება ძირის თანაბარი ნაწილი; შენატანი დროთა განმავლობაში მცირდება, რადგან პროცენტი კლებულობს.',mh_american:'ამერიკული სისტემა: ყოველ პერიოდში იხდით მხოლოდ პროცენტს, ხოლო მთელი ძირი ბრუნდება ბოლო შენატანით.',mh_flat:'ფიქსირებული პროცენტი: პროცენტი ყოველთვის საწყის თანხაზე ითვლება, ამიტომ შენატანი თანაბარია, მაგრამ რეალური ღირებულება ფრანგულზე მაღალია.',calcMethodLbl:'გამოთვლა',payment1:'1-ლი შენატანი',pvVar:'1-ლი შენატანი <b>{a}</b> → ბოლო <b>{b}</b> · {n} შენატანი · სულ პროცენტი <b>{i}</b>',extras:'წინსწრებით დაფარვა',addExtra:'+ წინსწრებით დაფარვის დამატება',extraTitle:'წინსწრებით დაფარვა',month:'თვე',xMode:'შედეგი',xReduceTerm:'ვადის შემცირება',xReducePay:'შენატანის შემცირება',xTermRes:'დასრულდება <b>{d}</b> ({d0}-ის ნაცვლად) · {k} შენატანით ნაკლები · დაზოგავთ <b>{i}</b> პროცენტს',xPayRes:'ახალი შენატანი ≈ <b>{a}</b> (იყო {b}) · დაზოგავთ <b>{i}</b> პროცენტს',xAmerRes:'პროცენტი მცირდება · დაზოგავთ <b>{i}</b>',xNoFlat:'ფიქსირებული პროცენტით წინსწრებით დაფარვა მიუწვდომელია.',xOutside:'ეს თვე სესხის გრაფიკის გარეთაა.',savedInt:'წინსწრებით დაფარვა ზოგავს {i} პროცენტს · დასრულდება {d} ({d0}-ის ნაცვლად).',extraRow:'წინსწრ. დაფარვა',xHint:'გამოიყენება ამ თვის შენატანის შემდეგ.',extraLbl:'წინსწრ. დაფარვა',confirmRmExtra:'წავშალოთ ეს დაფარვა?',noExtras:'ჯერ არ არის. დაამატეთ, როცა სესხის ნაწილს ვადამდე დაფარავთ.',paidWord:'გადახდილი',overview:'მიმოხილვა',payments:'გადახდები',settings:'პარამეტრები',language:'ენა',
+  langName:'ქართული',anyHint:'შეავსეთ ნებისმიერი 3: სესხის თანხა, პროცენტი, ვადა (ან ბოლო გადახდის თარიღი) და შენატანი. დანარჩენი გამოითვლება და ლურჯად გამოჩნდება.',rateImpossible:'შენატანი × ვადა სესხის თანხაზე ნაკლებია — გადაამოწმეთ.',termNeeded:'მხოლოდ პროცენტის სისტემაში მიუთითეთ ვადა ან ბოლო გადახდის თარიღი.',leftShort:'დარჩა {v}',timeline:'გადახდები თვეების მიხედვით',swipe:'← გადაფურცლეთ →',categories:'კატეგორიები',editCat:'კატეგორიის შეცვლა',icon:'ხატულა',color:'ფერი',resetCat:'საწყისზე დაბრუნება',currencies:'ვალუტები',mainCurrency:'ნაგულისხმევი ვალუტა',alsoMonthly:'სხვა ვალუტები თვეში:',currency:'ვალუტა',addCurrency:'ვალუტის დამატება',otherCur:'სხვა…',promptCur:'ვალუტის კოდი (3 ასო, მაგ. GEL):',updateRates:'კურსების განახლება ონლაინ',ratesUpdated:'კურსები განახლდა {d}',ratesManual:'კურსები შეყვანილია ხელით',ratesFail:'კურსების მიღება ვერ მოხერხდა — შეიყვანეთ ხელით.',errCur:'ვალუტის კოდი არასწორია',curInUse:'{c} გამოიყენება {n} გადახდაში — ჯერ ისინი შეცვალეთ.',ratesHint:'ყველა გადახდა ინარჩუნებს თავის ვალუტას. თანხები არ კონვერტირდება: მიმოხილვაში ჯამები და დიაგრამები თითოეული ვალუტისთვის ცალკეა.',approxMain:'≈ {v} თვეში ({c})',missingRate:'მიუთითეთ {c}-ის კურსი პარამეტრებში, რომ ჯამები სწორი იყოს.',m_simple:'ფიქსირებული (გამოთვლის გარეშე)',m_french:'ფრანგული — თანაბარი შენატანი',m_german:'გერმანული — თანაბარი ძირი',m_american:'ამერიკული — მხოლოდ პროცენტი',m_flat:'ფიქსირებული % (საწყის თანხაზე)',mh_simple:'პროცენტის გამოთვლის გარეშე: შეიყვანეთ თქვენი შენატანი.',mh_german:'გერმანული სისტემა: ყოველ პერიოდში იფარება ძირის თანაბარი ნაწილი; შენატანი დროთა განმავლობაში მცირდება, რადგან პროცენტი კლებულობს.',mh_american:'ამერიკული სისტემა: ყოველ პერიოდში იხდით მხოლოდ პროცენტს, ხოლო მთელი ძირი ბრუნდება ბოლო შენატანით.',mh_flat:'ფიქსირებული პროცენტი: პროცენტი ყოველთვის საწყის თანხაზე ითვლება, ამიტომ შენატანი თანაბარია, მაგრამ რეალური ღირებულება ფრანგულზე მაღალია.',calcMethodLbl:'გამოთვლა',payment1:'1-ლი შენატანი',pvVar:'1-ლი შენატანი <b>{a}</b> → ბოლო <b>{b}</b> · {n} შენატანი · სულ პროცენტი <b>{i}</b>',extras:'წინსწრებით დაფარვა',addExtra:'+ წინსწრებით დაფარვის დამატება',extraTitle:'წინსწრებით დაფარვა',month:'თვე',xMode:'შედეგი',xReduceTerm:'ვადის შემცირება',xReducePay:'შენატანის შემცირება',xTermRes:'დასრულდება <b>{d}</b> ({d0}-ის ნაცვლად) · {k} შენატანით ნაკლები · დაზოგავთ <b>{i}</b> პროცენტს',xPayRes:'ახალი შენატანი ≈ <b>{a}</b> (იყო {b}) · დაზოგავთ <b>{i}</b> პროცენტს',xAmerRes:'პროცენტი მცირდება · დაზოგავთ <b>{i}</b>',xNoFlat:'ფიქსირებული პროცენტით წინსწრებით დაფარვა მიუწვდომელია.',xOutside:'ეს თვე სესხის გრაფიკის გარეთაა.',savedInt:'წინსწრებით დაფარვა ზოგავს {i} პროცენტს · დასრულდება {d} ({d0}-ის ნაცვლად).',extraRow:'წინსწრ. დაფარვა',xHint:'გამოიყენება ამ თვის შენატანის შემდეგ.',extraLbl:'წინსწრ. დაფარვა',confirmRmExtra:'წავშალოთ ეს დაფარვა?',noExtras:'ჯერ არ არის. დაამატეთ, როცა სესხის ნაწილს ვადამდე დაფარავთ.',paidWord:'გადახდილი',overview:'მიმოხილვა',payments:'გადახდები',settings:'პარამეტრები',language:'ენა',
   monthlyAvg:'ყოველთვიური ვალდებულებები (საშუალო)',dueIn:'გადასახდელი: {m}',stillMonth:'ამ თვეში დარჩა ({n})',
   next12:'მომდევნო 12 თვე',leftFixed:'დარჩენილი (ვადიანი)',active:'აქტიური გადახდები',
   whereGoes:'ხარჯების განაწილება',perMonth:'თვეში',actualDates:'რეალური თარიღებით',
-  upcoming:'მოახლოებული',next25:'მომდევნო 25 დღე',nothing25:'მომდევნო 25 დღეში გადასახდელი არაფერია.',
+  upcoming:'მოახლოებული',next25:'მომდევნო 29 დღე',nothing25:'მომდევნო 29 დღეში გადასახდელი არაფერია.',
   progress:'პროგრესი',fixedTerm:'ვადიანი გადახდები',leftEnds:'დარჩა {n} · მთავრდება {d}',pctPaid:'{p}% გადახდილი',
   byMethod:'გადახდის მეთოდის მიხედვით',noMethod:'არ არის მითითებული',loans:'სესხები',pendingCapital:'დარჩენილი ძირი',interestLeft:'დარჩენილი პროცენტი',
   insuranceLeft:'დარჩენილი დაზღვევა',saved:'შენახულია {n}',finishedOn:'დასრულდა {d}',leftUntil:'დარჩა {n} · {d}-მდე',
@@ -335,7 +366,7 @@ ka:{
   insurance:'სესხის დაზღვევა',insAmount:'თანხა',insFreq:'გადახდა',insEach:'ყოველ შენატანთან',insAnnual:'ყოველწლიურად',insOnce:'ერთჯერადად დასაწყისში',insNone:'დაზღვევის გარეშე',
   pvFrench:'შენატანი <b>{a}</b> × {n} · სულ პროცენტი <b>{i}</b>',pvIns:'დაზღვევა სულ <b>{v}</b>',pvTotalCost:'სესხის სრული ღირებულება <b>{v}</b> · ეფექტური ≈ <b>{tae}</b>',
   pvPaidLeft:'გადახდილია {p} · დღეს დარჩენილი ძირი <b>{b}</b>',
-  needFrench:'გამოსათვლელად შეიყვანეთ თანხა, პროცენტი და ვადა ან შენატანი.',payTooLow:'შენატანი ძალიან მცირეა პროცენტის დასაფარად.',
+  needFrench:'შეავსეთ 3 მათგან: თანხა, პროცენტი, ვადა, შენატანი.',payTooLow:'შენატანი ძალიან მცირეა პროცენტის დასაფარად.',
   capRepaid:'დაფარული ძირი',interestPaid:'გადახდილი პროცენტი',totalInterest:'სულ პროცენტი',insPaid:'გადახდილი დაზღვევა',insTotal:'დაზღვევა სულ',
   totalCost:'სესხის სრული ღირებულება',tin:'წლიური % (TIN)',tae:'ეფექტური % (საკომ. და დაზღ.)',feeLbl:'გაცემის საკომისიო',capitalPaid:'დაფარული ძირი',
   nextSplit:'შემდეგი შენატანი {d}: {i} პროცენტი + {c} ძირი{ins}.',insPart:' + {v} დაზღვევა',
@@ -470,13 +501,17 @@ function countBetween(S,E,p){const q=Object.assign({},p,{start:iso(S),dom:''});l
 function remainingFromToday(E,p){const tt=today();let k=0;while(k<5000&&shiftP(E,-k,p)>tt)k++;return k}
 /* ---- Loan calculation methods ----
    To add a new formula later: add an entry here, a branch in amort(), and its labels m_<id> / mh_<id> in T. */
+/* first(P, r per period, n) = amount of the first payment — used to solve any missing value */
 const METHODS={
-  simple:{},                        // plain fixed payment, no interest maths
-  french:{solve:true,extras:true},  // equal payments (annuity)
-  german:{extras:true},             // equal capital, falling payments
-  american:{extras:true},           // interest only, capital at the end
-  flat:{extras:false}               // flat interest on the initial amount
+  simple:{},
+  french:{extras:true,first:(P,r,n)=>r?P*r/(1-Math.pow(1+r,-n)):P/n},   // equal payments (annuity)
+  german:{extras:true,first:(P,r,n)=>P/n+P*r},                          // equal capital, falling payments
+  american:{extras:true,first:(P,r,n)=>n<=1?P*(1+r):P*r},               // interest only, capital at the end
+  flat:{extras:false,first:(P,r,n)=>P/n+P*r}                            // flat interest on the initial amount
 };
+function rateFor(m,P,n,A){const f=r=>METHODS[m].first(P,r,n);if(!(P>0&&n>0&&A>0))return null;if(f(0)>A+0.005)return null;
+  let lo=0,hi=0.5;if(f(hi)<A)return null;for(let i=0;i<200;i++){const mid=(lo+hi)/2;if(f(mid)<A)lo=mid;else hi=mid}return (lo+hi)/2}
+function termFor(m,P,r,A){if(m==='american')return -2;if(!(P>0&&A>0))return 0;for(let n=1;n<=1200;n++)if(METHODS[m].first(P,r,n)<=A+0.005)return n;return -1}
 const isAmort=p=>!!p.calcMode&&p.calcMode!=='simple'&&!!METHODS[p.calcMode]&&p.freq!=='once';
 const isFrench=p=>isAmort(p)&&p.calcMode==='french';
 const isLoanLike=p=>isLoanCat(p.cat)||isAmort(p);
@@ -630,6 +665,7 @@ function render(){
   const v=$('#view');
   if(ui.detail){const p=state.items.find(x=>x.id===ui.detail);if(p){v.innerHTML=detailView(p);return}ui.detail=null}
   v.innerHTML=ui.tab==='dash'?dashView():listView();
+  afterRender();
 }
 function emptyState(){
   return `<div class="card empty"><div class="e1">💶</div><h2 style="justify-content:center">${t('emptyTitle')}</h2>
@@ -640,6 +676,41 @@ function header(title,sub){
   return `<header class="top"><div class="tt"><div class="sub">${esc(sub)}</div><h1>${esc(title)}</h1></div>
   <button class="iconbtn" data-act="langs" aria-label="${t('language')}">${flagImg(state.lang)}</button>
   <button class="iconbtn" data-act="settings" aria-label="${t('settings')}">⚙︎</button></header>`;
+}
+function timelineCard(items,C){
+  const tt=today(),cur=ymOf(tt),mo=(y,m)=>new Date(y,m,1);
+  let s0=null,e0=null;
+  items.forEach(p=>{const s=pd(p.start);if(s&&(!s0||s<s0))s0=s;if(hasEnd(p)){const e=loanEndDate(p);if(e&&(!e0||e>e0))e0=e}});
+  let a=s0?mo(s0.getFullYear(),s0.getMonth()):mo(tt.getFullYear(),tt.getMonth());
+  const lo=mo(tt.getFullYear()-10,tt.getMonth()),a3=mo(tt.getFullYear(),tt.getMonth()-3);if(a<lo)a=lo;if(a>a3)a=a3;
+  let b=mo(tt.getFullYear(),tt.getMonth()+24);if(e0&&e0>b)b=mo(e0.getFullYear(),e0.getMonth());const hi=mo(tt.getFullYear()+30,tt.getMonth());if(b>hi)b=hi;
+  const M=[],idx={};for(let d=a;d<=b;d=mo(d.getFullYear(),d.getMonth()+1)){idx[ymOf(d)]=M.length;M.push({d,ym:ymOf(d),by:{},tot:0,list:[]})}
+  const endD=new Date(b.getFullYear(),b.getMonth()+1,0);
+  items.forEach(p=>events(p,a,endD).forEach(ev=>{const m=M[idx[ymOf(ev.d)]];if(!m)return;const c=C[p.cat]?p.cat:'other';
+    m.by[c]=(m.by[c]||0)+ev.amt;m.tot+=ev.amt;m.list.push({p,d:ev.d,amt:ev.amt})}));
+  if(!(ui.tlSel in idx))ui.tlSel=cur;
+  const si=idx[ui.tlSel],bw=40,H=180,pb=34,pt=18,ch=H-pb-pt,W=M.length*bw,max=Math.max(1,...M.map(m=>m.tot));
+  let g='';
+  M.forEach((m,i)=>{const x=i*bw,sel=i===si,fut=m.ym>cur,isCur=m.ym===cur,w=bw*.56,bx=x+(bw-w)/2;let y=H-pb;
+    if(sel)g+=`<rect x="${x+2}" y="1" width="${bw-4}" height="${H-2}" rx="11" fill="var(--input)"/>`;
+    Object.keys(C).forEach(c=>{const v=m.by[c];if(!v)return;const h=Math.max(1.5,v/max*ch);y-=h;
+      g+=`<rect x="${bx}" y="${y}" width="${w}" height="${h}" fill="${C[c].color}" opacity="${fut&&!sel?.45:1}"/>`});
+    if(m.tot)g+=`<text x="${x+bw/2}" y="${y-4}" text-anchor="middle" class="vl"${sel?' style="font-weight:700;fill:var(--text)"':''}>${compact(m.tot)}</text>`;
+    g+=`<text x="${x+bw/2}" y="${H-pb+15}" text-anchor="middle" class="ax${isCur||sel?' cur':''}"${isCur?' style="fill:var(--accent)"':''}>${m.d.toLocaleDateString(loc(),{month:'short'}).replace('.','').slice(0,3)}</text>`;
+    if(m.d.getMonth()===0||i===0)g+=`<text x="${x+bw/2}" y="${H-pb+28}" text-anchor="middle" class="ax">${m.d.getFullYear()}</text>`;
+    g+=`<rect x="${x}" y="0" width="${bw}" height="${H}" fill="transparent" data-act="tlsel" data-v="${m.ym}"/>`;
+  });
+  const sm=M[si],grp={};sm.list.forEach(e=>{const k=e.p.id+iso(e.d);(grp[k]=grp[k]||{p:e.p,d:e.d,amt:0}).amt+=e.amt});
+  const L=Object.values(grp).sort((x,y)=>x.d-y.d);
+  return `<div class="card"><h2>${t('timeline')} <small>${t('swipe')}</small></h2>
+   <div class="tl" id="tl" data-selx="${si*bw}"><svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${g}</svg></div>
+   <div class="tlinfo"><b>${sm.d.toLocaleDateString(loc(),{month:'long',year:'numeric'})}</b><span>${money(sm.tot)}</span></div>
+   ${L.length?L.map(r=>{const c=catOf(r.p);return `<button class="tlr" data-act="open" data-id="${r.p.id}"><span>${c.icon}</span><span class="n">${esc(r.p.name)}</span><span class="d">${fds(r.d)}</span><span class="v">${money(r.amt)}</span></button>`}).join(''):`<div class="note">${t('nothingActive')}</div>`}</div>`;
+}
+function afterRender(){
+  const tl=$('#tl');if(!tl)return;
+  if(ui.tlKeep&&ui.tlScroll!=null)tl.scrollLeft=ui.tlScroll;else tl.scrollLeft=Math.max(0,+tl.dataset.selx-tl.clientWidth/2+20);
+  ui.tlKeep=false;ui.tlScroll=tl.scrollLeft;tl.addEventListener('scroll',()=>{ui.tlScroll=tl.scrollLeft},{passive:true});
 }
 const icBox=(c,size)=>`<div class="ic" style="background:${c.color}22${size?`;margin:0 auto;width:54px;height:54px;font-size:28px;border-radius:15px`:''}">${c.icon}</div>`;
 
@@ -678,7 +749,7 @@ function dashViewCur(curs){
   h+=`<div class="card"><h2>${t('whereGoes')} <small>${t('perMonth')}</small></h2><div class="donutwrap">${donut(parts,monthly,money0(monthly),t('perMonth'))}
   <div class="legend">${parts.map(p=>`<div><i style="background:${p.color}"></i><span class="nm">${esc(C[p.c].label)}</span><em>${Math.round(p.v/monthly*100)}%</em></div>`).join('')||`<div class="note">${t('nothingActive')}</div>`}</div></div></div>`;
 
-  h+=`<div class="card"><h2>${t('next12')} <small>${t('actualDates')}</small></h2>${barChart(bars)}</div>`;
+  h+=timelineCard(items,C);
 
   // loans summary
   const fr=active.filter(r=>r.s.amort);
@@ -689,7 +760,7 @@ function dashViewCur(curs){
     ${insl?`<div class="kv"><span>${t('insuranceLeft')}</span><b>${money(insl)}</b></div>`:''}</div></div>`}
 
   // upcoming (grouped per item+date)
-  const upMap={};items.forEach(p=>events(p,tt,addDays(tt,25)).forEach(e=>{const k=p.id+'|'+iso(e.d);(upMap[k]=upMap[k]||{p,d:e.d,amt:0}).amt+=e.amt}));
+  const upMap={};items.forEach(p=>events(p,tt,addDays(tt,29)).forEach(e=>{const k=p.id+'|'+iso(e.d);(upMap[k]=upMap[k]||{p,d:e.d,amt:0}).amt+=e.amt}));
   const up=Object.values(upMap).sort((a,b)=>a.d-b.d);
   h+=`<div class="card"><h2>${t('upcoming')} <small>${t('next25')} · ${money0(up.reduce((a,u)=>a+u.amt,0))}</small></h2><div class="list">`+
    (up.length?up.slice(0,12).map(u=>{const c=catOf(u.p);return `<button class="it" data-act="open" data-id="${u.p.id}">${icBox(c)}
@@ -714,24 +785,27 @@ function dashViewCur(curs){
   return h;
 }
 
+function rgba(hex,al){let h=String(hex||'#8d99ae').replace('#','');if(h.length===3)h=h.split('').map(x=>x+x).join('');const n=parseInt(h,16)||0;return `rgba(${n>>16&255},${n>>8&255},${n&255},${al})`}
 function listView(){
   let h=header(t('payments'),t('saved',{n:state.items.length}));
   if(!state.items.length)return h+emptyState();
   const C=cats(),rows=state.items.map(p=>({p,s:stats(p)}));
-  const row=({p,s})=>{const c=catOf(p);
-    const meta=s.done?t('finishedOn',{d:fd(s.end)}):s.hasEnd?t('leftUntil',{n:s.leftN,d:fd(s.end)}):t('ongoing')+(s.next?' · '+t('nextShort',{d:fds(s.next)}):'');
-    const m=methodName(p.method);
-    return `<button class="it" data-act="open" data-id="${p.id}">${icBox(c)}
-    <div class="mid"><div class="nm">${esc(p.name)}</div><div class="meta">${meta}${m?' · '+esc(m):''}</div>
-    ${s.hasEnd&&!s.done&&p.freq!=='once'?`<div class="bar"><i style="width:${(s.pct*100).toFixed(1)}%;background:${c.color}"></i></div>`:''}</div>
-    <div class="rt">${money(currentPay(p)+(p.insFreq==='each'&&isLoanLike(p)?num(p.insAmount):0),2,curOf(p))}<small>${freqShort(p)}</small></div></button>`};
+  const row=({p,s},i)=>{const c=catOf(p),cur=curOf(p);
+    const fixed=s.hasEnd&&p.freq!=='once',pc=s.done?1:fixed?s.pct:0,col=pc>=0.85?'#30b158':c.color;
+    const meta=s.done?t('finishedOn',{d:fd(s.end)}):fixed?`${Math.round(pc*100)}% · ${t('leftUntil',{n:s.leftN,d:fd(s.end)})}`:
+      s.hasEnd?fd(s.end):t('ongoing')+(s.next?' · '+t('nextShort',{d:fds(s.next)}):'');
+    const m=methodName(p.method),pay=currentPay(p)+(p.insFreq==='each'&&isLoanLike(p)?num(p.insAmount):0);
+    return `<button class="prow" data-act="open" data-id="${p.id}" style="--p:${(pc*100).toFixed(1)}%;--c1:${rgba(col,.07)};--c2:${rgba(col,.30)};--ce:${rgba(col,.8)};animation-delay:${Math.min(i,12)*35}ms">
+     ${pc>0?'<span class="pfill"></span>':''}<span class="pic" style="background:${rgba(c.color,.16)}">${c.icon}</span>
+     <span class="mid"><span class="nm">${esc(p.name)}</span><span class="meta">${meta}${m?' · '+esc(m):''}</span></span>
+     <span class="rt">${money(pay,2,cur)}<em>${freqShort(p)}</em>${fixed&&!s.done?`<small>${t('leftShort',{v:money0(s.leftSum,cur)})}</small>`:''}</span></button>`};
   Object.keys(C).forEach(cat=>{
     const g=rows.filter(r=>(C[r.p.cat]?r.p.cat:'other')===cat&&!r.s.done).sort((a,b)=>(a.s.next||Infinity)-(b.s.next||Infinity));
     if(!g.length)return;
-    h+=`<div class="sect">${esc(C[cat].label)} · ${perCur(g,r=>perMonth(r.p),0)}${t('s_monthly')}</div><div class="card list" style="margin-top:0">${g.map(row).join('')}</div>`;
+    h+=`<div class="sect">${esc(C[cat].label)} · ${perCur(g,r=>perMonth(r.p),0)}${t('s_monthly')}</div><div class="plist">${g.map(row).join('')}</div>`;
   });
   const done=rows.filter(r=>r.s.done);
-  if(done.length)h+=`<div class="sect">${t('finished')}</div><div class="card list" style="margin-top:0;opacity:.75">${done.map(row).join('')}</div>`;
+  if(done.length)h+=`<div class="sect">${t('finished')}</div><div class="plist" style="opacity:.7">${done.map(row).join('')}</div>`;
   return h;
 }
 
@@ -867,7 +941,8 @@ function editor(p){
   const isNew=!p;
   ui.edit=p?Object.assign({calcMode:'simple',calc:'payment',insFreq:'none',insAmount:'',fee:'',rate:'',method:''},JSON.parse(JSON.stringify(p)))
     :{id:uid(),name:'',cat:'loan',amount:'',freq:'monthly',every:2,start:iso(today()),endType:'none',end:'',count:'',principal:'',notes:'',
-      calcMode:'simple',calc:'payment',rate:'',fee:'',insAmount:'',insFreq:'none',method:''};
+      calcMode:'simple',calc:'payment',rate:'',fee:'',insAmount:'',insFreq:'none',method:'',given:[]};
+  if(!ui.edit.given){const mp={payment:['P','r','n'],term:['P','r','A'],principal:['A','r','n'],pending:['r','A']};ui.edit.given=(ui.edit.calcMode==='french'&&mp[ui.edit.calc])||['P','r','n']}
   const e=ui.edit,F=['weekly','monthly','bimonthly','quarterly','semiannual','annual','custom','once'];
   openSheet(`<div class="bar0"><button data-act="close">${t('cancel')}</button><b>${isNew?t('newPayment'):t('editPayment')}</b><button class="done" data-act="saveItem">${t('save')}</button></div>
   <div class="wrap">
@@ -890,8 +965,6 @@ function editor(p){
   <div class="hint">${t('firstHint')}</div>
 
   <div id="frenchBlock">
-   <div class="lbl2" id="h_calcLbl">${t('calcWhat')}</div>
-   <div class="seg" id="f_calc">${[['payment',t('calcPayment')],['term',t('calcTerm')],['principal',t('calcPrincipal')],['pending',t('calcPending')]].map(([k,l])=>`<button type="button" data-act="calc" data-v="${k}">${l}</button>`).join('')}</div>
    <div class="fg tight">
     <div class="fr"><label id="l_fprincipal">${t('borrowed')}</label><input id="f_fprincipal" inputmode="decimal" placeholder="0,00" value="${esc(e.principal)}"></div>
     <div class="fr"><label>${t('rate')}</label><input id="f_rate" inputmode="decimal" placeholder="0,00" value="${esc(e.rate)}"><span class="unit">%</span></div>
@@ -924,6 +997,9 @@ function editor(p){
   <div class="fg"><div class="fr col"><label>${t('notes')}</label><textarea id="f_notes" placeholder="${t('notesPh')}">${esc(e.notes)}</textarea></div></div>
   <div class="preview" id="preview"></div>
   </div>`);
+  // remember the order in which the user typed loan values (the oldest one becomes the calculated one)
+  [['P','f_fprincipal'],['r','f_rate'],['n','f_term'],['A','f_fpay']].forEach(([k,id])=>$('#'+id).addEventListener('input',ev=>{
+    ev.target.classList.remove('calc');e.given=(e.given||[]).filter(x=>x!==k);if(ev.target.value.trim())e.given.push(k)}));
   $('#sheet').querySelectorAll('input,select,textarea').forEach(el=>{el.addEventListener('input',readForm);el.addEventListener('change',readForm)});
   readForm();
 }
@@ -936,27 +1012,38 @@ function readForm(){
   const nm=g('f_mode');
   if(nm!==e.calcMode){ // carry values over when switching between fixed payment and a calculation
     if(e.calcMode==='simple'||!e.calcMode){if(!$('#f_fprincipal').value)$('#f_fprincipal').value=$('#f_principal').value;if(!$('#f_term').value)$('#f_term').value=$('#f_count').value;if(!$('#f_fpay').value)$('#f_fpay').value=$('#f_amount').value;
-      if(!$('#f_fend').value&&$('#f_end').value)$('#f_fend').value=$('#f_end').value}
+      if(!$('#f_fend').value&&$('#f_end').value)$('#f_fend').value=$('#f_end').value;
+      e.given=[['P','f_fprincipal'],['r','f_rate'],['n','f_term'],['A','f_fpay']].filter(([k,id])=>$('#'+id).value.trim()).map(x=>x[0])}
     else if(nm==='simple'){if(!$('#f_amount').value)$('#f_amount').value=e.amount;$('#f_count').value=e.count;$('#f_principal').value=e.principal;if(e.count)e.endType='count'}
     e.calcMode=nm}
-  const am=e.calcMode!=='simple'&&e.freq!=='once',french=am&&e.calcMode==='french';
-  if(!french&&e.calc==='pending')e.calc='payment';
+  const am=e.calcMode!=='simple'&&e.freq!=='once';
   if(am){
-    e.rate=g('f_rate').trim();e.fee=g('f_fee').trim();e.endType='count';
-    const r=num(e.rate)/100/ppy(e);
+    e.fee=g('f_fee').trim();e.endType='count';e.calcErr=null;
     const E0=pd(g('f_fend'));e.fend=E0?iso(E0):'';
-    if(S0&&E0&&e.calc==='term')e.calc='payment';
-    if(e.calc==='pending'&&S0){e.calc='payment'}
-    let P=num(g('f_fprincipal')),n=parseInt(g('f_term'))||0,A=num(g('f_fpay'));e.calcErr=null;
-    if(S0&&E0){n=E0>=S0?countBetween(S0,E0,e):0;$('#f_term').value=n||''}
-    if(!french){/* other formulas: borrowed + rate + term/dates → schedule */}
-    else if(e.calc==='pending'){n=E0?remainingFromToday(E0,e):0;$('#f_term').value=n||'';P=frenchPrincipal(A,r,n);$('#f_fprincipal').value=P?String(P):'';e.partial=true}
-    else if(e.calc==='payment'){A=frenchPayment(P,r,n);$('#f_fpay').value=A?String(A):''}
-    else if(e.calc==='term'){n=frenchTerm(P,r,A);if(n<0){e.calcErr='payTooLow';n=0}$('#f_term').value=n||''}
-    else{P=frenchPrincipal(A,r,n);$('#f_fprincipal').value=P?String(P):''}
-    e.principal=P||'';e.count=n||'';if(french)e.amount=A||'';
-    if(!S0&&E0&&n>0){e.start=iso(shiftP(E0,-(n-1),e));e.dom=E0.getDate();e.derived=true}
-    if(!french){const rows=amort(e);e.amount=rows.length?rows[0].pay:'';$('#f_fpay').value=e.amount||''}
+    const F={P:'f_fprincipal',r:'f_rate',n:'f_term',A:'f_fpay'};
+    const raw={P:g(F.P).trim(),r:g(F.r).trim(),n:g(F.n).trim(),A:g(F.A).trim()};
+    const v={P:num(raw.P),r:num(raw.r),n:parseInt(raw.n)||0,A:num(raw.A)};
+    const has=k=>k==='r'?raw.r!==''&&v.r>=0:v[k]>0;
+    let giv=(e.given||[]).filter(has),fixedN=false;
+    if(S0&&E0){v.n=E0>=S0?countBetween(S0,E0,e):0;fixedN=true}
+    else if(!S0&&E0&&!giv.includes('n')){v.n=remainingFromToday(E0,e);fixedN=true;e.partial=true}
+    const keep=fixedN?giv.filter(k=>k!=='n').slice(-2).concat(v.n>0?['n']:[]):giv.slice(-3);
+    e.given=keep.filter(k=>!(fixedN&&k==='n'));
+    const calcK=keep.length===3?['P','r','n','A'].find(k=>!keep.includes(k)):null;
+    // clear values that were calculated earlier but can't be calculated now
+    Object.keys(F).forEach(k=>{const el=$('#'+F[k]);if(el.classList.contains('calc')&&k!==calcK&&!(k==='n'&&fixedN)){el.value='';v[k]=0;raw[k]=''}});
+    const m=e.calcMode,pp=ppy(e),rp=v.r/100/pp,first=METHODS[m].first;
+    if(calcK==='A')v.A=r2(first(v.P,rp,v.n));
+    else if(calcK==='P'){const f=first(1,rp,v.n);v.P=f>0?r2(v.A/f):0}
+    else if(calcK==='n'){const n=termFor(m,v.P,rp,v.A);if(n<0){e.calcErr=n===-2?'termNeeded':'payTooLow';v.n=0}else v.n=n}
+    else if(calcK==='r'){const x=rateFor(m,v.P,v.n,v.A);if(x==null){e.calcErr='rateImpossible';v.r=0}else v.r=Math.round(x*pp*100*1000)/1000}
+    Object.keys(F).forEach(k=>{const el=$('#'+F[k]),isC=k===calcK||(k==='n'&&fixedN);el.classList.toggle('calc',isC);
+      if(isC)el.value=(v[k]||(k==='r'&&calcK==='r'&&!e.calcErr))?String(v[k]):''});
+    $('#f_term').readOnly=fixedN;
+    e.rate=(raw.r!==''||calcK==='r')&&!e.calcErr?String(v.r):(raw.r!==''?String(v.r):'');
+    e.principal=v.P||'';e.count=v.n||'';e.amount=v.A||'';
+    if(!S0&&E0&&v.n>0){e.start=iso(shiftP(E0,-(v.n-1),e));e.dom=E0.getDate();e.derived=true}
+    if(m!=='french'){const rows=amort(e);if(rows.length)e.amount=rows[0].pay}
   }else{
     e.amount=g('f_amount').trim();e.end=g('f_end');e.count=g('f_count');e.principal=g('f_principal').trim();
     const E=pd(e.end);
@@ -967,23 +1054,14 @@ function readForm(){
   // visibility
   const vis=(id,on)=>$('#'+id).classList.toggle('hide',!on);
   vis('loanBlock',e.freq!=='once');vis('frenchBlock',am);vis('r_amount',!am);vis('endBlock',!am&&e.freq!=='once');
-  vis('f_calc',french);vis('h_calcLbl',french);
   vis('endFields',e.endType!=='none');vis('r_end',e.endType==='date');vis('r_count',e.endType==='count'||(e.endType==='date'&&!S0));
   $('#l_count').textContent=e.endType==='date'?t('totalOpt'):t('totalPayments');
-  if(am){const E0=pd(g('f_fend'));
-    document.querySelector('#f_calc [data-v=term]').classList.toggle('hide',!!(S0&&E0));
-    document.querySelector('#f_calc [data-v=pending]').classList.toggle('hide',!!S0);
-    $('#h_french').textContent=french?(e.calc==='pending'?t('pendingHint'):t('frenchHint')):t('mh_'+e.calcMode);
-    $('#l_fprincipal').textContent=e.calc==='pending'&&french?t('pendingCapital'):t('borrowed');
-    $('#l_fpay').textContent=french?t('monthlyPay'):t('payment1')}
+  if(am){$('#h_french').textContent=(e.partial?t('pendingHint')+' ':'')+t('anyHint')+(e.calcMode!=='french'?' '+t('mh_'+e.calcMode):'');
+    $('#l_fprincipal').textContent=e.partial?t('pendingCapital'):t('borrowed');
+    $('#l_fpay').textContent=e.calcMode==='french'?t('monthlyPay'):t('payment1')}
   vis('r_principal',loan&&!am);vis('insBlock',loan||am);vis('r_insAmount',e.insFreq!=='none');vis('r_every',e.freq==='custom');
   $('#l_start').textContent=e.freq==='once'?t('payDate'):t('firstPayment');
-  document.querySelectorAll('#f_mode button').forEach(b=>b.classList.toggle('on',b.dataset.v===e.calcMode));
-  document.querySelectorAll('#f_calc button').forEach(b=>b.classList.toggle('on',b.dataset.v===e.calc));
   document.querySelectorAll('#f_endType button').forEach(b=>b.classList.toggle('on',b.dataset.v===e.endType));
-  if(am){const both=!!(S0&&pd(g('f_fend')));
-    if(french){$('#f_fpay').readOnly=e.calc==='payment';$('#f_term').readOnly=e.calc==='term'||e.calc==='pending'||both;$('#f_fprincipal').readOnly=e.calc==='principal'||e.calc==='pending'}
-    else{$('#f_fpay').readOnly=true;$('#f_term').readOnly=both;$('#f_fprincipal').readOnly=false}}
   preview();
 }
 function derivedLine(e){if(!e.derived)return '';return '<br>'+t('startCalc',{d:fd(pd(e.start))})+(e.partial?'<br>'+t('partialSimple'):'')}
@@ -991,7 +1069,7 @@ function preview(){return withCur(curOf(ui.edit),previewInner)}
 function previewInner(){
   const e=ui.edit,pv=$('#preview');
   if(isAmort(e)){
-    if(e.calcErr){pv.textContent=t('payTooLow');return}
+    if(e.calcErr){pv.textContent=t(e.calcErr);return}
     if(!(num(e.principal)>0&&num(e.amount)>0&&parseInt(e.count)>0&&pd(e.start))){pv.textContent=t('needFrench');return}
     const s=stats(e),tae=taeOf(e),insT=s.insPaid+s.insLeft,fee=num(e.fee),rw=s.rows;
     pv.innerHTML=(isFrench(e)&&!s.extraTotal?t('pvFrench',{a:money(num(e.amount)),n:rw.length,i:money(s.intTotal)}):t('pvVar',{a:money(rw[0].pay),b:money(rw[rw.length-1].pay),n:rw.length,i:money(s.intTotal)}))+(insT?'<br>'+t('pvIns',{v:money(insT)}):'')+
@@ -1186,6 +1264,7 @@ document.addEventListener('click',ev=>{
     case'addCatS':if(addCat())settings();break;
     case'editCat':catSheet(id);break;
     case'dcur':ui.dcur=b.dataset.v;render();break;
+    case'tlsel':ui.tlSel=b.dataset.v;ui.tlKeep=true;render();break;
     case'saveCat':saveCat();break;
     case'resetCat':if(state.catEdit){delete state.catEdit[ui.cat];save();render()}settings();break;
     case'rmCur':{const c=b.dataset.v,n=state.items.filter(p=>curOf(p)===c).length;if(n){toast(t('curInUse',{c,n}));break}
