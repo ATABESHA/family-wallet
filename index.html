@@ -375,6 +375,63 @@ body.bg-photo #bgphoto{display:block}
 .bgsw button.on i{box-shadow:0 0 0 2px #fff,0 0 14px rgba(255,255,255,.35)}
 .row input[type=range]{flex:1;background:none;box-shadow:none;padding:0;accent-color:#7b7bff;-webkit-appearance:auto;appearance:auto;height:28px}
 .row .rl{min-width:96px}
+
+/* ===== settings tabs ===== */
+.sbarwrap{position:sticky;top:0;z-index:3;margin:0 -16px;padding:0 16px 10px;background:linear-gradient(180deg,rgba(14,14,30,.95),rgba(14,14,30,.82));-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:0 .5px 0 rgba(255,255,255,.08)}
+.sheet.full .sbarwrap .bar{position:static;margin:0;padding-left:0;padding-right:0;background:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.stabs{display:flex;gap:4px;padding:4px;border-radius:14px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.1)}
+.stabs button{flex:1;min-width:0;padding:7px 2px 6px;border-radius:10px;text-align:center;font-size:11px;font-weight:600;color:rgba(255,255,255,.7);line-height:1.1}
+.stabs button b{display:block;font-size:19px;line-height:1.2;margin-bottom:2px}
+.stabs button.on{background:rgba(255,255,255,.16);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 10px rgba(0,0,0,.25)}
+.stabs button span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ===== live preview ===== */
+.pv{position:relative;height:250px;border-radius:20px;overflow:hidden;margin-top:6px;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.35);isolation:isolate}
+.pv-bg{position:absolute;inset:-30px;background-size:cover;background-position:center}
+.pv-dim{position:absolute;inset:0}
+.pv-in{position:absolute;top:0;left:0;width:200%;transform:scale(.5);transform-origin:0 0;padding:36px 32px;pointer-events:none}
+.pv-in .group h2{margin-top:0}
+.pv-tag{position:absolute;top:10px;right:10px;z-index:2;font-size:11px;font-weight:700;letter-spacing:.4px;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+
+/* ===== option tiles with picture previews ===== */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 14px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:rgba(255,255,255,.75);text-align:center;line-height:1.15}
+.tile .art{width:100%;aspect-ratio:.72;border-radius:12px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);position:relative;overflow:hidden;padding:7px;display:flex;flex-direction:column;gap:4px}
+.tile.on{color:#fff}
+.tile.on .art{box-shadow:0 0 0 2px #fff,0 0 16px rgba(140,150,255,.45)}
+.mc{border-radius:4px;flex:none;height:14px;background:linear-gradient(135deg,#7ab8ff,#6d3df0)}
+.mc.b{background:linear-gradient(135deg,#ffc46b,#d9342b)}.mc.c{background:linear-gradient(135deg,#ffaee0,#b01f74)}.mc.d{background:linear-gradient(135deg,#6ff0b8,#0a7d67)}
+.art.stack .mc{height:30px;margin-top:-20px}.art.stack .mc:first-child{margin-top:0}.art.stack .mc:last-child{height:38px}
+.art.list .mc{height:10px}
+.art.grid{display:grid;grid-template-columns:1fr 1fr;align-content:start}.art.grid .mc{height:22px}
+.art.carousel{flex-direction:row;align-items:flex-start;padding-right:0}.art.carousel .mc{width:78%;height:30px}
+.art.carousel .row2{display:flex;gap:4px;width:100%}
+.sty{width:100%;height:46px;border-radius:7px;margin-top:auto;position:relative;overflow:hidden}
+.sty.gloss{background:radial-gradient(85% 95% at 100% 100%,#8fd3ffe6,transparent 68%),linear-gradient(140deg,#3a8bff,#3330c4);box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}
+.sty.gloss::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.35),transparent 50%)}
+.sty.glass{background:linear-gradient(140deg,#3a8bff8c,#3330c466);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(255,255,255,.25)}
+.sty.flat{background:#3a6bff}
+.sty.dark{background:linear-gradient(#191a22,#0e0f14) padding-box,linear-gradient(140deg,#8fd3ff,#3330c4) border-box;border:1.5px solid transparent}
+.sty i{position:absolute;left:6px;top:6px;width:40%;height:5px;border-radius:3px;background:rgba(255,255,255,.85)}
+.art.sbg{padding:0}
+.art.sbg .sty{position:absolute;left:8px;right:8px;bottom:8px;width:auto;height:26px;margin:0}
+label.tile{cursor:pointer}
+.tile .ph{position:absolute;inset:0;display:grid;place-items:center;font-size:24px}
+
+/* ===== fuller cards: pattern, chip, big icon, extra fields ===== */
+.c-deco{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit}
+.c-pat{position:absolute;inset:0;opacity:.16;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='60' viewBox='0 0 160 60'%3E%3Cg fill='none' stroke='white' stroke-width='.7'%3E%3Cpath d='M0 30 Q20 0 40 30 T80 30 T120 30 T160 30'/%3E%3Cpath d='M0 36 Q20 6 40 36 T80 36 T120 36 T160 36'/%3E%3Cpath d='M0 24 Q20 54 40 24 T80 24 T120 24 T160 24'/%3E%3Cpath d='M0 42 Q20 12 40 42 T80 42 T120 42 T160 42'/%3E%3C/g%3E%3C/svg%3E");background-size:160px 60px;-webkit-mask-image:linear-gradient(115deg,transparent 15%,#000 55%);mask-image:linear-gradient(115deg,transparent 15%,#000 55%)}
+.c-big{position:absolute;right:-6%;bottom:-14%;font-size:150px;line-height:1;filter:grayscale(1) brightness(2.6);opacity:.17;transform:rotate(-12deg)}
+.c-chip{width:42px;height:32px;border-radius:7px;margin-top:18px;position:relative;z-index:1;flex:none;
+  background:linear-gradient(135deg,#f7e3a1,#d4a84e 45%,#f3d98a 60%,#b98a33);box-shadow:inset 0 0 0 1px rgba(120,80,10,.35),0 2px 6px rgba(0,0,0,.25)}
+.c-chip::before{content:"";position:absolute;inset:7px 12px;border:1px solid rgba(120,80,10,.45);border-radius:3px}
+.c-chip::after{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px solid rgba(120,80,10,.45)}
+.c-row{display:flex;gap:18px}
+.lay-list .c-chip,.lay-grid .c-chip,.lay-list .c-big,.lay-grid .c-pat{display:none}
+.lay-grid .c-big{font-size:90px;bottom:-18%}
+.cs-flat .c-deco{opacity:.6}
+.cs-dark .c-big{filter:none;opacity:.12}
+
 </style>
 </style>
 </head>
@@ -474,6 +531,10 @@ body.bg-photo #bgphoto{display:block}
       <div class="field"><label for="e-number" data-i18n="e.number">Number</label><input id="e-number" data-i18n-ph="e.optional" placeholder="Optional" autocomplete="off" autocapitalize="characters"></div>
       <div class="field"><label for="e-expiry" data-i18n="e.expires">Expires</label><input id="e-expiry" type="date"></div>
     </div>
+    <div class="row2">
+      <div class="field"><label for="e-issuer" data-i18n="e.issuer">Issued by</label><input id="e-issuer" data-i18n-ph="e.issuerPh" placeholder="e.g. Spain, Sanitas" autocomplete="off"></div>
+      <div class="field"><label for="e-issued" data-i18n="e.issued">Issue date</label><input id="e-issued" type="date"></div>
+    </div>
     <div class="field"><label for="e-notes" data-i18n="e.notes">Notes</label><textarea id="e-notes" data-i18n-ph="e.notesPh" placeholder="Optional — issuer, policy phone number, etc."></textarea></div>
     <button class="danger" id="e-delete" data-i18n="e.delete" hidden>Delete document</button>
   </div>
@@ -482,7 +543,10 @@ body.bg-photo #bgphoto{display:block}
 <!-- settings -->
 <div class="overlay sheet full" id="settings">
   <div class="panel set">
-    <div class="bar"><span></span><span class="t" data-i18n="s.title">Settings</span><button class="link b" id="s-done" data-i18n="done">Done</button></div>
+    <div class="sbarwrap">
+      <div class="bar"><span></span><span class="t" data-i18n="s.title">Settings</span><button class="link b" id="s-done" data-i18n="done">Done</button></div>
+      <div class="stabs" id="stabs"></div>
+    </div>
     <div id="s-body"></div>
     <input type="file" id="s-import" accept="application/json,.json" hidden>
   </div>
@@ -746,6 +810,11 @@ I18N.es = {
   'blocked':'Este navegador bloqueó el almacenamiento local y la cartera no puede funcionar. En el iPhone, ábrela en Safari (no en modo privado).'
 };
 Object.assign(I18N.en, {
+  'st.look':'Look', 'st.cards':'Cards', 'st.people':'People', 'st.security':'Security', 'st.general':'General', 'pv.title':'PREVIEW',
+  'cf.title':'Show on cards', 'cf.deco':'Decorations', 'cf.decoSub':'ID-style pattern, chip and a large icon, so cards never look empty',
+  'cf.thumb':'Document picture', 'cf.mask':'Hide most of the number', 'cf.owner':'Owner name',
+  'cf.foot':'Tip: add “Issued by” and “Issue date” to any document under Edit — they appear on the card too.',
+  'e.issuer':'Issued by', 'e.issuerPh':'e.g. Spain, Sanitas, DGT', 'e.issued':'Issue date', 's.bgUse':'Use my photo again',
   'pk.share':'Share',
   's.import':'Import card or backup…',
   'sh.title':'Share', 'sh.file':'Share file', 'sh.fileSub':'The original PDF or photo',
@@ -759,6 +828,11 @@ Object.assign(I18N.en, {
   's.bgPick':'Choose photo…', 's.bgChange':'Change photo…', 's.bgBlur':'Blur', 's.bgDim':'Darken', 's.bgFoot':'Your photo stays on this iPhone. Hold-and-drag works in the Wallet stack and Compact list layouts.'
 });
 Object.assign(I18N.ka, {
+  'st.look':'იერი', 'st.cards':'ბარათები', 'st.people':'წევრები', 'st.security':'დაცვა', 'st.general':'ზოგადი', 'pv.title':'გადახედვა',
+  'cf.title':'ბარათზე ჩვენება', 'cf.deco':'დეკორაცია', 'cf.decoSub':'პირადობის მოწმობის სტილის ნახატი, ჩიპი და დიდი ხატულა — ბარათი ცარიელი აღარ ჩანს',
+  'cf.thumb':'დოკუმენტის სურათი', 'cf.mask':'ნომრის უმეტესი ნაწილის დამალვა', 'cf.owner':'მფლობელის სახელი',
+  'cf.foot':'რჩევა: ნებისმიერ დოკუმენტს რედაქტირებაში დაუმატეთ „გამცემი“ და „გაცემის თარიღი“ — ისინი ბარათზეც გამოჩნდება.',
+  'e.issuer':'გამცემი', 'e.issuerPh':'მაგ.: საქართველო, Sanitas', 'e.issued':'გაცემის თარიღი', 's.bgUse':'ჩემი ფოტოს ხელახლა გამოყენება',
   'pk.share':'გაზიარება',
   's.import':'ბარათის ან ასლის იმპორტი…',
   'sh.title':'გაზიარება', 'sh.file':'ფაილის გაზიარება', 'sh.fileSub':'ორიგინალი PDF ან ფოტო',
@@ -772,6 +846,11 @@ Object.assign(I18N.ka, {
   's.bgPick':'ფოტოს არჩევა…', 's.bgChange':'ფოტოს შეცვლა…', 's.bgBlur':'გაბუნდოვნება', 's.bgDim':'დაბნელება', 's.bgFoot':'თქვენი ფოტო მხოლოდ ამ iPhone-ზე რჩება. დაჭერით გადათრევა მუშაობს „საფულის დასტისა“ და „კომპაქტური სიის“ განლაგებაში.'
 });
 Object.assign(I18N.es, {
+  'st.look':'Aspecto', 'st.cards':'Tarjetas', 'st.people':'Personas', 'st.security':'Seguridad', 'st.general':'General', 'pv.title':'VISTA PREVIA',
+  'cf.title':'Mostrar en las tarjetas', 'cf.deco':'Decoración', 'cf.decoSub':'Trama tipo DNI, chip y un icono grande para que ninguna tarjeta parezca vacía',
+  'cf.thumb':'Imagen del documento', 'cf.mask':'Ocultar casi todo el número', 'cf.owner':'Nombre del titular',
+  'cf.foot':'Consejo: añade «Emitido por» y «Fecha de expedición» a cualquier documento en Editar; también aparecen en la tarjeta.',
+  'e.issuer':'Emitido por', 'e.issuerPh':'p. ej. España, Sanitas, DGT', 'e.issued':'Fecha de expedición', 's.bgUse':'Volver a usar mi foto',
   'sh.title':'Compartir', 'sh.file':'Compartir archivo', 'sh.fileSub':'El PDF o la foto original',
   'sh.card':'Compartir como tarjeta de Cartera', 'sh.cardSub':'Imágenes + datos — se abre en Family Wallet',
   'sh.askName':'Tu nombre — sustituye a «Yo» en las tarjetas que compartes', 'sh.ready':'Tarjeta lista para enviar',
@@ -890,7 +969,8 @@ async function getFiles(docId) {
 
 /* ---------- state ---------- */
 const S = {members:[], docs:[], filter:'all', q:'', locked:false, hasPin:false, bioId:null, lockAfter:60000,
-  prefs:{layout:'stack', cardStyle:'gloss', bg:'aurora', bgBlur:12, bgDim:35}, myName:''};
+  prefs:{layout:'stack', cardStyle:'gloss', bg:'aurora', bgBlur:12, bgDim:35,
+    show:{thumb:true, number:true, mask:true, expiry:true, issuer:true, issued:false, owner:true, deco:true}}, myName:'', stab:'look'};
 const BG_PREVIEW = {aurora:'radial-gradient(60% 40% at 20% 15%,#6e5cff,transparent),radial-gradient(60% 40% at 90% 30%,#ff4096aa,transparent),radial-gradient(70% 50% at 60% 95%,#00d2c8aa,transparent),#05060c',
   midnight:'radial-gradient(60% 40% at 20% 15%,#3c5affaa,transparent),radial-gradient(60% 45% at 85% 70%,#783cffaa,transparent),#03040b',
   sunset:'radial-gradient(60% 40% at 15% 12%,#ff783c,transparent),radial-gradient(60% 40% at 90% 30%,#ff3c82,transparent),radial-gradient(70% 50% at 60% 95%,#8c3cff,transparent),#0d0610',
@@ -920,7 +1000,7 @@ async function pickBackground(file) {
     const blob = await canvasToBlob(c, 0.86); c.width = c.height = 0;
     await kvSet('bgImage', {type:'image/jpeg', data: await blob.arrayBuffer()});
     if (bgUrl) URL.revokeObjectURL(bgUrl); bgUrl = null;
-    S.prefs.bg = 'photo'; await savePrefs(); renderSettings();
+    S.prefs.bg = 'photo'; await savePrefs(); renderSettings(); toast('✓');
   } catch (e) { alert(e.message || e); } finally { URL.revokeObjectURL(url); }
 }
 
@@ -959,7 +1039,7 @@ function render() {
   }
   const q = S.q.trim().toLowerCase();
   let docs = S.docs.filter(d => S.filter === 'all' || d.memberId === S.filter);
-  if (q) docs = docs.filter(d => [d.title, typeOf(d.type).label, member(d.memberId)?.name, d.number, d.notes].join(' ').toLowerCase().includes(q));
+  if (q) docs = docs.filter(d => [d.title, typeOf(d.type).label, member(d.memberId)?.name, d.number, d.notes, d.issuer].join(' ').toLowerCase().includes(q));
   if (!docs.length) { list.append(el('p', 'none', q ? L('none.search') : L('none.person'))); return; }
   const tOrder = d => TYPES.findIndex(t => t.id === d.type);
   const pos = d => (typeof d.pos === 'number' ? d.pos : 1e9);
@@ -1059,8 +1139,19 @@ function cardEl(d) {
   b.dataset.id = d.id;
   cardVars(b, d);
   b.style.setProperty('--sd', (Math.random() * 8).toFixed(1) + 's');
-  b.innerHTML = `<div class="c-top"><div class="c-head"><div class="c-title">${esc(d.title || t.label)}</div><div class="c-sub">${t.icon} ${esc(t.label)} · ${esc(m.name)}</div></div>${exp ? `<span class="badge ${exp.cls}">${exp.text}</span>` : ''}</div>
-    <div class="c-body"><div class="c-meta">${d.number ? `<div class="c-k">${esc(L('card.number'))}</div><div class="c-v">${esc(mask(d.number))}</div>` : ''}${d.expiry ? `<div class="c-k">${esc(L('card.expires'))}</div><div class="c-v">${esc(fmtDate(d.expiry))}</div>` : ''}</div>${d.thumb ? `<img class="c-thumb" src="${d.thumb}" alt="">` : ''}</div>`;
+  const SH = S.prefs.show, deco = SH.deco;
+  const chip = deco && ['id', 'driving', 'health', 'insurance', 'residence'].includes(d.type);
+  const kv = (k, v) => `<div><div class="c-k">${esc(k)}</div><div class="c-v">${esc(v)}</div></div>`;
+  const metaL = [], metaR = [];
+  if (SH.number && d.number) metaL.push(kv(L('card.number'), SH.mask ? mask(d.number) : d.number));
+  if (SH.expiry && d.expiry) metaL.push(kv(L('card.expires'), fmtDate(d.expiry)));
+  if (SH.issuer && d.issuer) metaR.push(kv(L('e.issuer'), d.issuer));
+  if (SH.issued && d.issued) metaR.push(kv(L('e.issued'), fmtDate(d.issued)));
+  const thumb = SH.thumb && d.thumb;
+  b.innerHTML = `${deco ? `<div class="c-deco"><div class="c-pat"></div>${thumb ? '' : `<div class="c-big">${t.icon}</div>`}</div>` : ''}
+    <div class="c-top"><div class="c-head"><div class="c-title">${esc(d.title || t.label)}</div><div class="c-sub">${t.icon} ${esc(t.label)}${SH.owner ? ' · ' + esc(m.name) : ''}</div></div>${exp ? `<span class="badge ${exp.cls}">${exp.text}</span>` : ''}</div>
+    ${chip ? '<div class="c-chip"></div>' : ''}
+    <div class="c-body"><div class="c-meta"><div class="c-row">${metaL.join('')}</div><div class="c-row">${metaR.join('')}</div></div>${thumb ? `<img class="c-thumb" src="${d.thumb}" alt="">` : ''}</div>`;
   attachPress(b, d.id);
   return b;
 }
@@ -1240,6 +1331,8 @@ async function openViewer(id) {
     <div class="box">
       ${d.number ? `<button class="row selectable" id="vs-num"><span class="grow">${esc(d.number)}<small>${esc(L('v.numberCopy'))}</small></span><svg style="width:20px;height:20px;opacity:.7"><use href="#i-copy"/></svg></button>` : ''}
       ${d.expiry ? `<div class="row"><span class="grow">${esc(fmtDate(d.expiry))}<small>${esc(L('e.expires'))}</small></span>${ex ? `<span class="badge ${ex.cls}">${ex.text}</span>` : ''}</div>` : ''}
+      ${d.issuer ? `<div class="row"><span class="grow">${esc(d.issuer)}<small>${esc(L('e.issuer'))}</small></span></div>` : ''}
+      ${d.issued ? `<div class="row"><span class="grow">${esc(fmtDate(d.issued))}<small>${esc(L('e.issued'))}</small></span></div>` : ''}
       <div class="row"><span class="grow">${esc(m ? m.name : L('unassigned'))}<small>${esc(L('e.owner'))}</small></span></div>
       ${d.notes ? `<div class="row"><span class="grow vs-note selectable">${esc(d.notes)}<small>${esc(L('v.notes'))}</small></span></div>` : ''}
       <div class="row"><span class="grow">${nFiles}<small>${esc(L('v.files'))}</small></span></div>
@@ -1319,7 +1412,7 @@ async function shareCard(d) {
   }
   const files = await getFiles(d.id);
   const card = {app:'family-wallet-card', version:1, exported:new Date().toISOString(), owner,
-    doc:{type:d.type, title:d.title || '', number:d.number || '', expiry:d.expiry || '', notes:d.notes || '', color:d.color || null},
+    doc:{type:d.type, title:d.title || '', number:d.number || '', expiry:d.expiry || '', notes:d.notes || '', color:d.color || null, issuer:d.issuer || '', issued:d.issued || ''},
     thumb:d.thumb || null, files:files.map(f => ({name:f.name, type:f.type, data:abToB64(f.data)}))};
   const safe = s => String(s).replace(/[\\/:*?"<>|]+/g, '').trim();
   const name = `${safe(d.title || typeOf(d.type).label)}${owner ? ' - ' + safe(owner) : ''}.json`;
@@ -1338,7 +1431,7 @@ async function importCard(data) {
   let i = 0;
   for (const f of data.files || []) await put('files', {id:uid(), docId:id, name:f.name || 'document', type:f.type || guessType(f.name || ''), data:b64ToAb(f.data), order:now + i++});
   await put('docs', {id, memberId:m.id, type:TYPES.some(t => t.id === dd.type) ? dd.type : 'other', title:dd.title || '', number:dd.number || '',
-    expiry:dd.expiry || '', notes:dd.notes || '', color:dd.color && COLORS[dd.color] ? dd.color : null, thumb:data.thumb || null, created:now, updated:now});
+    expiry:dd.expiry || '', notes:dd.notes || '', issuer:dd.issuer || '', issued:dd.issued || '', color:dd.color && COLORS[dd.color] ? dd.color : null, thumb:data.thumb || null, created:now, updated:now});
   await load(); render(); toast(L('imp.done'));
   return true;
 }
@@ -1432,6 +1525,8 @@ async function openEditor(id) {
   $('#e-title').placeholder = typeOf($('#e-type').value).label;
   $('#e-number').value = d ? (d.number || '') : '';
   $('#e-expiry').value = d ? (d.expiry || '') : '';
+  $('#e-issuer').value = d ? (d.issuer || '') : '';
+  $('#e-issued').value = d ? (d.issued || '') : '';
   $('#e-notes').value = d ? (d.notes || '') : '';
   $('#e-delete').hidden = !d;
   E.color = d && d.color ? d.color : null;
@@ -1441,7 +1536,7 @@ async function openEditor(id) {
   $('#editor .panel').scrollTop = 0;
   show('#editor');
 }
-function editorSnapshot() { return JSON.stringify(['#e-member','#e-type','#e-title','#e-number','#e-expiry','#e-notes'].map(s => $(s).value).concat(E.color || '')); }
+function editorSnapshot() { return JSON.stringify(['#e-member','#e-type','#e-title','#e-number','#e-expiry','#e-issuer','#e-issued','#e-notes'].map(s => $(s).value).concat(E.color || '')); }
 function editorDirty() { return E && (E.newFiles.length || E.removed.size || editorSnapshot() !== E.snap); }
 function cancelEditor() { if (editorDirty() && !confirm(L('discard'))) return; hide('#editor'); }
 function renderSwatches() {
@@ -1497,6 +1592,7 @@ async function saveDoc() {
     await put('docs', {
       id, memberId, type: $('#e-type').value, title: $('#e-title').value.trim(),
       number: $('#e-number').value.trim(), expiry: $('#e-expiry').value, notes: $('#e-notes').value.trim(), color: E.color || null,
+      issuer: $('#e-issuer').value.trim(), issued: $('#e-issued').value,
       thumb, created: old ? old.created : now, updated: now
     });
     await load(); render(); hide('#editor'); toast(L('saved'));
@@ -1520,6 +1616,26 @@ async function addMember(name) {
 
 /* ---------- settings ---------- */
 async function openSettings() { await renderSettings(); $('#settings .panel').scrollTop = 0; show('#settings'); }
+function previewHTML() {
+  const P = S.prefs;
+  let docs = S.docs.slice().sort((a, b) => (typeof a.pos === 'number' ? a.pos : 1e9) - (typeof b.pos === 'number' ? b.pos : 1e9)).slice(0, 4);
+  if (!docs.length) docs = [{id:'p1', type:'id', number:'12345678Z', expiry:'2031-05-01', issuer:'España'}, {id:'p2', type:'passport', expiry:'2027-02-01'},
+    {id:'p3', type:'health'}, {id:'p4', type:'driving', number:'B-778812'}];
+  const bg = P.bg === 'photo' && bgUrl ? `background-image:url('${bgUrl}');filter:blur(${Math.round(P.bgBlur / 2)}px)` : `background:${BG_PREVIEW[P.bg] || BG_PREVIEW.aurora}`;
+  return `<div class="pv"><div class="pv-bg" style="${bg}"></div>${P.bg === 'photo' ? `<div class="pv-dim" style="background:rgba(0,0,0,${(P.bgDim / 100).toFixed(2)})"></div>` : ''}
+    <span class="pv-tag">${esc(L('pv.title'))}</span><div class="pv-in" id="pv-in"></div></div>`;
+}
+function fillPreview() {
+  const box = $('#pv-in'); if (!box) return;
+  let docs = S.docs.slice().sort((a, b) => (typeof a.pos === 'number' ? a.pos : 1e9) - (typeof b.pos === 'number' ? b.pos : 1e9)).slice(0, 4);
+  if (!docs.length) docs = [{id:'p1', type:'id', number:'12345678Z', expiry:'2031-05-01', issuer:'España'}, {id:'p2', type:'passport', expiry:'2027-02-01'},
+    {id:'p3', type:'health'}, {id:'p4', type:'driving', number:'B-778812'}];
+  const sec = el('section', 'group'), lay = S.prefs.layout;
+  sec.append(el('h2', '', (S.members[0] && S.members[0].name) || L('me')));
+  const st = el('div', lay === 'stack' ? 'stack' : 'stack open');
+  docs.forEach(d => st.append(cardEl(d)));
+  sec.append(st); box.innerHTML = ''; box.append(sec);
+}
 async function renderSettings() {
   S.hasPin = !!(await kvGet('pinHash'));
   S.bioId = (await kvGet('bioId')) || null;
@@ -1529,32 +1645,48 @@ async function renderSettings() {
   try { persisted = await navigator.storage.persisted(); } catch {}
   const count = id => S.docs.filter(d => d.memberId === id).length;
   const opts = [[0,L('s.now')],[60000,L('s.1')],[300000,L('s.5')],[900000,L('s.15')]];
-  const P = S.prefs;
-  const seg = (act, cur, items) => `<div class="seg">${items.map(([v, k]) => `<button data-act="${act}" data-v="${v}" class="${cur === v ? 'on' : ''}">${esc(L(k))}</button>`).join('')}</div>`;
-  const bgs = ['aurora', 'midnight', 'sunset', 'ocean', 'forest', 'black'];
-  $('#s-body').innerHTML = `
-    <h3>${esc(L('s.appearance'))}</h3>
-    <div class="box">
-      <div class="row"><span class="grow">${esc(L('s.layout'))}</span></div>
-      ${seg('layout', P.layout, [['stack','lay.stack'],['carousel','lay.carousel'],['list','lay.list'],['grid','lay.grid']])}
-    </div>
-    <div class="box" style="margin-top:10px">
-      <div class="row"><span class="grow">${esc(L('s.cardStyle'))}</span></div>
-      ${seg('cstyle', P.cardStyle, [['gloss','cs.gloss'],['glass','cs.glass'],['flat','cs.flat'],['dark','cs.dark']])}
-    </div>
-    <div class="box" style="margin-top:10px">
-      <div class="row"><span class="grow">${esc(L('s.bg'))}</span></div>
-      <div class="bgsw">${bgs.map(k => `<button data-act="bg" data-v="${k}" class="${P.bg === k ? 'on' : ''}"><i style="background:${BG_PREVIEW[k]}"></i>${esc(L('bg.' + k))}</button>`).join('')}
-        <button data-act="bgphoto" class="${P.bg === 'photo' ? 'on' : ''}"><i style="${P.bg === 'photo' && bgUrl ? `background-image:url('${bgUrl}')` : 'background:rgba(255,255,255,.08);display:grid;place-items:center;font-size:24px'}">${P.bg === 'photo' && bgUrl ? '' : '🖼️'}</i>${esc(L('bg.photo'))}</button></div>
+  const P = S.prefs, tab = S.stab;
+  const tabs = [['look','🎨','st.look'],['cards','🪪','st.cards'],['people','👥','st.people'],['security','🔒','st.security'],['general','⚙️','st.general']];
+  $('#stabs').innerHTML = tabs.map(([k, i, l]) => `<button data-act="tab" data-v="${k}" class="${tab === k ? 'on' : ''}"><b>${i}</b><span>${esc(L(l))}</span></button>`).join('');
+  const sw = (key, label, sub) => `<div class="row"><span class="grow">${esc(label)}${sub ? `<small>${esc(sub)}</small>` : ''}</span><button class="sw ${P.show[key] ? 'on' : ''}" data-act="show" data-v="${key}" aria-label="${esc(label)}"></button></div>`;
+  let html = '';
+  if (tab === 'look') {
+    const lays = [['stack','lay.stack','<div class="mc"></div><div class="mc b"></div><div class="mc c"></div><div class="mc d"></div>'],
+      ['carousel','lay.carousel','<div class="row2"><div class="mc"></div><div class="mc b"></div></div><div class="row2"><div class="mc c"></div><div class="mc d"></div></div>'],
+      ['list','lay.list','<div class="mc"></div><div class="mc b"></div><div class="mc c"></div><div class="mc d"></div><div class="mc"></div>'],
+      ['grid','lay.grid','<div class="mc"></div><div class="mc b"></div><div class="mc c"></div><div class="mc d"></div><div class="mc b"></div><div class="mc"></div>']];
+    const bgs = ['aurora', 'midnight', 'sunset', 'ocean', 'forest', 'black'];
+    html = `${previewHTML()}
+    <h3>${esc(L('s.layout'))}</h3>
+    <div class="box"><div class="tiles">${lays.map(([v, k, art]) => `<button class="tile ${P.layout === v ? 'on' : ''}" data-act="layout" data-v="${v}"><div class="art ${v}">${art}</div>${esc(L(k))}</button>`).join('')}</div></div>
+    <h3>${esc(L('s.cardStyle'))}</h3>
+    <div class="box"><div class="tiles">${['gloss','glass','flat','dark'].map(v => `<button class="tile ${P.cardStyle === v ? 'on' : ''}" data-act="cstyle" data-v="${v}"><div class="art" style="background:${BG_PREVIEW.aurora}"><div class="sty ${v}"><i></i></div></div>${esc(L('cs.' + v))}</button>`).join('')}</div></div>
+    <h3>${esc(L('s.bg'))}</h3>
+    <div class="box"><div class="tiles">${bgs.map(k => `<button class="tile ${P.bg === k ? 'on' : ''}" data-act="bg" data-v="${k}"><div class="art sbg" style="background:${BG_PREVIEW[k]}"><div class="sty gloss"><i></i></div></div>${esc(L('bg.' + k))}</button>`).join('')}
+      <label class="tile ${P.bg === 'photo' ? 'on' : ''}"><input type="file" accept="image/*" data-act="bgfile" hidden><div class="art sbg" style="${bgUrl ? `background:center/cover url('${bgUrl}')` : ''}">${bgUrl ? '<div class="sty gloss"><i></i></div>' : '<span class="ph">🖼️</span>'}</div>${esc(L('bg.photo'))}</label>
+      ${bgUrl && P.bg !== 'photo' ? '' : ''}</div>
       ${P.bg === 'photo' ? `
-      <button class="row link" data-act="bgphoto">${esc(L('s.bgChange'))}</button>
+      <label class="row link"><input type="file" accept="image/*" data-act="bgfile" hidden>${esc(L('s.bgChange'))}</label>
       <div class="row"><span class="rl">${esc(L('s.bgBlur'))}</span><input type="range" min="0" max="40" value="${P.bgBlur}" data-act="bgblur"></div>
-      <div class="row"><span class="rl">${esc(L('s.bgDim'))}</span><input type="range" min="0" max="85" value="${P.bgDim}" data-act="bgdim"></div>` : ''}
+      <div class="row"><span class="rl">${esc(L('s.bgDim'))}</span><input type="range" min="0" max="85" value="${P.bgDim}" data-act="bgdim"></div>` : (bgUrl ? `<button class="row link" data-act="bgusephoto">${esc(L('s.bgUse'))}</button>` : '')}
     </div>
-    <p class="foot">${esc(L('s.bgFoot'))}</p>
-    <h3>${esc(L('s.lang'))}</h3>
-    <div class="box"><div class="row"><span class="grow">🌐 ${esc(L('s.lang'))}</span><select class="mini" data-act="lang"><option value="en" ${LANG === 'en' ? 'selected' : ''}>English</option><option value="ka" ${LANG === 'ka' ? 'selected' : ''}>ქართული</option><option value="es" ${LANG === 'es' ? 'selected' : ''}>Español</option></select></div></div>
-    <h3>${esc(L('s.people'))}</h3>
+    <p class="foot">${esc(L('s.bgFoot'))}</p>`;
+  } else if (tab === 'cards') {
+    html = `${previewHTML()}
+    <h3>${esc(L('cf.title'))}</h3>
+    <div class="box">
+      ${sw('deco', L('cf.deco'), L('cf.decoSub'))}
+      ${sw('thumb', L('cf.thumb'))}
+      ${sw('number', L('e.number'))}
+      ${P.show.number ? sw('mask', L('cf.mask')) : ''}
+      ${sw('expiry', L('e.expires'))}
+      ${sw('issuer', L('e.issuer'))}
+      ${sw('issued', L('e.issued'))}
+      ${sw('owner', L('cf.owner'))}
+    </div>
+    <p class="foot">${esc(L('cf.foot'))}</p>`;
+  } else if (tab === 'people') {
+    html = `<h3>${esc(L('s.people'))}</h3>
     <div class="box">
       ${S.members.map(m => `<div class="row">
         <button class="dot" data-act="color" data-id="${m.id}" style="background:${grad(m.color)}" aria-label="${esc(L('aria.color'))}"></button>
@@ -1562,11 +1694,12 @@ async function renderSettings() {
         <button class="red" data-act="delmember" data-id="${m.id}">${esc(L('s.remove'))}</button></div>`).join('')}
       <button class="row link" data-act="addmember">${esc(L('s.addPerson'))}</button>
     </div>
-    <div class="box" style="margin-top:10px">
-      <button class="row" data-act="myname"><span class="grow">${esc(L('s.myName'))}<small>${esc(L('s.myNameSub'))}</small></span><span class="muted">${esc(S.myName || L('s.notSet'))}</span></button>
-    </div>
     <p class="foot">${esc(L('s.peopleFoot'))}</p>
-    <h3>${esc(L('s.security'))}</h3>
+    <div class="box" style="margin-top:14px">
+      <button class="row" data-act="myname"><span class="grow">${esc(L('s.myName'))}<small>${esc(L('s.myNameSub'))}</small></span><span class="muted">${esc(S.myName || L('s.notSet'))}</span></button>
+    </div>`;
+  } else if (tab === 'security') {
+    html = `<h3>${esc(L('s.security'))}</h3>
     <div class="box">
       <div class="row"><span class="grow">${esc(L('s.pin'))}</span><button class="sw ${S.hasPin ? 'on' : ''}" data-act="pin" aria-label="${esc(L('s.pin'))}"></button></div>
       ${S.hasPin ? `
@@ -1574,7 +1707,10 @@ async function renderSettings() {
       <div class="row"><span class="grow">${esc(L('s.require'))}</span><select class="mini" data-act="lockafter">${opts.map(([v, l]) => `<option value="${v}" ${v === S.lockAfter ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
       <button class="row link" data-act="changepin">${esc(L('s.changePin'))}</button>` : ''}
     </div>
-    <p class="foot">${esc(L('s.secFoot'))}</p>
+    <p class="foot">${esc(L('s.secFoot'))}</p>`;
+  } else {
+    html = `<h3>${esc(L('s.lang'))}</h3>
+    <div class="box"><div class="row"><span class="grow">🌐 ${esc(L('s.lang'))}</span><select class="mini" data-act="lang"><option value="en" ${LANG === 'en' ? 'selected' : ''}>English</option><option value="ka" ${LANG === 'ka' ? 'selected' : ''}>ქართული</option><option value="es" ${LANG === 'es' ? 'selected' : ''}>Español</option></select></div></div>
     <h3>${esc(L('s.backup'))}</h3>
     <div class="box">
       <button class="row link" data-act="export">${esc(L('s.export'))}</button>
@@ -1589,7 +1725,10 @@ async function renderSettings() {
     </div>
     <h3></h3>
     <div class="box"><button class="row red" data-act="erase">${esc(L('s.erase'))}</button></div>
-    <p class="foot">Family Wallet 1.0${persisted ? ' · ' + esc(L('s.protected')) : ''}</p>`;
+    <p class="foot">Family Wallet 1.1${persisted ? ' · ' + esc(L('s.protected')) : ''}</p>`;
+  }
+  $('#s-body').innerHTML = html;
+  fillPreview();
 }
 async function settingsAction(act, id, target) {
   const m = id ? member(id) : null;
@@ -1608,13 +1747,13 @@ async function settingsAction(act, id, target) {
     case 'bio': S.bioId ? (await kvDel('bioId'), S.bioId = null, toast(L('bio.off'))) : await enableBio(); renderSettings(); break;
     case 'lang': await setLang(target.value); renderSettings(); break;
     case 'layout': S.prefs.layout = target.dataset.v; await savePrefs(); render(); renderSettings(); break;
-    case 'cstyle': S.prefs.cardStyle = target.dataset.v; await savePrefs(); renderSettings(); break;
+    case 'cstyle': S.prefs.cardStyle = target.dataset.v; await savePrefs(); render(); renderSettings(); break;
     case 'bg': S.prefs.bg = target.dataset.v; await savePrefs(); renderSettings(); break;
-    case 'bgphoto': if (S.prefs.bg === 'photo' && target.tagName === 'BUTTON' && target.classList.contains('row')) { $('#bg-input').click(); break; }
-      if (await kvGet('bgImage') && S.prefs.bg !== 'photo') { S.prefs.bg = 'photo'; await savePrefs(); renderSettings(); } else $('#bg-input').click();
-      break;
-    case 'bgblur': S.prefs.bgBlur = +target.value; await savePrefs(); break;
-    case 'bgdim': S.prefs.bgDim = +target.value; await savePrefs(); break;
+    case 'tab': S.stab = target.dataset.v; await renderSettings(); $('#settings .panel').scrollTop = 0; break;
+    case 'show': S.prefs.show[target.dataset.v] = !S.prefs.show[target.dataset.v]; await savePrefs(); render(); renderSettings(); break;
+    case 'bgusephoto': S.prefs.bg = 'photo'; await savePrefs(); renderSettings(); break;
+    case 'bgblur': S.prefs.bgBlur = +target.value; await savePrefs(); renderSettings(); break;
+    case 'bgdim': S.prefs.bgDim = +target.value; await savePrefs(); renderSettings(); break;
     case 'myname': { const n = prompt(L('s.myName'), S.myName || ''); if (n !== null) { S.myName = n.trim().slice(0, 40); await kvSet('myName', S.myName); renderSettings(); } break; }
     case 'lockafter': S.lockAfter = +target.value; await kvSet('lockAfter', S.lockAfter); break;
     case 'export': exportBackup(); break;
@@ -1833,8 +1972,10 @@ function bindUI() {
     fillMemberSelect(m ? m.id : e.target.dataset.prev);
   };
   $('#s-done').onclick = () => hide('#settings');
-  $('#s-body').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && b.tagName !== 'SELECT' && b.tagName !== 'INPUT') settingsAction(b.dataset.act, b.dataset.id, b); });
-  $('#s-body').addEventListener('change', e => { const b = e.target.closest('select[data-act],input[type=range][data-act]'); if (b) settingsAction(b.dataset.act, null, b); });
+  $('#stabs').addEventListener('click', e => { const b = e.target.closest('[data-act=tab]'); if (b) settingsAction('tab', null, b); });
+  $('#s-body').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && b.tagName !== 'SELECT' && b.tagName !== 'INPUT' && b.tagName !== 'LABEL') settingsAction(b.dataset.act, b.dataset.id, b); });
+  $('#s-body').addEventListener('change', e => { const f = e.target.closest('input[type=file][data-act=bgfile]'); if (f) { const file = f.files[0]; f.value = ''; if (file) pickBackground(file); return; }
+    const b = e.target.closest('select[data-act],input[type=range][data-act]'); if (b) settingsAction(b.dataset.act, null, b); });
   $('#s-body').addEventListener('input', e => { const r = e.target.closest('input[type=range]'); if (!r) return;
     if (r.dataset.act === 'bgblur') document.documentElement.style.setProperty('--bgBlur', r.value + 'px');
     if (r.dataset.act === 'bgdim') document.documentElement.style.setProperty('--bgDim', (r.value / 100).toFixed(2)); });
@@ -1867,7 +2008,7 @@ async function init() {
   catch (e) { document.body.innerHTML = `<p class="none" style="padding:60px 20px">${esc(L('blocked'))}</p>`; return; }
   const savedLang = await kvGet('lang'); if (I18N[savedLang]) { LANG = savedLang; try { localStorage.setItem('lang', LANG); } catch {} }
   applyStatic();
-  const pf = await kvGet('prefs'); if (pf) Object.assign(S.prefs, pf);
+  const pf = await kvGet('prefs'); if (pf) { const sh = Object.assign({}, S.prefs.show, pf.show || {}); Object.assign(S.prefs, pf); S.prefs.show = sh; }
   S.myName = (await kvGet('myName')) || '';
   await applyPrefs();
   await load();
