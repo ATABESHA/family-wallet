@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="List" id="m-title">
+<meta name="theme-color" content="#05060c">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>List</title>
+<style>
+:root{--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:#05060c;color:#fff;font:17px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text",Roboto,Helvetica,Arial,sans-serif;-webkit-user-select:none;user-select:none}
+body{position:fixed;inset:0}
+body::before{content:"";position:fixed;inset:-25%;z-index:0;pointer-events:none;background:radial-gradient(38% 30% at 18% 14%,rgba(110,92,255,.5),transparent 70%),radial-gradient(32% 28% at 86% 16%,rgba(255,64,150,.3),transparent 70%),radial-gradient(42% 36% at 72% 84%,rgba(0,210,200,.26),transparent 70%),#05060c}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+[hidden]{display:none!important}
+#app{position:fixed;inset:0;z-index:1;max-width:560px;margin:0 auto}
+#scroller{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:none;padding:0 16px calc(var(--sb) + 40px)}
+.head{position:sticky;top:0;z-index:2;margin:0 -16px 8px;padding:calc(var(--st) + 12px) 16px 12px;display:flex;align-items:center;gap:10px;background:linear-gradient(180deg,rgba(6,7,14,.8),rgba(6,7,14,.4));-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%)}
+.head .t{flex:1;min-width:0}
+h1{margin:0;font-size:30px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub{font-size:13px;color:rgba(255,255,255,.6)}
+.iconbtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:20px;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05));box-shadow:inset 0 1px 0 rgba(255,255,255,.38),inset 0 0 0 .5px rgba(255,255,255,.2)}
+.stack{display:flex;flex-direction:column;margin-top:8px}
+.card{position:relative;isolation:isolate;width:100%;aspect-ratio:1.586;border-radius:20px;padding:15px 18px;overflow:hidden;color:#fff;display:flex;flex-direction:column;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 0 0 .5px rgba(255,255,255,.3),0 -4px 18px rgba(0,0,0,.35),0 14px 30px rgba(0,0,0,.28);transition:transform .2s}
+.card::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(120% 80% at 0% 0%,rgba(255,255,255,.3),transparent 45%),linear-gradient(180deg,rgba(255,255,255,.16),transparent 42%)}
+.card:active{transform:scale(.985)}
+.stack .card+.card{margin-top:calc(-63.05% + 70px)}
+.c-top{display:flex;justify-content:space-between;gap:10px;position:relative;z-index:1}
+.c-title{font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.c-sub{font-size:12.5px;opacity:.88;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-head{min-width:0;flex:1}
+.badge{flex:none;align-self:flex-start;font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.3)}
+.badge.red{background:linear-gradient(180deg,#ff6b6b,#ff2d55)}
+.badge.amber{background:linear-gradient(180deg,#fff27a,#ffb627);color:#000}
+.c-body{flex:1;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;position:relative;z-index:1;min-height:0}
+.c-k{opacity:.7;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin-top:8px}
+.c-v{font-weight:600;font-size:15px}
+.c-thumb{max-height:100%;max-width:44%;border-radius:10px;background:#fff;object-fit:contain;box-shadow:0 0 0 1px rgba(255,255,255,.5),0 8px 20px rgba(0,0,0,.35)}
+.empty{text-align:center;padding:70px 24px;color:rgba(255,255,255,.7)}
+.empty .big{font-size:56px}
+.empty h2{color:#fff;margin:12px 0 8px}
+.btn{display:inline-block;margin-top:18px;padding:14px 24px;border-radius:16px;font-weight:600;background:linear-gradient(135deg,#46b3ff,#5b5cff 55%,#b25cff);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 24px rgba(91,92,255,.45)}
+.note{margin:14px 4px;font-size:13px;color:rgba(255,255,255,.55);text-align:center}
+.ended{margin:8px 0 0;padding:10px 14px;border-radius:14px;background:rgba(255,69,58,.18);color:#ffb3ad;font-size:14px}
+/* viewer */
+.overlay{position:fixed;inset:0;z-index:20;display:none}
+.overlay.show{display:block}
+#viewer{background:#000}
+#v-body{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#v-pages{min-height:100%;padding:calc(var(--st) + 12px) 10px calc(var(--sb) + 64px);display:flex;flex-direction:column;justify-content:center;gap:10px}
+#v-pages img{width:100%;display:block;border-radius:14px;background:#fff}
+#v-pages .card{pointer-events:none}
+.v-grab{position:absolute;left:50%;bottom:calc(var(--sb) + 12px);transform:translateX(-50%);z-index:2;border-radius:18px;padding:8px 18px;font-size:12px;font-weight:600;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05));-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:inset 0 1px 0 rgba(255,255,255,.38)}
+.v-sheet{position:absolute;left:0;right:0;bottom:0;z-index:3;max-height:75%;overflow:auto;background:rgba(20,21,32,.86);-webkit-backdrop-filter:blur(40px);backdrop-filter:blur(40px);border-radius:28px 28px 0 0;padding:10px 16px calc(var(--sb) + 22px);transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.85,.2,1);box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+#viewer.details .v-sheet{transform:none}
+#viewer.details .v-grab{opacity:0}
+.v-handle{width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.4);margin:2px auto 14px}
+.vs-title{font-size:22px;font-weight:700}
+.vs-sub{color:rgba(255,255,255,.65);font-size:14px;margin:2px 0 14px}
+.box{border-radius:16px;overflow:hidden;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.1)}
+.row{display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:48px;width:100%;position:relative;-webkit-user-select:text;user-select:text}
+.row+.row::before{content:"";position:absolute;top:0;left:14px;right:0;border-top:.5px solid rgba(255,255,255,.12)}
+.row .g{flex:1;min-width:0;white-space:pre-wrap}
+.row small{display:block;color:rgba(255,255,255,.58);font-size:13px}
+.spinner{width:28px;height:28px;border:3px solid #3a3a3c;border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin:60px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+#toast{position:fixed;left:50%;bottom:calc(var(--sb) + 28px);transform:translate(-50%,20px);background:rgba(58,58,60,.96);padding:11px 18px;border-radius:999px;font-size:15px;opacity:0;transition:.25s;z-index:80;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.menu{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.4);display:none}
+.menu.show{display:block}
+.menu .m{position:absolute;left:10px;right:10px;bottom:calc(var(--sb) + 10px);display:flex;flex-direction:column;gap:8px;max-width:560px;margin:0 auto}
+.menu .mb{border-radius:18px;overflow:hidden;background:rgba(40,42,56,.85);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px)}
+.menu .mb button{display:block;width:100%;padding:16px;text-align:center;border-top:.5px solid rgba(255,255,255,.12)}
+.menu .mb button:first-child{border-top:0}
+.menu .red{color:#ff6b6b}
+.menu .cancel{border-radius:18px;padding:16px;text-align:center;font-weight:600;color:#5fb2ff;background:rgba(40,42,56,.9)}
+</style>
+</head>
+<body>
+<div id="app"><div id="scroller">
+  <div class="head"><div class="t"><h1 id="title">List</h1><div class="sub" id="sub"></div></div><button class="iconbtn" id="more" aria-label="More" hidden>⋯</button></div>
+  <div id="main"></div>
+</div></div>
+<div class="overlay" id="viewer">
+  <div id="v-body"><div id="v-pages"></div></div>
+  <button class="v-grab" id="v-grab">⌃ <span id="t-details">Details</span></button>
+  <div class="v-sheet" id="v-sheet"><div class="v-handle"></div><div id="v-info"></div></div>
+</div>
+<div class="menu" id="menu"><div class="m"><div class="mb"><button id="m-update"></button><button class="red" id="m-remove"></button></div><button class="cancel" id="m-cancel"></button></div></div>
+<input type="file" id="pick" accept="application/json,.json" hidden>
+<div id="toast"></div>
+<script>
+'use strict';
+const T = {
+  en:{list:'List', importT:'Open your list', importP:'Choose the list file you saved from Family Wallet (it’s in the Files app).', importB:'Choose list file',
+    bad:'This is not a Family Wallet list file.', docs:'{n} documents', until:'Until {d}', ended:'This list ended on {d}.', details:'Details', number:'Number · tap to copy',
+    expires:'Expires', notes:'Notes', copied:'Copied', update:'Update list…', remove:'Remove list from this icon', cancel:'Cancel', removeQ:'Remove this list from this icon? Your main Wallet is not affected.',
+    expired:'Expired', days:'{n} days', today:'Expires today', noFile:'', private:'Only a copy of these documents lives in this icon. Edit them in your main Wallet.', holder:'Cardholder', valid:'Valid thru'},
+  ka:{list:'სია', importT:'გახსენით თქვენი სია', importP:'აირჩიეთ Family Wallet-დან შენახული სიის ფაილი (ის ფაილების აპშია).', importB:'სიის ფაილის არჩევა',
+    bad:'ეს არ არის Family Wallet-ის სიის ფაილი.', docs:'{n} დოკუმენტი', until:'{d}-მდე', ended:'ეს სია დასრულდა {d}.', details:'დეტალები', number:'ნომერი · შეეხეთ დასაკოპირებლად',
+    expires:'მოქმედების ვადა', notes:'შენიშვნები', copied:'დაკოპირდა', update:'სიის განახლება…', remove:'სიის წაშლა ამ ხატულიდან', cancel:'გაუქმება', removeQ:'წავშალოთ ეს სია ამ ხატულიდან? მთავარ საფულეზე ეს არ იმოქმედებს.',
+    expired:'ვადაგასული', days:'{n} დღე', today:'დღეს იწურება', noFile:'', private:'ამ ხატულაში მხოლოდ დოკუმენტების ასლია. შეცვალეთ ისინი მთავარ საფულეში.', holder:'ბარათის მფლობელი', valid:'მოქმედებს'},
+  es:{list:'Lista', importT:'Abre tu lista', importP:'Elige el archivo de lista que guardaste desde Family Wallet (está en la app Archivos).', importB:'Elegir archivo de lista',
+    bad:'Este no es un archivo de lista de Family Wallet.', docs:'{n} documentos', until:'Hasta el {d}', ended:'Esta lista terminó el {d}.', details:'Detalles', number:'Número · toca para copiar',
+    expires:'Caduca', notes:'Notas', copied:'Copiado', update:'Actualizar lista…', remove:'Quitar la lista de este icono', cancel:'Cancelar', removeQ:'¿Quitar esta lista de este icono? Tu Cartera principal no cambia.',
+    expired:'Caducado', days:'{n} días', today:'Caduca hoy', noFile:'', private:'Este icono solo guarda una copia de los documentos. Edítalos en tu Cartera principal.', holder:'Titular', valid:'Válida hasta'}
+};
+let lang = (navigator.language || 'en').slice(0, 2); if (!T[lang]) lang = 'en';
+const L = (k, v) => { let s = (T[lang] && T[lang][k]) ?? T.en[k] ?? k; if (v) for (const x in v) s = s.split('{' + x + '}').join(v[x]); return s; };
+const $ = s => document.querySelector(s);
+const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const b64ToAb = b => { const s = atob(b), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u.buffer; };
+const isPdf = f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name || '');
+let tt; const toast = m => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 2000); };
+const daysUntil = d => { const t = new Date(d + 'T00:00:00'), n = new Date(); n.setHours(0, 0, 0, 0); return Math.round((t - n) / 864e5); };
+const fmt = d => { try { return new Date(d + 'T00:00:00').toLocaleDateString(lang === 'ka' ? 'ka-GE' : lang, {day:'2-digit', month:'short', year:'numeric'}); } catch { return d; } };
+const badge = d => { if (!d.expiry || d.status === 'complete') return null; const n = daysUntil(d.expiry); return n < 0 ? ['red', L('expired')] : n === 0 ? ['amber', L('today')] : n <= 60 ? ['amber', L('days', {n})] : null; };
+
+/* name from the link, so “Add to Home Screen” suggests it */
+const qName = new URLSearchParams(location.search).get('n');
+function setName(n) { document.title = n; $('#m-title').content = n; $('#title').textContent = n; }
+setName(qName || L('list'));
+
+/* storage: this icon keeps its own copy */
+let db, DATA = null;
+const openDB = () => new Promise((res, rej) => { const r = indexedDB.open('family-wallet-list', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+const kv = (mode, fn) => new Promise((res, rej) => { const t = db.transaction('kv', mode), s = t.objectStore('kv'); let out; const r = fn(s); if (r) r.onsuccess = () => out = r.result; t.oncomplete = () => res(out); t.onerror = () => rej(t.error); });
+
+async function importFile(file) {
+  try {
+    const data = JSON.parse(await file.text());
+    if (data.app !== 'family-wallet-list') throw 0;
+    for (const d of data.docs) for (const f of d.files || []) { f.data = b64ToAb(f.data); }
+    await kv('readwrite', s => s.put(data, 'data'));
+    DATA = data; render();
+  } catch { alert(L('bad')); }
+}
+function render() {
+  const main = $('#main'); main.innerHTML = '';
+  if (DATA && DATA.lang && T[DATA.lang]) lang = DATA.lang;
+  $('#t-details').textContent = L('details');
+  $('#m-update').textContent = L('update'); $('#m-remove').textContent = L('remove'); $('#m-cancel').textContent = L('cancel');
+  if (!DATA) {
+    $('#more').hidden = true; $('#sub').textContent = '';
+    main.innerHTML = `<div class="empty"><div class="big">📋</div><h2>${esc(L('importT'))}</h2><p>${esc(L('importP'))}</p><button class="btn" id="imp">${esc(L('importB'))}</button></div>`;
+    $('#imp').onclick = () => $('#pick').click();
+    return;
+  }
+  setName(DATA.list.name);
+  $('#more').hidden = false;
+  $('#sub').textContent = L('docs', {n:DATA.docs.length}) + (DATA.list.until ? ' · ' + L('until', {d:fmt(DATA.list.until)}) : '');
+  if (DATA.list.until && daysUntil(DATA.list.until) < 0) main.append(el('div', 'ended', L('ended', {d:fmt(DATA.list.until)})));
+  const st = el('div', 'stack');
+  DATA.docs.forEach((d, i) => { const c = cardEl(d); c.onclick = () => openViewer(i); st.append(c); });
+  main.append(st, el('p', 'note', L('private')));
+}
+function cardEl(d) {
+  const g = d.grad || ['#8fd3ff', '#3a8bff', '#3330c4'], b = el('button', 'card'), bd = badge(d);
+  b.style.background = `radial-gradient(85% 95% at 100% 100%,${g[0]}e6,transparent 68%),linear-gradient(140deg,${g[1]},${g[2]} 78%)`;
+  const bk = d.bank;
+  b.innerHTML = `<div class="c-top"><div class="c-head"><div class="c-title">${esc(d.title || (bk && bk.bank) || d.typeLabel)}</div><div class="c-sub">${d.icon || ''} ${esc(d.typeLabel || '')}${d.owner ? ' · ' + esc(d.owner) : ''}</div></div>${bd ? `<span class="badge ${bd[0]}">${esc(bd[1])}</span>` : ''}</div>
+    <div class="c-body"><div>${bk ? `<div class="c-k">${esc(L('holder'))}</div><div class="c-v">${esc(bk.holder || '')} · •••• ${esc(bk.last4 || '')}</div>` : d.number ? `<div class="c-k">Nº</div><div class="c-v">${esc(d.number)}</div>` : ''}${d.expiry ? `<div class="c-k">${esc(L('expires'))}</div><div class="c-v">${esc(fmt(d.expiry))}</div>` : ''}</div>${d.thumb ? `<img class="c-thumb" src="${d.thumb}" alt="">` : ''}</div>`;
+  return b;
+}
+
+/* viewer */
+let pdfReady, urls = [], cur = null;
+const loadPdf = () => window.pdfjsLib ? Promise.resolve() : (pdfReady ||= new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'pdf.min.js'; s.onload = () => { pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js'; res(); }; s.onerror = rej; document.head.append(s); }));
+async function openViewer(i) {
+  const d = DATA.docs[i]; cur = d;
+  const v = $('#viewer'); v.classList.remove('details'); v.style.transform = ''; v.style.opacity = '';
+  const pages = $('#v-pages'); pages.innerHTML = '<div class="spinner"></div>';
+  $('#v-info').innerHTML = `<div class="vs-title">${esc(d.title || d.typeLabel)}</div><div class="vs-sub">${d.icon || ''} ${esc(d.typeLabel || '')}${d.owner ? ' · ' + esc(d.owner) : ''}</div>
+    <div class="box">${d.number ? `<button class="row" id="cp"><span class="g">${esc(d.number)}<small>${esc(L('number'))}</small></span>⧉</button>` : ''}
+    ${d.expiry ? `<div class="row"><span class="g">${esc(fmt(d.expiry))}<small>${esc(L('expires'))}</small></span></div>` : ''}
+    ${d.bank ? `<div class="row"><span class="g">${esc(d.bank.holder || '')} · •••• ${esc(d.bank.last4 || '')}<small>${esc(d.bank.bank || '')}</small></span></div>` : ''}
+    ${d.notes ? `<div class="row"><span class="g">${esc(d.notes)}<small>${esc(L('notes'))}</small></span></div>` : ''}</div>`;
+  const cp = $('#cp'); if (cp) cp.onclick = async () => { try { await navigator.clipboard.writeText(d.number); toast(L('copied')); } catch {} };
+  v.classList.add('show'); $('#v-body').scrollTo(0, 0);
+  urls.forEach(u => URL.revokeObjectURL(u)); urls = [];
+  pages.innerHTML = '';
+  if (!(d.files || []).length) { const c = cardEl(d); pages.append(c); return; }
+  const w = Math.min(2000, Math.round(pages.clientWidth * (devicePixelRatio || 2) * 1.5));
+  for (const f of d.files) {
+    if (isPdf(f)) {
+      try {
+        await loadPdf(); const pdf = await pdfjsLib.getDocument({data:new Uint8Array(f.data.slice(0))}).promise;
+        for (let p = 1; p <= pdf.numPages; p++) {
+          const pg = await pdf.getPage(p), vp1 = pg.getViewport({scale:1}), vp = pg.getViewport({scale:w / vp1.width});
+          const c = document.createElement('canvas'); c.width = vp.width; c.height = vp.height; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+          await pg.render({canvasContext:x, viewport:vp}).promise;
+          const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', .9)); addImg(URL.createObjectURL(blob));
+        }
+        pdf.destroy();
+      } catch {}
+    } else addImg(URL.createObjectURL(new Blob([f.data], {type:f.type})));
+  }
+}
+function addImg(u) { urls.push(u); const i = el('img'); i.src = u; $('#v-pages').append(i); }
+function closeViewer() { $('#viewer').classList.remove('show', 'details'); urls.forEach(u => URL.revokeObjectURL(u)); urls = []; }
+(function gestures() {
+  const v = $('#viewer'), body = $('#v-body'), sheet = $('#v-sheet'); let sx, sy, t0, mode, dd = 0;
+  v.addEventListener('touchstart', e => { const t = e.touches[0]; sx = t.clientX; sy = t.clientY; t0 = Date.now(); mode = null; dd = 0; }, {passive:true});
+  v.addEventListener('touchmove', e => {
+    const t = e.touches[0], mx = t.clientX - sx, my = t.clientY - sy;
+    if (mode === null) {
+      if (Math.abs(mx) < 10 && Math.abs(my) < 10) return;
+      const det = v.classList.contains('details');
+      if (Math.abs(mx) > Math.abs(my) * 1.2) mode = mx > 0 && !det ? 'back' : 'no';
+      else if (det) mode = my > 0 ? 'sdown' : 'no';
+      else mode = my > 0 && body.scrollTop <= 1 ? 'dismiss' : my < 0 && body.scrollTop + body.clientHeight >= body.scrollHeight - 2 ? 'sup' : 'no';
+      if (mode !== 'no') { v.style.transition = 'none'; }
+    }
+    if (mode === 'no') return;
+    e.preventDefault();
+    if (mode === 'back') { dd = Math.max(0, mx); v.style.transform = `translateX(${dd}px)`; }
+    else if (mode === 'dismiss') { dd = Math.max(0, my); v.style.transform = `translateY(${dd}px) scale(${Math.max(.85, 1 - dd / 1600)})`; }
+    else dd = mode === 'sup' ? -my : my;
+  }, {passive:false});
+  v.addEventListener('touchend', () => {
+    const m = mode; mode = null; if (!m || m === 'no') return;
+    const fast = dd / Math.max(1, Date.now() - t0) > .5;
+    if (m === 'sup') { if (dd > 50 || fast) v.classList.add('details'); return; }
+    if (m === 'sdown') { if (dd > 60 || fast) v.classList.remove('details'); return; }
+    v.style.transition = 'transform .24s ease-out, opacity .24s';
+    if (dd > (m === 'back' ? innerWidth * .33 : 110) || (fast && dd > 40)) { v.style.transform = m === 'back' ? 'translateX(100%)' : 'translateY(100%)'; v.style.opacity = '0'; setTimeout(() => { closeViewer(); v.style.transform = ''; v.style.opacity = ''; v.style.transition = ''; }, 240); }
+    else { v.style.transform = ''; }
+  });
+  body.addEventListener('click', () => v.classList.remove('details'));
+  $('#v-grab').onclick = () => v.classList.add('details');
+})();
+$('#more').onclick = () => $('#menu').classList.add('show');
+$('#m-cancel').onclick = () => $('#menu').classList.remove('show');
+$('#menu').onclick = e => { if (e.target.id === 'menu') $('#menu').classList.remove('show'); };
+$('#m-update').onclick = () => { $('#menu').classList.remove('show'); $('#pick').click(); };
+$('#m-remove').onclick = async () => { $('#menu').classList.remove('show'); if (!confirm(L('removeQ'))) return; await kv('readwrite', s => s.delete('data')); DATA = null; render(); };
+$('#pick').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) importFile(f); };
+document.addEventListener('gesturestart', e => { if (!e.target.closest('#v-body')) e.preventDefault(); });
+(async () => {
+  try { db = await openDB(); DATA = (await kv('readonly', s => s.get('data'))) || null; } catch {}
+  render();
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+</script>
+</body>
+</html>
