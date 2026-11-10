@@ -73,8 +73,9 @@ h1{font-size:34px;font-weight:700;margin:0;letter-spacing:.2px}
 .card{position:relative;isolation:isolate;width:100%;aspect-ratio:1.586;border-radius:16px;padding:15px 18px;overflow:hidden;color:#fff;display:flex;flex-direction:column;
   box-shadow:0 -1px 0 rgba(255,255,255,.18) inset,0 -6px 18px rgba(0,0,0,.45);transition:transform .18s ease;-webkit-touch-callout:none;touch-action:manipulation}
 .card::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 100% 0%,rgba(255,255,255,.22),transparent 55%),radial-gradient(90% 80% at 0% 100%,rgba(0,0,0,.25),transparent 60%);pointer-events:none}
-.card:active{transform:scale(.985)}
-.card.holding{transform:scale(.97);transition:transform .45s ease}
+.card{transform:perspective(900px) translate3d(0,calc(var(--sv,0px) * var(--i,0)),0) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(calc(var(--sc,1) * var(--sp,1)));transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.card:active{--sp:.985}
+.card.holding{--sp:.97;transition:transform .45s ease}
 .card.lifted{z-index:50;transition:none;box-shadow:0 22px 44px rgba(0,0,0,.65),0 -1px 0 rgba(255,255,255,.18) inset}
 body.dragging .card:not(.lifted){transition:none}
 #viewer{box-shadow:-12px 0 30px rgba(0,0,0,.6)}
@@ -386,10 +387,12 @@ body.bg-photo #bgphoto{display:block}
 .stabs button span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ===== live preview ===== */
-.pv{position:relative;height:250px;border-radius:20px;overflow:hidden;margin-top:6px;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.35);isolation:isolate}
+.pv{position:relative;height:190px;border-radius:20px;overflow:hidden;margin-top:6px;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.18),0 10px 30px rgba(0,0,0,.35);isolation:isolate}
 .pv-bg{position:absolute;inset:-30px;background-size:cover;background-position:center}
 .pv-dim{position:absolute;inset:0}
-.pv-in{position:absolute;top:0;left:0;width:200%;transform:scale(.5);transform-origin:0 0;padding:36px 32px;pointer-events:none}
+.pv-in{position:absolute;top:0;left:0;width:250%;transform:scale(.4);transform-origin:0 0;padding:40px 44px;pointer-events:none}
+#s-pv:not(:empty){padding-top:10px}
+#s-pv .pv{margin-top:0}
 .pv-in .group h2{margin-top:0}
 .pv-tag{position:absolute;top:10px;right:10px;z-index:2;font-size:11px;font-weight:700;letter-spacing:.4px;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.45);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 
@@ -431,6 +434,91 @@ label.tile{cursor:pointer}
 .lay-grid .c-big{font-size:90px;bottom:-18%}
 .cs-flat .c-deco{opacity:.6}
 .cs-dark .c-big{filter:none;opacity:.12}
+
+/* ===== more card styles ===== */
+.cs-neu .card{background:var(--neu-bg,#e8ebf1);color:#2a2e3d;border-radius:22px;
+  box-shadow:9px 9px 20px var(--neu-dark,rgba(160,170,190,.55)),-9px -9px 20px var(--neu-light,rgba(255,255,255,.95)),inset 0 0 0 1px rgba(255,255,255,.5)}
+.cs-neu .card::before,.cs-neu .card::after{display:none}
+.cs-neu .card .c-deco{opacity:.5}
+.cs-neu .c-pat{filter:invert(1);opacity:.07}
+.cs-neu .c-big{filter:none;opacity:.14}
+.cs-neu .c-title{color:var(--t);text-shadow:none}
+.cs-neu .c-sub,.cs-neu .c-meta{color:#5d6274;text-shadow:none}
+.cs-neu .c-thumb{box-shadow:4px 4px 10px rgba(160,170,190,.55),-4px -4px 10px #fff}
+.cs-neu .stack .card+.card{box-shadow:9px 9px 20px rgba(160,170,190,.55),-6px -10px 16px rgba(255,255,255,.95)}
+.cs-neu .card .c-head::before{content:"";position:absolute;left:-18px;top:2px;bottom:2px;width:4px;border-radius:0 4px 4px 0;background:var(--g)}
+.cs-neu .card .c-head{position:relative}
+.cs-neu .bk-num,.cs-neu .bk-net{color:#2a2e3d;text-shadow:none}
+body:not(.light).cs-neu .card{--neu-bg:#262a36;--neu-dark:rgba(0,0,0,.55);--neu-light:rgba(255,255,255,.06);color:#e8eaf2}
+body:not(.light).cs-neu .c-sub,body:not(.light).cs-neu .c-meta{color:#a7adbf}
+body:not(.light).cs-neu .bk-num,body:not(.light).cs-neu .bk-net{color:#e8eaf2}
+.cs-clay .card{border-radius:28px;background:linear-gradient(150deg,var(--t2),var(--t) 85%);
+  box-shadow:inset 6px 8px 14px rgba(255,255,255,.55),inset -8px -12px 20px rgba(0,0,0,.18),0 18px 30px rgba(0,0,0,.22),0 4px 8px rgba(0,0,0,.12)}
+.cs-clay .card::after{background:radial-gradient(60% 50% at 25% 15%,rgba(255,255,255,.45),transparent 60%)}
+.cs-clay .card::before{display:none}
+.cs-clay .c-pat{display:none}
+.cs-clay .c-big{filter:drop-shadow(0 8px 10px rgba(0,0,0,.2));opacity:.55;transform:rotate(-8deg)}
+.cs-clay .c-chip{border-radius:10px}
+.cs-clay .c-thumb{border-radius:14px}
+.cs-liquid .card{border:1.5px solid transparent;border-radius:24px;
+  background:linear-gradient(140deg,color-mix(in srgb,var(--t) 68%,transparent),color-mix(in srgb,var(--t) 40%,color-mix(in srgb,var(--t2) 30%,transparent))) padding-box,
+    conic-gradient(from 200deg,#ffb3ec,#9fe8ff,#c6b6ff,#fff1b0,#ffb3ec) border-box;
+  -webkit-backdrop-filter:blur(24px) saturate(200%);backdrop-filter:blur(24px) saturate(200%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -14px 28px rgba(255,255,255,.08),inset 10px 0 24px rgba(255,170,230,.18),inset -10px 0 24px rgba(140,220,255,.18),0 16px 34px rgba(0,0,0,.22)}
+.cs-liquid .card::after{background:radial-gradient(40% 30% at 18% 10%,rgba(255,255,255,.75),transparent 70%),radial-gradient(30% 22% at 92% 88%,rgba(255,255,255,.35),transparent 70%)}
+.cs-liquid .card::before{opacity:.6}
+.cs-liquid .c-pat{opacity:.1}
+.cs-liquid .c-title{text-shadow:0 1px 4px rgba(0,0,0,.35)}
+.cs-liquid .c-sub,.cs-liquid .c-meta{text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.sty.neu{background:#e8ebf1;box-shadow:4px 4px 8px rgba(160,170,190,.6),-4px -4px 8px #fff}
+.sty.neu i{background:#5b5cff}
+.sty.clay{background:linear-gradient(150deg,#c7b6ff,#9b7bff);border-radius:12px;box-shadow:inset 3px 4px 6px rgba(255,255,255,.55),inset -4px -5px 8px rgba(0,0,0,.18),0 6px 10px rgba(0,0,0,.2)}
+.sty.liquid{border:1.5px solid transparent;background:linear-gradient(140deg,rgba(120,140,255,.35),rgba(255,140,220,.2)) padding-box,conic-gradient(from 200deg,#ffb3ec,#9fe8ff,#c6b6ff,#fff1b0,#ffb3ec) border-box;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+
+/* ===== light backgrounds ===== */
+body.bg-light::before{background:#e8ebf1;animation:none}
+body.bg-pastel::before{background:radial-gradient(45% 35% at 15% 10%,#ffd9b8,transparent 70%),radial-gradient(45% 40% at 90% 30%,#ffc1dc,transparent 70%),radial-gradient(55% 45% at 30% 95%,#d9c8ff,transparent 70%),radial-gradient(40% 35% at 85% 90%,#c2f0e4,transparent 70%),#fbeef0}
+body.bg-dreamy::before{background:radial-gradient(45% 35% at 10% 85%,#ff7ac0,transparent 70%),radial-gradient(55% 45% at 85% 15%,#7aa8ff,transparent 70%),radial-gradient(50% 40% at 60% 70%,#46c8ff,transparent 70%),radial-gradient(40% 30% at 30% 20%,#b38cff,transparent 70%),#6f8cff}
+:root:has(body.light){background:#e8ebf1}
+body.light{color:#1b1e2b;background:#e8ebf1}
+body.light h1{background:linear-gradient(180deg,#1b1e2b 30%,#4b4f7a);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.light .head{background:linear-gradient(180deg,rgba(240,242,247,.82),rgba(240,242,247,.5))}
+body.light .head.shadow{box-shadow:0 .5px 0 rgba(0,0,0,.08),0 8px 24px rgba(120,130,160,.18)}
+body.light .iconbtn,body.light .chip,body.light .search input,body.light .notice{background:rgba(255,255,255,.62);color:#1b1e2b;box-shadow:4px 4px 10px rgba(150,160,185,.35),-4px -4px 10px rgba(255,255,255,.85),inset 0 0 0 .5px rgba(255,255,255,.7)}
+body.light .chip.on{background:#1b1e2b;color:#fff}
+body.light .chip.fav{color:#b07800}
+body.light .search svg,body.light .notice small,body.light .muted{color:#6b7080}
+body.light .search input::placeholder{color:#8a8fa0}
+body.light .group h2{color:rgba(27,30,43,.5)}
+body.light .bell{color:#e09b00}
+body.light .bell .count{border-color:#eef0f5}
+body.light .none,body.light .empty{color:#6b7080}
+body.light .empty h3{color:#1b1e2b}
+body.light .sheet.full{background:radial-gradient(60% 40% at 10% 0%,rgba(150,140,255,.22),transparent 70%),radial-gradient(50% 40% at 100% 30%,rgba(255,150,200,.18),transparent 70%),#eef0f5;color:#1b1e2b}
+body.light .sheet.full .bar,body.light .sbarwrap{background:linear-gradient(180deg,rgba(240,242,247,.96),rgba(240,242,247,.85));box-shadow:0 .5px 0 rgba(0,0,0,.08)}
+body.light .panel{background:rgba(245,246,250,.88);color:#1b1e2b}
+body.light .box,body.light .file,body.light .addfile,body.light .danger,body.light input,body.light select,body.light textarea{background-color:rgba(255,255,255,.75);color:#1b1e2b;box-shadow:0 1px 2px rgba(0,0,0,.05),inset 0 0 0 .5px rgba(0,0,0,.06)}
+body.light .box>.row+.row::before{border-color:rgba(0,0,0,.08)}
+body.light .set h3,body.light .field>label,body.light .foot,body.light .row small,body.light .set .row small,body.light .tipbox{color:#6b7080}
+body.light .set .link,body.light .link{color:#1f6fff}
+body.light .stabs{background:rgba(0,0,0,.05)}
+body.light .stabs button{color:#5b6070}
+body.light .stabs button.on{background:#fff;color:#1b1e2b;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+body.light .tile{color:#5b6070}
+body.light .tile.on{color:#1b1e2b}
+body.light .tile .art{background:rgba(0,0,0,.04);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+body.light .tile.on .art{box-shadow:0 0 0 2px #5b5cff,0 0 14px rgba(91,92,255,.3)}
+body.light .seg button,body.light .stt button{background:rgba(0,0,0,.05);color:#1b1e2b}
+body.light .sw{background:rgba(0,0,0,.12)}
+body.light .sw-c.on{border-color:#1b1e2b}
+body.light #lock{background:rgba(240,242,247,.35)}
+body.light #lock-title,body.light .lk-face{color:#1b1e2b}
+body.light .pv{box-shadow:inset 0 0 0 .5px rgba(0,0,0,.08),0 10px 24px rgba(120,130,160,.25)}
+
+/* ===== Face ID lock screen ===== */
+.lk-face{width:78px;height:78px;border-radius:24px;display:grid;place-items:center;margin:26px auto 14px;background:var(--gl);box-shadow:var(--gedge),0 10px 30px rgba(0,0,0,.25);color:#fff}
+.lk-face svg{width:46px;height:46px}
+#lock-help{margin-top:18px;font-size:14px;opacity:.75}
 
 /* ===== status badges, favourites ===== */
 .badge.green{background:linear-gradient(180deg,#5af0a5,#13b873);color:#04220f;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 10px rgba(30,200,120,.45)}
@@ -622,6 +710,7 @@ label.tile{cursor:pointer}
     <div class="sbarwrap">
       <div class="bar"><span></span><span class="t" data-i18n="s.title">Settings</span><button class="link b" id="s-done" data-i18n="done">Done</button></div>
       <div class="stabs" id="stabs"></div>
+      <div id="s-pv"></div>
     </div>
     <div id="s-body"></div>
     <input type="file" id="s-import" accept="application/json,.json" hidden>
@@ -631,11 +720,13 @@ label.tile{cursor:pointer}
 <!-- lock -->
 <div class="overlay" id="lock">
   <div class="lk">🔒</div>
-  <div id="lock-title" data-i18n="lock.enter">Enter passcode</div>
+  <div id="lock-title" data-i18n="lock.title">Wallet is locked</div>
   <div id="lock-msg"></div>
-  <div class="dots" id="lock-dots"></div>
-  <div class="keys" id="lock-keys"></div>
-  <button id="lock-bio" class="link b" style="margin-top:26px;font-size:17px" data-i18n="lock.bio" hidden>Unlock with Face ID</button>
+  <button class="lk-face" id="lock-face" aria-label="Face ID"><svg><use href="#i-face"/></svg></button>
+  <button id="lock-bio" class="btn" data-i18n="lock.tap">Unlock with Face ID</button>
+  <button id="lock-help" class="link" data-i18n="lock.help" hidden>Can’t unlock?</button>
+  <div class="dots" id="lock-dots" hidden></div>
+  <div class="keys" id="lock-keys" hidden></div>
 </div>
 
 <div class="overlay" id="acts"><div class="as"></div></div>
@@ -946,6 +1037,15 @@ Object.assign(I18N.es, {
 });
 
 Object.assign(I18N.en, {
+  'lock.title':'Wallet is locked', 'lock.tap':'Unlock with Face ID', 'lock.again':'Face ID didn’t work — tap to try again', 'lock.help':'Can’t unlock?',
+  'lock.helpText':'Wallet uses a passkey saved on this iPhone (Settings → Passwords). If Face ID fails, iOS offers your iPhone passcode. If the passkey was deleted, remove the Wallet icon, add it again from Safari and restore your backup.',
+  'sec.ready':'Face ID is set up', 'sec.notSet':'Face ID is not set up yet', 'sec.setup':'Set up Face ID',
+  'sec.what':'Uses your iPhone’s Face ID — no separate app code', 'sec.app':'Lock the app', 'sec.appSub':'Ask for Face ID when Wallet opens',
+  'sec.cards':'Protect bank cards', 'sec.cardsSub':'Ask for Face ID before showing card number and CVV',
+  'sec.foot':'If Face ID doesn’t recognise you, iOS lets you use your iPhone passcode instead. The two switches work independently — for example, bank cards only.',
+  'sec.appOn':'App lock on', 'sec.appOff':'App lock off', 'sec.setupFirst':'Bank cards are protected with Face ID — let’s set it up now.',
+  'sec.migrated':'The app passcode was removed — turn on Face ID in Settings → Security.',
+  'bg.light':'Soft light', 'bg.pastel':'Pastel', 'bg.dreamy':'Dreamy', 'cs.neu':'Neumorphic', 'cs.clay':'Clay 3D', 'cs.liquid':'Liquid glass',
   'type.bank':'Bank card',
   'stt.title':'Status', 'stt.active':'Active', 'stt.process':'In process', 'stt.complete':'Complete',
   'rm.title':'Calendar reminders', 'rm.first':'First reminder', 'rm.second':'Second reminder', 'rm.off':'None',
@@ -971,6 +1071,15 @@ Object.assign(I18N.en, {
   'bk.unlock':'Unlock to see card details', 'bk.revealed':'Visible for 60 seconds', 'bk.badNum':'This card number doesn’t look right — please check it.'
 });
 Object.assign(I18N.ka, {
+  'lock.title':'საფულე დაბლოკილია', 'lock.tap':'განბლოკვა Face ID-ით', 'lock.again':'Face ID არ ამოქმედდა — შეეხეთ ხელახლა საცდელად', 'lock.help':'ვერ განბლოკავთ?',
+  'lock.helpText':'საფულე იყენებს ამ iPhone-ზე შენახულ წვდომის გასაღებს (Settings → Passwords). თუ Face ID ვერ გიცნობთ, iOS iPhone-ის კოდს შემოგთავაზებთ. თუ გასაღები წაშლილია, წაშალეთ საფულის ხატულა, ხელახლა დაამატეთ Safari-დან და აღადგინეთ სარეზერვო ასლი.',
+  'sec.ready':'Face ID დაყენებულია', 'sec.notSet':'Face ID ჯერ არ არის დაყენებული', 'sec.setup':'Face ID-ის დაყენება',
+  'sec.what':'იყენებს iPhone-ის Face ID-ს — ცალკე კოდის გარეშე', 'sec.app':'აპის დაბლოკვა', 'sec.appSub':'Face ID-ის მოთხოვნა საფულის გახსნისას',
+  'sec.cards':'საბანკო ბარათების დაცვა', 'sec.cardsSub':'Face ID-ის მოთხოვნა ბარათის ნომრისა და CVV-ის ჩვენებამდე',
+  'sec.foot':'თუ Face ID ვერ გიცნობთ, iOS iPhone-ის კოდის შეყვანის საშუალებას მოგცემთ. ორი გადამრთველი ერთმანეთისგან დამოუკიდებელია — მაგალითად, მხოლოდ საბანკო ბარათებისთვის.',
+  'sec.appOn':'აპის დაბლოკვა ჩართულია', 'sec.appOff':'აპის დაბლოკვა გამორთულია', 'sec.setupFirst':'საბანკო ბარათები Face ID-ით არის დაცული — მოდით, ახლავე დავაყენოთ.',
+  'sec.migrated':'აპის კოდი წაიშალა — ჩართეთ Face ID: პარამეტრები → დაცვა.',
+  'bg.light':'ღია', 'bg.pastel':'პასტელი', 'bg.dreamy':'ოცნება', 'cs.neu':'ნეომორფიზმი', 'cs.clay':'თიხა 3D', 'cs.liquid':'თხევადი მინა',
   'type.bank':'საბანკო ბარათი',
   'stt.title':'სტატუსი', 'stt.active':'მოქმედი', 'stt.process':'პროცესშია', 'stt.complete':'დასრულებული',
   'rm.title':'კალენდრის შეხსენებები', 'rm.first':'პირველი შეხსენება', 'rm.second':'მეორე შეხსენება', 'rm.off':'არა',
@@ -996,6 +1105,15 @@ Object.assign(I18N.ka, {
   'bk.unlock':'ბარათის მონაცემების სანახავად განბლოკეთ', 'bk.revealed':'ჩანს 60 წამის განმავლობაში', 'bk.badNum':'ბარათის ნომერი არასწორი ჩანს — გთხოვთ, შეამოწმოთ.'
 });
 Object.assign(I18N.es, {
+  'lock.title':'La cartera está bloqueada', 'lock.tap':'Desbloquear con Face ID', 'lock.again':'Face ID no ha funcionado — toca para reintentar', 'lock.help':'¿No puedes desbloquear?',
+  'lock.helpText':'La cartera usa una llave de acceso guardada en este iPhone (Ajustes → Contraseñas). Si Face ID falla, iOS te ofrece el código del iPhone. Si la llave se borró, elimina el icono de la cartera, vuelve a añadirlo desde Safari y restaura tu copia.',
+  'sec.ready':'Face ID está configurado', 'sec.notSet':'Face ID aún no está configurado', 'sec.setup':'Configurar Face ID',
+  'sec.what':'Usa el Face ID de tu iPhone — sin código propio de la app', 'sec.app':'Bloquear la app', 'sec.appSub':'Pedir Face ID al abrir la cartera',
+  'sec.cards':'Proteger tarjetas bancarias', 'sec.cardsSub':'Pedir Face ID antes de mostrar el número y el CVV',
+  'sec.foot':'Si Face ID no te reconoce, iOS te deja usar el código del iPhone. Los dos interruptores son independientes — por ejemplo, solo para las tarjetas bancarias.',
+  'sec.appOn':'Bloqueo de la app activado', 'sec.appOff':'Bloqueo de la app desactivado', 'sec.setupFirst':'Las tarjetas bancarias se protegen con Face ID — vamos a configurarlo ahora.',
+  'sec.migrated':'Se quitó el código de la app — activa Face ID en Ajustes → Seguridad.',
+  'bg.light':'Claro', 'bg.pastel':'Pastel', 'bg.dreamy':'Ensueño', 'cs.neu':'Neumórfico', 'cs.clay':'Arcilla 3D', 'cs.liquid':'Cristal líquido',
   'type.bank':'Tarjeta bancaria',
   'stt.title':'Estado', 'stt.active':'Vigente', 'stt.process':'En trámite', 'stt.complete':'Completado',
   'rm.title':'Recordatorios en el Calendario', 'rm.first':'Primer aviso', 'rm.second':'Segundo aviso', 'rm.off':'Ninguno',
@@ -1135,12 +1253,18 @@ const BG_PREVIEW = {aurora:'radial-gradient(60% 40% at 20% 15%,#6e5cff,transpare
   sunset:'radial-gradient(60% 40% at 15% 12%,#ff783c,transparent),radial-gradient(60% 40% at 90% 30%,#ff3c82,transparent),radial-gradient(70% 50% at 60% 95%,#8c3cff,transparent),#0d0610',
   ocean:'radial-gradient(60% 40% at 20% 15%,#00c8ff,transparent),radial-gradient(60% 45% at 85% 45%,#0078ffaa,transparent),radial-gradient(70% 50% at 30% 95%,#00e6be99,transparent),#020a12',
   forest:'radial-gradient(60% 40% at 18% 15%,#3cdc8caa,transparent),radial-gradient(60% 45% at 88% 35%,#b4dc3c77,transparent),radial-gradient(70% 50% at 40% 95%,#00967899,transparent),#030b07',
-  black:'#000'};
+  black:'#000',
+  light:'linear-gradient(135deg,#f4f6fa,#dde1ea)',
+  pastel:'radial-gradient(60% 40% at 15% 10%,#ffd9b8,transparent),radial-gradient(60% 45% at 90% 30%,#ffc1dc,transparent),radial-gradient(70% 50% at 30% 95%,#d9c8ff,transparent),#fbeef0',
+  dreamy:'radial-gradient(60% 45% at 10% 85%,#ff7ac0,transparent),radial-gradient(70% 50% at 85% 15%,#7aa8ff,transparent),radial-gradient(60% 45% at 60% 70%,#46c8ff,transparent),#6f8cff'};
+const LIGHT_BG = ['light', 'pastel'];
 let bgUrl = null;
 async function applyPrefs() {
   const P = S.prefs, b = document.body;
   b.className = b.className.replace(/\b(lay|cs|bg)-[a-z]+\b/g, '').trim();
   b.classList.add('lay-' + P.layout, 'cs-' + P.cardStyle, 'bg-' + P.bg);
+  b.classList.toggle('light', LIGHT_BG.includes(P.bg));
+  document.querySelector('meta[name=theme-color]').content = LIGHT_BG.includes(P.bg) ? '#e8ebf1' : '#000000';
   const bp = $('#bgphoto');
   document.documentElement.style.setProperty('--bgBlur', (P.bgBlur || 0) + 'px');
   document.documentElement.style.setProperty('--bgDim', ((P.bgDim || 0) / 100).toFixed(2));
@@ -1195,17 +1319,16 @@ function luhnOk(num) {
 }
 const fmtCard = n => String(n || '').replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
 let authUntil = 0;
+async function verifyFace() {
+  if (!S.bioId || !window.PublicKeyCredential) return false;
+  try { await navigator.credentials.get({publicKey:{challenge:rand(32), allowCredentials:[{type:'public-key', id:b64ToAb(S.bioId)}], userVerification:'required', timeout:60000}}); return true; }
+  catch { return false; }
+}
 async function requireAuth() {
-  if (Date.now() < authUntil) return true;
-  if (!S.hasPin) {
-    alert(L('bk.needPin'));
-    if (!(await setPasscode())) return false;
-  }
-  let ok = false;
-  if (S.bioId && window.PublicKeyCredential) {
-    try { await navigator.credentials.get({publicKey:{challenge:rand(32), allowCredentials:[{type:'public-key', id:b64ToAb(S.bioId)}], userVerification:'required', timeout:60000}}); ok = true; } catch {}
-  }
-  if (!ok) ok = !!(await pinPad('verify', L('bk.unlock')));
+  if (!S.cardLock || Date.now() < authUntil) return true;
+  let ok;
+  if (!S.bioId) { alert(L('sec.setupFirst')); ok = await enableBio(); }   // creating the passkey itself checks Face ID
+  else ok = await verifyFace();
   if (ok) authUntil = Date.now() + 60000;
   return ok;
 }
@@ -1446,9 +1569,11 @@ function render() {
       sec.append(h);
     }
     const st = el('div', q || g.docs.length === 1 || lay !== 'stack' ? 'stack open' : 'stack');
+    cardEl.idx = 0;
     st.dataset.drag = !q && (lay === 'stack' || lay === 'list') ? '1' : '';
     g.docs.forEach(d => st.append(cardEl(d)));
     sec.append(st); list.append(sec);
+    if (lay === 'carousel') { st.addEventListener('scroll', () => carouselTilt(st), {passive:true}); requestAnimationFrame(() => carouselTilt(st)); }
   }
 }
 function renderChips() {
@@ -1551,6 +1676,7 @@ function cardEl(d) {
   const b = el('button', 'card' + (d.type === 'bank' ? ' bank bkd-' + ((d.bank && d.bank.design) || 'waves') : ''));
   b.dataset.id = d.id;
   cardVars(b, d);
+  b.style.setProperty('--i', String(cardEl.idx = (cardEl.idx || 0) + 1));
   b.style.setProperty('--sd', (Math.random() * 8).toFixed(1) + 's');
   const SH = S.prefs.show, deco = SH.deco;
   const chip = deco && ['id', 'driving', 'health', 'insurance', 'residence'].includes(d.type);
@@ -1577,6 +1703,30 @@ function cardEl(d) {
     <div class="c-body"><div class="c-meta"><div class="c-row">${metaL.join('')}</div><div class="c-row">${metaR.join('')}</div></div>${thumb ? `<img class="c-thumb" src="${d.thumb}" alt="">` : ''}</div>`;
   attachPress(b, d.id);
   return b;
+}
+/* ---------- scroll motion: cards spread with scroll speed, carousel tilts ---------- */
+const MO = {last:0, lt:0, v:0, raf:0};
+function motionTick() {
+  MO.v *= 0.86;
+  const sv = Math.max(-9, Math.min(9, MO.v * 0.09));
+  const list = $('#list');
+  list.style.setProperty('--sv', (S.prefs.layout === 'stack' ? sv : sv * 0.35).toFixed(2) + 'px');
+  list.style.setProperty('--rx', (-sv * 0.35).toFixed(2) + 'deg');
+  MO.raf = Math.abs(MO.v) > 0.3 ? requestAnimationFrame(motionTick) : (list.style.setProperty('--sv', '0px'), list.style.setProperty('--rx', '0deg'), 0);
+}
+function onListScroll() {
+  if (DR.active || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const sc = $('#scroller'), t = performance.now(), y = sc.scrollTop;
+  if (MO.lt) { const v = (y - MO.last) / Math.max(8, t - MO.lt) * 16; MO.v = MO.v * 0.5 + v * 0.5; }
+  MO.last = y; MO.lt = t;
+  if (!MO.raf) MO.raf = requestAnimationFrame(motionTick);
+}
+function carouselTilt(stack) {
+  const r = stack.getBoundingClientRect(), mid = r.left + r.width / 2;
+  stack.querySelectorAll('.card').forEach(c => {
+    const cr = c.getBoundingClientRect(), d = Math.max(-1.2, Math.min(1.2, (cr.left + cr.width / 2 - mid) / cr.width));
+    c.style.setProperty('--ry', (-d * 10).toFixed(2) + 'deg'); c.style.setProperty('--sc', (1 - Math.min(1, Math.abs(d)) * 0.07).toFixed(3));
+  });
 }
 function attachPress(b, id) {
   let t = null, sx = 0, sy = 0;
@@ -2098,6 +2248,7 @@ function previewHTML() {
 }
 function fillPreview() {
   const box = $('#pv-in'); if (!box) return;
+  cardEl.idx = 0;
   let docs = S.docs.slice().sort((a, b) => (typeof a.pos === 'number' ? a.pos : 1e9) - (typeof b.pos === 'number' ? b.pos : 1e9)).slice(0, 4);
   if (!docs.length) docs = [{id:'p1', type:'id', number:'12345678Z', expiry:'2031-05-01', issuer:'España'}, {id:'p2', type:'passport', expiry:'2027-02-01'},
     {id:'p3', type:'health'}, {id:'p4', type:'driving', number:'B-778812'}];
@@ -2108,7 +2259,6 @@ function fillPreview() {
   sec.append(st); box.innerHTML = ''; box.append(sec);
 }
 async function renderSettings() {
-  S.hasPin = !!(await kvGet('pinHash'));
   S.bioId = (await kvGet('bioId')) || null;
   const last = await kvGet('lastBackup');
   let usage = '—', persisted = false;
@@ -2126,12 +2276,11 @@ async function renderSettings() {
       ['carousel','lay.carousel','<div class="row2"><div class="mc"></div><div class="mc b"></div></div><div class="row2"><div class="mc c"></div><div class="mc d"></div></div>'],
       ['list','lay.list','<div class="mc"></div><div class="mc b"></div><div class="mc c"></div><div class="mc d"></div><div class="mc"></div>'],
       ['grid','lay.grid','<div class="mc"></div><div class="mc b"></div><div class="mc c"></div><div class="mc d"></div><div class="mc b"></div><div class="mc"></div>']];
-    const bgs = ['aurora', 'midnight', 'sunset', 'ocean', 'forest', 'black'];
-    html = `${previewHTML()}
-    <h3>${esc(L('s.layout'))}</h3>
+    const bgs = ['aurora', 'midnight', 'sunset', 'ocean', 'forest', 'black', 'light', 'pastel', 'dreamy'];
+    html = `<h3>${esc(L('s.layout'))}</h3>
     <div class="box"><div class="tiles">${lays.map(([v, k, art]) => `<button class="tile ${P.layout === v ? 'on' : ''}" data-act="layout" data-v="${v}"><div class="art ${v}">${art}</div>${esc(L(k))}</button>`).join('')}</div></div>
     <h3>${esc(L('s.cardStyle'))}</h3>
-    <div class="box"><div class="tiles">${['gloss','glass','flat','dark'].map(v => `<button class="tile ${P.cardStyle === v ? 'on' : ''}" data-act="cstyle" data-v="${v}"><div class="art" style="background:${BG_PREVIEW.aurora}"><div class="sty ${v}"><i></i></div></div>${esc(L('cs.' + v))}</button>`).join('')}</div></div>
+    <div class="box"><div class="tiles">${['gloss','glass','liquid','clay','neu','flat','dark'].map(v => `<button class="tile ${P.cardStyle === v ? 'on' : ''}" data-act="cstyle" data-v="${v}"><div class="art" style="background:${v === 'neu' ? BG_PREVIEW.light : v === 'clay' ? BG_PREVIEW.pastel : BG_PREVIEW.aurora}"><div class="sty ${v}"><i></i></div></div>${esc(L('cs.' + v))}</button>`).join('')}</div></div>
     <h3>${esc(L('s.bg'))}</h3>
     <div class="box"><div class="tiles">${bgs.map(k => `<button class="tile ${P.bg === k ? 'on' : ''}" data-act="bg" data-v="${k}"><div class="art sbg" style="background:${BG_PREVIEW[k]}"><div class="sty gloss"><i></i></div></div>${esc(L('bg.' + k))}</button>`).join('')}
       <label class="tile ${P.bg === 'photo' ? 'on' : ''}"><input type="file" accept="image/*" data-act="bgfile" hidden><div class="art sbg" style="${bgUrl ? `background:center/cover url('${bgUrl}')` : ''}">${bgUrl ? '<div class="sty gloss"><i></i></div>' : '<span class="ph">🖼️</span>'}</div>${esc(L('bg.photo'))}</label>
@@ -2143,8 +2292,7 @@ async function renderSettings() {
     </div>
     <p class="foot">${esc(L('s.bgFoot'))}</p>`;
   } else if (tab === 'cards') {
-    html = `${previewHTML()}
-    <h3>${esc(L('cf.title'))}</h3>
+    html = `<h3>${esc(L('cf.title'))}</h3>
     <div class="box">
       ${sw('deco', L('cf.deco'), L('cf.decoSub'))}
       ${sw('thumb', L('cf.thumb'))}
@@ -2170,15 +2318,18 @@ async function renderSettings() {
       <button class="row" data-act="myname"><span class="grow">${esc(L('s.myName'))}<small>${esc(L('s.myNameSub'))}</small></span><span class="muted">${esc(S.myName || L('s.notSet'))}</span></button>
     </div>`;
   } else if (tab === 'security') {
-    html = `<h3>${esc(L('s.security'))}</h3>
+    html = `<h3>Face ID</h3>
     <div class="box">
-      <div class="row"><span class="grow">${esc(L('s.pin'))}</span><button class="sw ${S.hasPin ? 'on' : ''}" data-act="pin" aria-label="${esc(L('s.pin'))}"></button></div>
-      ${S.hasPin ? `
-      <div class="row"><span class="grow">${esc(L('s.bio'))}</span><button class="sw ${S.bioId ? 'on' : ''}" data-act="bio" aria-label="Face ID"></button></div>
-      <div class="row"><span class="grow">${esc(L('s.require'))}</span><select class="mini" data-act="lockafter">${opts.map(([v, l]) => `<option value="${v}" ${v === S.lockAfter ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
-      <button class="row link" data-act="changepin">${esc(L('s.changePin'))}</button>` : ''}
+      <div class="row"><span style="font-size:24px">🙂</span><span class="grow">${esc(S.bioId ? L('sec.ready') : L('sec.notSet'))}<small>${esc(L('sec.what'))}</small></span>${S.bioId ? '<span class="badge green">✓</span>' : ''}</div>
+      ${S.bioId ? '' : `<button class="row link b" data-act="bioset">${esc(L('sec.setup'))}</button>`}
     </div>
-    <p class="foot">${esc(L('s.secFoot'))}</p>`;
+    <h3>${esc(L('s.security'))}</h3>
+    <div class="box">
+      <div class="row"><span class="grow">${esc(L('sec.app'))}<small>${esc(L('sec.appSub'))}</small></span><button class="sw ${S.appLock ? 'on' : ''}" data-act="applock" aria-label="${esc(L('sec.app'))}"></button></div>
+      ${S.appLock ? `<div class="row"><span class="grow">${esc(L('s.require'))}</span><select class="mini" data-act="lockafter">${opts.map(([v, l]) => `<option value="${v}" ${v === S.lockAfter ? 'selected' : ''}>${l}</option>`).join('')}</select></div>` : ''}
+      <div class="row"><span class="grow">${esc(L('sec.cards'))}<small>${esc(L('sec.cardsSub'))}</small></span><button class="sw ${S.cardLock ? 'on' : ''}" data-act="cardlock" aria-label="${esc(L('sec.cards'))}"></button></div>
+    </div>
+    <p class="foot">${esc(L('sec.foot'))}</p>`;
   } else {
     const rsel = (i) => `<select class="mini" data-act="remdef" data-i="${i}">${REM_OPTS.map(o => `<option value="${o}" ${P.rem[i] === o ? 'selected' : ''}>${esc(remLabel(o))}</option>`).join('')}</select>`;
     html = `<h3>${esc(L('rm.title'))}</h3>
@@ -2207,6 +2358,7 @@ async function renderSettings() {
     <p class="foot">Family Wallet 1.1${persisted ? ' · ' + esc(L('s.protected')) : ''}</p>`;
   }
   $('#s-body').innerHTML = html;
+  $('#s-pv').innerHTML = tab === 'look' || tab === 'cards' ? previewHTML() : '';
   fillPreview();
 }
 async function settingsAction(act, id, target) {
@@ -2221,9 +2373,15 @@ async function settingsAction(act, id, target) {
       if (confirm(L('p.removeQ', {name:m.name}))) { await del('members', id); await load(); render(); renderSettings(); }
       break;
     }
-    case 'pin': S.hasPin ? await disablePin() : await setPasscode(); renderSettings(); break;
-    case 'changepin': if (await pinPad('verify', L('pin.current'))) await setPasscode(); renderSettings(); break;
-    case 'bio': S.bioId ? (await kvDel('bioId'), S.bioId = null, toast(L('bio.off'))) : await enableBio(); renderSettings(); break;
+    case 'bioset': await enableBio(); renderSettings(); break;
+    case 'applock':
+      if (S.appLock) { if (!(await verifyFace())) return; S.appLock = false; }
+      else { if (!S.bioId && !(await enableBio())) return; if (S.bioId) S.appLock = true; }
+      await kvSet('appLock', S.appLock); toast(S.appLock ? L('sec.appOn') : L('sec.appOff')); renderSettings(); break;
+    case 'cardlock':
+      if (S.cardLock) { if (S.bioId && !(await verifyFace())) return; S.cardLock = false; }
+      else S.cardLock = true;
+      await kvSet('cardLock', S.cardLock); authUntil = 0; renderSettings(); break;
     case 'lang': await setLang(target.value); renderSettings(); break;
     case 'layout': S.prefs.layout = target.dataset.v; await savePrefs(); render(); renderSettings(); break;
     case 'cstyle': S.prefs.cardStyle = target.dataset.v; await savePrefs(); render(); renderSettings(); break;
@@ -2332,21 +2490,8 @@ async function pinKey(v) {
     if (ok) setTimeout(() => finishPin(true), 80); else wrongPin();
   } finally { PIN.busy = false; }
 }
-async function setPasscode() {
-  const a = await pinPad('set', L('pin.choose', {n:PIN_LEN})); if (!a) return false;
-  const b = await pinPad('set', L('pin.again')); if (!b) return false;
-  if (a !== b) { toast(L('pin.mismatch')); return false; }
-  const salt = uid();
-  await kvSet('pinSalt', salt); await kvSet('pinHash', await sha(salt + a));
-  S.hasPin = true; toast(L('pin.set')); return true;
-}
-async function disablePin() {
-  if (!(await pinPad('verify', L('pin.offAsk')))) return;
-  await kvDel('pinHash'); await kvDel('pinSalt'); await kvDel('bioId');
-  S.hasPin = false; S.bioId = null; toast(L('pin.off'));
-}
 async function enableBio() {
-  if (!window.PublicKeyCredential) return alert(L('bio.na'));
+  if (!window.PublicKeyCredential) { alert(L('bio.na')); return false; }
   try {
     const cred = await navigator.credentials.create({publicKey:{
       challenge:rand(32), rp:{name:'Family Wallet', id:location.hostname},
@@ -2355,10 +2500,12 @@ async function enableBio() {
       authenticatorSelection:{authenticatorAttachment:'platform', userVerification:'required', residentKey:'discouraged'},
       timeout:60000, attestation:'none'}});
     S.bioId = abToB64(cred.rawId); await kvSet('bioId', S.bioId); toast(L('bio.on'));
+    return true;
   } catch (e) {
     alert(e.name === 'NotAllowedError'
       ? L('bio.denied')
       : L('bio.fail') + (e.message || e.name));
+    return false;
   }
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -2371,39 +2518,31 @@ function waitForeground(ms) {
     setTimeout(fin, ms);
   });
 }
-let bioBusy = false;
+let bioBusy = false, lockFails = 0, lockResolve = null;
 async function bioUnlock(auto) {
-  if (!S.bioId || PIN.mode !== 'unlock' || bioBusy) return;
+  if (!S.locked || bioBusy) return;
   bioBusy = true; $('#lock-msg').textContent = '';
   try {
     for (let i = 0; i < (auto ? 4 : 1); i++) {
       if (auto) { await waitForeground(2000); await sleep(i ? 600 : 350); }
-      if (PIN.mode !== 'unlock') return;
+      if (!S.locked) return;
       const t0 = Date.now();
-      try {
-        await navigator.credentials.get({publicKey:{challenge:rand(32), allowCredentials:[{type:'public-key', id:b64ToAb(S.bioId)}], userVerification:'required', timeout:60000}});
-        finishPin(true); return;
-      } catch (e) {
-        // iOS rejects instantly if the app isn't fully in front yet — retry; a slower error means you cancelled.
-        if (!auto || Date.now() - t0 > 900) break;
-      }
+      if (await verifyFace()) { unlockDone(); return; }
+      // iOS rejects instantly if the app isn't fully in front yet — retry; a slower error means you cancelled.
+      if (!auto || Date.now() - t0 > 900) break;
     }
-    if (PIN.mode === 'unlock') $('#lock-msg').textContent = L('pin.tapBio');
+    lockFails++;
+    if (S.locked) { $('#lock-msg').textContent = L('lock.again'); if (lockFails >= 2) $('#lock-help').hidden = false; }
   } finally { bioBusy = false; }
 }
+function unlockDone() { hide('#lock'); S.locked = false; lockFails = 0; document.body.classList.remove('locked'); const r = lockResolve; lockResolve = null; if (r) r(); }
 async function lockApp() {
-  if (S.locked) return;
+  if (S.locked || !S.appLock || !S.bioId) return;
   S.locked = true; document.body.classList.add('locked');
-  const p = pinPad('unlock', L('lock.enter'));
-  if (S.bioId) bioUnlock(true);
+  $('#lock-msg').textContent = ''; $('#lock-help').hidden = true; show('#lock');
+  const p = new Promise(r => lockResolve = r);
+  bioUnlock(true);
   await p;
-  S.locked = false; document.body.classList.remove('locked');
-  maybeOfferBio();
-}
-async function maybeOfferBio() {
-  if (S.bioId || !S.hasPin || (await kvGet('bioDeclined'))) return;
-  try { if (!window.PublicKeyCredential || !(await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable())) return; } catch { return; }
-  show('#bio-offer');
 }
 
 /* ---------- wiring ---------- */
@@ -2416,16 +2555,15 @@ function bindUI() {
   $('#a-done').onclick = () => hide('#alerts');
   $('#peek').addEventListener('click', e => { if ((e.target.id === 'peek' || e.target.classList.contains('pk')) && Date.now() - P.at > 400) closePeek(); });
   $('#peek .pk-menu').addEventListener('click', e => { const b = e.target.closest('[data-pk]'); if (b) peekAction(b.dataset.pk); });
-  $('#lock .lk').onclick = () => bioUnlock(false);
+  $('#lock-face').onclick = () => bioUnlock(false);
   $('#lock-bio').onclick = () => bioUnlock(false);
-  $('#bo-yes').onclick = async () => { hide('#bio-offer'); await enableBio(); };
-  $('#bo-no').onclick = async () => { hide('#bio-offer'); await kvSet('bioDeclined', true); toast(L('bo.later')); };
+  $('#lock-help').onclick = () => alert(L('lock.helpText'));
   $('#lock').addEventListener('dblclick', e => e.preventDefault());
   bindViewerGestures();
 
   window.addEventListener('touchmove', e => { if (DR.active) e.preventDefault(); }, {passive:false});
   const sc = $('#scroller');
-  sc.addEventListener('scroll', () => $('#head').classList.toggle('shadow', sc.scrollTop > 4), {passive:true});
+  sc.addEventListener('scroll', () => { $('#head').classList.toggle('shadow', sc.scrollTop > 4); onListScroll(); }, {passive:true});
   $('#e-cancel').onclick = cancelEditor;
   $('#e-save').onclick = saveDoc;
   $('#e-delete').onclick = deleteDoc;
@@ -2480,13 +2618,13 @@ function bindUI() {
   // auto-lock + privacy blur in app switcher
   let hiddenAt = 0;
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { hiddenAt = Date.now(); if (S.hasPin) document.body.classList.add('privacy'); }
+    if (document.hidden) { hiddenAt = Date.now(); if (S.appLock) document.body.classList.add('privacy'); }
     else {
-      if (S.hasPin && !S.locked && Date.now() - hiddenAt >= S.lockAfter) lockApp();
+      if (S.appLock && !S.locked && Date.now() - hiddenAt >= S.lockAfter) lockApp();
       document.body.classList.remove('privacy');
     }
   });
-  window.addEventListener('pagehide', () => { if (S.hasPin) document.body.classList.add('privacy'); });
+  window.addEventListener('pagehide', () => { if (S.appLock) document.body.classList.add('privacy'); });
 }
 
 async function init() {
@@ -2499,15 +2637,18 @@ async function init() {
   await applyPrefs();
   await load();
   if (!S.members.length) { await put('members', {id:uid(), name:L('me'), color:0, order:0, self:true}); await load(); }
-  S.hasPin = !!(await kvGet('pinHash'));
   S.bioId = (await kvGet('bioId')) || null;
+  // the old 6-digit app passcode is replaced by Face ID / iPhone passcode
+  if (await kvGet('pinHash')) { await kvDel('pinHash'); await kvDel('pinSalt'); await kvSet('appLock', !!S.bioId); if (!S.bioId) setTimeout(() => toast(L('sec.migrated')), 1500); }
+  S.appLock = !!(await kvGet('appLock')) && !!S.bioId;
+  const cl = await kvGet('cardLock'); S.cardLock = cl == null ? true : !!cl;
   const la = await kvGet('lockAfter'); if (la != null) S.lockAfter = la;
   S.lastBackup = (await kvGet('lastBackup')) || 0;
   S.backupSnooze = (await kvGet('backupSnooze')) || 0;
   S.backupReminders = await kvGet('backupReminders');
   bindUI();
-  if (S.hasPin) lockApp();
   render();
+  if (S.appLock) lockApp();
   if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 init();
