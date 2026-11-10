@@ -308,9 +308,78 @@ select.mini{box-shadow:none;background-color:transparent}
 .v-sheet .row small,.set .row small{color:rgba(255,255,255,.58)}
 .set .link{color:#5fb2ff}
 @media (prefers-reduced-motion:reduce){body::before,.card::before{animation:none}}
+
+/* ===== background presets & photo ===== */
+body.bg-midnight::before{background:radial-gradient(40% 32% at 20% 15%,rgba(60,90,255,.45),transparent 70%),radial-gradient(40% 35% at 85% 70%,rgba(120,60,255,.35),transparent 70%),radial-gradient(35% 30% at 15% 85%,rgba(20,160,255,.25),transparent 70%),#03040b}
+body.bg-sunset::before{background:radial-gradient(42% 34% at 15% 12%,rgba(255,120,60,.55),transparent 70%),radial-gradient(40% 32% at 88% 25%,rgba(255,60,130,.45),transparent 70%),radial-gradient(45% 38% at 60% 90%,rgba(140,60,255,.40),transparent 70%),#0d0610}
+body.bg-ocean::before{background:radial-gradient(42% 34% at 20% 15%,rgba(0,200,255,.45),transparent 70%),radial-gradient(40% 34% at 85% 40%,rgba(0,120,255,.40),transparent 70%),radial-gradient(45% 38% at 30% 92%,rgba(0,230,190,.32),transparent 70%),#020a12}
+body.bg-forest::before{background:radial-gradient(42% 34% at 18% 15%,rgba(60,220,140,.40),transparent 70%),radial-gradient(40% 34% at 88% 35%,rgba(180,220,60,.28),transparent 70%),radial-gradient(45% 38% at 40% 92%,rgba(0,150,120,.38),transparent 70%),#030b07}
+body.bg-black::before{background:#000;animation:none}
+body.bg-photo::before{display:none}
+#bgphoto{position:fixed;inset:-40px;z-index:0;pointer-events:none;display:none;background:center/cover no-repeat;filter:blur(var(--bgBlur,12px));transform:translateZ(0)}
+#bgphoto::after{content:"";position:fixed;inset:0;background:rgba(0,0,0,var(--bgDim,.35))}
+body.bg-photo #bgphoto{display:block}
+
+/* ===== layouts ===== */
+.lay-list .stack .card{aspect-ratio:auto;min-height:74px;padding:13px 16px}
+.lay-list .stack .card+.card{margin-top:10px}
+.lay-list .card .c-body{display:none}
+.lay-list .c-top{height:auto}
+.lay-grid .stack{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lay-grid .stack .card+.card{margin-top:0}
+.lay-grid .card{padding:12px 13px;border-radius:16px}
+.lay-grid .c-top{height:auto;flex-direction:column-reverse;gap:6px}
+.lay-grid .c-title{font-size:15px;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.lay-grid .c-sub{font-size:11.5px}
+.lay-grid .c-body{display:none}
+.lay-grid .badge{align-self:flex-start;font-size:11px;padding:3px 8px}
+.lay-carousel .stack{display:flex;flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:12px;margin:0 -16px;padding:4px 16px 14px;scroll-padding:0 16px;scrollbar-width:none}
+.lay-carousel .stack::-webkit-scrollbar{display:none}
+.lay-carousel .stack .card{flex:0 0 86%;scroll-snap-align:center}
+.lay-carousel .stack .card+.card{margin-top:0}
+.lay-carousel .stack .card:only-child{flex-basis:100%}
+.lay-carousel .group h2{display:flex;justify-content:space-between}
+.lay-carousel .group h2 span{opacity:.6}
+
+/* ===== card styles (colours come from --g / --ga) ===== */
+.card{background:var(--g)}
+.cs-glass .card{background:var(--ga);-webkit-backdrop-filter:blur(22px) saturate(180%);backdrop-filter:blur(22px) saturate(180%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),inset 0 0 0 1px rgba(255,255,255,.22),0 -4px 18px rgba(0,0,0,.25),0 12px 30px rgba(0,0,0,.25)}
+.cs-glass .card::after{background:linear-gradient(160deg,rgba(255,255,255,.22),rgba(255,255,255,0) 45%)}
+.cs-flat .card{box-shadow:0 -2px 10px rgba(0,0,0,.35)}
+.cs-flat .card::after,.cs-flat .card::before{display:none}
+.cs-flat .c-title,.cs-flat .c-sub,.cs-flat .c-meta{text-shadow:none}
+.cs-dark .card{background:linear-gradient(180deg,#191a22,#0e0f14) padding-box,var(--g) border-box;border:1.5px solid transparent;
+  box-shadow:0 -4px 18px rgba(0,0,0,.5),0 10px 26px rgba(0,0,0,.35)}
+.cs-dark .card::after{background:radial-gradient(70% 90% at 100% 0%,var(--t),transparent 70%);opacity:.28}
+.cs-dark .card::before{opacity:.35}
+.cs-dark .c-title{color:var(--t2)}
+
+/* ===== action sheet ===== */
+#acts{z-index:70;background:rgba(0,0,0,.4)}
+#acts .as{position:absolute;left:10px;right:10px;bottom:calc(var(--sb) + 10px);max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:8px;animation:up .26s cubic-bezier(.2,.8,.2,1)}
+#acts .as-box{border-radius:18px;overflow:hidden;background:rgba(40,42,56,.72);-webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+#acts .as-t{color:rgba(255,255,255,.6);font-size:13px;text-align:center;padding:12px 16px 10px}
+#acts .as-o{display:flex;gap:14px;align-items:center;width:100%;padding:14px 16px;border-top:.5px solid rgba(255,255,255,.12)}
+#acts .as-o:active{background:rgba(255,255,255,.12)}
+#acts .as-o .ic{font-size:24px;width:30px;text-align:center}
+#acts .as-o b{display:block;font-weight:600}
+#acts .as-o small{display:block;color:rgba(255,255,255,.6);font-size:13px}
+#acts .as-c{border-radius:18px;padding:16px;text-align:center;font-weight:600;color:#5fb2ff;background:rgba(40,42,56,.85);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px)}
+.seg{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px}
+.seg button{flex:1 1 auto;padding:9px 12px;border-radius:12px;font-size:14px;font-weight:600;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.14);text-align:center}
+.seg button.on{background:linear-gradient(135deg,#46b3ff,#5b5cff 55%,#b25cff);box-shadow:0 4px 14px rgba(91,92,255,.4)}
+.bgsw{display:flex;gap:10px;padding:12px 14px;overflow-x:auto;scrollbar-width:none}
+.bgsw button{flex:none;width:58px;text-align:center;font-size:11px;color:rgba(255,255,255,.75)}
+.bgsw i{display:block;width:58px;height:78px;border-radius:12px;margin-bottom:5px;background-size:cover;background-position:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.bgsw button.on i{box-shadow:0 0 0 2px #fff,0 0 14px rgba(255,255,255,.35)}
+.row input[type=range]{flex:1;background:none;box-shadow:none;padding:0;accent-color:#7b7bff;-webkit-appearance:auto;appearance:auto;height:28px}
+.row .rl{min-width:96px}
+</style>
 </style>
 </head>
 <body>
+<div id="bgphoto"></div>
 
 <svg width="0" height="0" style="position:absolute">
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></symbol>
@@ -393,7 +462,7 @@ select.mini{box-shadow:none;background-color:transparent}
     <div class="field"><label data-i18n="e.document">Document</label>
       <div class="files" id="e-files"></div>
       <button class="addfile" id="e-pick">＋ Choose PDF or photo</button>
-      <input type="file" id="e-input" accept="application/pdf,image/*" multiple hidden>
+      <input type="file" id="e-input" accept="application/pdf,image/*,application/json,.json" multiple hidden>
     </div>
     <div class="row2">
       <div class="field"><label for="e-member" data-i18n="e.owner">Belongs to</label><select id="e-member"></select></div>
@@ -428,6 +497,9 @@ select.mini{box-shadow:none;background-color:transparent}
   <div class="keys" id="lock-keys"></div>
   <button id="lock-bio" class="link b" style="margin-top:26px;font-size:17px" data-i18n="lock.bio" hidden>Unlock with Face ID</button>
 </div>
+
+<div class="overlay" id="acts"><div class="as"></div></div>
+<input type="file" id="bg-input" accept="image/*" hidden>
 
 <div id="toast"></div>
 
@@ -603,9 +675,118 @@ ka: {
   'bk.restoring':'მიმდინარეობს აღდგენა…', 'bk.restored':'ასლი აღდგენილია', 'bk.restoreFail':'აღდგენა ვერ მოხერხდა: ',
   'blocked':'ბრაუზერმა ლოკალური მეხსიერება დაბლოკა, ამიტომ საფულე ვერ იმუშავებს. iPhone-ზე გახსენით Safari-ში (არა პირად რეჟიმში).'
 }};
+/* ---------- language: Spanish + new features ---------- */
+I18N.es = {
+  'app.title':'Cartera', 'search.ph':'Buscar documentos', 'all':'Todos', 'me':'Yo', 'unassigned':'Sin asignar',
+  'aria.bell':'Documentos que caducan', 'aria.settings':'Ajustes', 'aria.add':'Añadir documento', 'aria.close':'Cerrar',
+  'aria.share':'Compartir o abrir en Archivos', 'aria.edit':'Editar', 'aria.dismiss':'Descartar', 'aria.remove':'Quitar',
+  'aria.delete':'Borrar', 'aria.color':'Cambiar color',
+  'pk.open':'Abrir', 'pk.share':'Compartir', 'pk.copy':'Copiar número', 'pk.edit':'Editar',
+  'pk.hint':'Consejo: mantén pulsada una tarjeta y arrástrala para cambiar su posición',
+  'bo.title':'¿Desbloquear con Face ID?',
+  'bo.text':'Abre la Cartera con una mirada en lugar de escribir el código. iOS te pedirá guardar una llave de acceso — toca Continuar.',
+  'bo.yes':'Activar Face ID', 'bo.no':'Ahora no', 'bo.later':'Puedes activarlo más tarde en Ajustes',
+  'alerts.title':'Avisos', 'done':'OK', 'cancel':'Cancelar', 'save':'Guardar', 'saving':'Guardando…',
+  'v.zoom':'Pellizca o toca dos veces para ampliar', 'v.details':'Detalles', 'v.files':'Archivos', 'v.share':'Compartir', 'v.edit':'Editar',
+  'e.new':'Nuevo documento', 'e.edit':'Editar documento', 'e.document':'Documento', 'e.pick':'＋ Elegir PDF o foto',
+  'e.pickMore':'＋ Añadir otra página o archivo', 'e.owner':'Pertenece a', 'e.type':'Tipo', 'e.color':'Color de la tarjeta',
+  'e.auto':'Auto', 'e.name':'Nombre en la tarjeta', 'e.number':'Número', 'e.optional':'Opcional', 'e.expires':'Caduca',
+  'e.notes':'Notas', 'e.notesPh':'Opcional — emisor, teléfono de la póliza, etc.', 'e.delete':'Eliminar documento',
+  'e.addPerson':'＋ Añadir persona…', 'e.newFile':'nuevo',
+  'lock.enter':'Introduce el código', 'lock.bio':'Desbloquear con Face ID',
+  'type.id':'DNI / identidad', 'type.passport':'Pasaporte', 'type.residence':'Permiso de residencia', 'type.driving':'Carné de conducir',
+  'type.health':'Tarjeta sanitaria', 'type.medical':'Informe médico', 'type.insurance':'Seguro', 'type.vehicle':'Papeles del vehículo',
+  'type.travel':'Viajes / billetes', 'type.education':'Títulos / certificados', 'type.other':'Otro',
+  'exp.expired':'Caducado', 'exp.today':'Caduca hoy', 'exp.day':'1 día', 'exp.days':'{n} días',
+  'empty.title':'Añade tu primer documento',
+  'empty.text':'Importa DNI, pasaportes y tarjetas sanitarias en PDF o foto. Se guardan solo en este iPhone y se abren al instante, incluso sin conexión.',
+  'empty.btn':'Añadir documento', 'none.search':'Ningún documento coincide con la búsqueda.', 'none.person':'Esta persona aún no tiene documentos.',
+  'snooze':'Te lo recordaré dentro de {n} días', 'bk.remOff':'Recordatorios desactivados — vuelve a activarlos en Ajustes',
+  'al.expired':'caducó el {d}', 'al.expires':'caduca el {d}', 'al.docs':'Documentos que caducan',
+  'al.foot':'Aparecen los documentos caducados o que caducan en los próximos 60 días. Tras renovarlo, ábrelo → Editar, adjunta el archivo nuevo y cambia la fecha.',
+  'al.last':'Última copia: {d}', 'al.none':'Aún no hay copia de seguridad',
+  'al.bkText':'Los documentos solo están en esta app. Una copia en iCloud Drive o OneDrive te permite recuperarlos.',
+  'al.now':'Hacer copia ahora', 'al.30':'Recordar en 30 días', 'al.off':'No volver a recordar', 'al.backup':'Copia de seguridad',
+  'al.ok':'✅ Todo en orden — nada requiere atención.',
+  'inst.title':'Añadir a la pantalla de inicio',
+  'inst.text':'Toca Compartir → Añadir a pantalla de inicio y abre la Cartera desde el icono. Añade los documentos allí: Safari y la app instalada guardan datos por separado.',
+  'card.number':'Número', 'card.expires':'Caduca',
+  'copied':'Número copiado', 'copyFail':'No se pudo copiar', 'v.numberCopy':'Número · toca para copiar', 'v.notes':'Notas',
+  'v.noFile':'No hay archivo adjunto.', 'v.cantShow':'No se puede mostrar «{n}» aquí. Usa Compartir para abrirlo en Archivos.',
+  'noShare':'No hay archivo para compartir', 'discard':'¿Descartar los cambios?', 'chooseOwner':'Elige a quién pertenece',
+  'saveNoFile':'¿Guardar sin ningún archivo adjunto?', 'saveFail':'No se pudo guardar: ', 'noSpace':'El iPhone no tiene espacio para esta app.',
+  'saved':'Guardado', 'delConfirm':'¿Eliminar este documento de la cartera?', 'deleted':'Eliminado',
+  's.title':'Ajustes', 's.lang':'Idioma', 's.people':'Personas', 's.docCount1':'1 documento · toca para renombrar',
+  's.docCount':'{n} documentos · toca para renombrar', 's.remove':'Quitar', 's.addPerson':'＋ Añadir persona',
+  's.peopleFoot':'El color del punto se usa en el botón de filtro de la persona. El color de las tarjetas depende del tipo de documento, o elige uno en Editar → Color de la tarjeta.',
+  's.security':'Seguridad', 's.pin':'Bloqueo con código', 's.bio':'Desbloquear con Face ID', 's.require':'Pedir código',
+  's.changePin':'Cambiar código',
+  's.secFoot':'El bloqueo protege la app si alguien coge tu iPhone desbloqueado. Los archivos están protegidos por el cifrado del propio iPhone.',
+  's.backup':'Copia de seguridad', 's.export':'Exportar copia…', 's.import':'Importar tarjeta o copia…', 's.reminder':'Recordatorio mensual',
+  's.bkFoot':'Última copia: {d}. Los documentos solo se guardan en esta app: si borras el icono de la pantalla de inicio, se pierden. Guarda una copia en iCloud Drive u OneDrive.',
+  's.never':'nunca', 's.storage':'Almacenamiento', 's.used':'Espacio usado', 's.counts':'{d} documentos · {p} personas',
+  's.erase':'Borrar todos los datos de este dispositivo', 's.protected':'almacenamiento protegido',
+  's.now':'Inmediatamente', 's.1':'Tras 1 minuto', 's.5':'Tras 5 minutos', 's.15':'Tras 15 minutos',
+  'p.name':'Nombre (p. ej. Yo, Ana, Luca)', 'p.rename':'Renombrar', 'p.newName':'Nombre de la persona',
+  'p.hasDocs':'«{name}» todavía tiene documentos. Pásalos a otra persona (Editar → Pertenece a) o elimínalos primero.',
+  'p.keepOne':'Debe quedar al menos una persona.', 'p.removeQ':'¿Quitar a «{name}»?',
+  'pin.current':'Introduce el código actual', 'pin.choose':'Elige un código de {n} dígitos', 'pin.again':'Vuelve a introducirlo',
+  'pin.mismatch':'Los códigos no coinciden', 'pin.set':'Código establecido', 'pin.offAsk':'Introduce el código para desactivarlo',
+  'pin.off':'Bloqueo con código desactivado', 'pin.wrong':'Código incorrecto', 'pin.tapBio':'Toca Face ID o introduce el código',
+  'bio.off':'Desbloqueo con Face ID desactivado', 'bio.on':'Desbloqueo con Face ID activado',
+  'bio.na':'El desbloqueo con Face ID no está disponible aquí. Abre la Cartera desde el icono de la pantalla de inicio.',
+  'bio.denied':'Face ID no se activó (la solicitud se canceló o no se permitió). Vuelve a intentarlo en Ajustes → Desbloquear con Face ID y toca Continuar cuando iOS pida guardar la llave de acceso.',
+  'bio.fail':'No se pudo configurar Face ID: ',
+  'erase1':'¿Borrar TODOS los documentos, personas y ajustes de este dispositivo?',
+  'erase2':'¿Seguro? No se puede deshacer si no tienes una copia de seguridad.',
+  'bk.preparing':'Preparando la copia…', 'bk.ready':'Copia lista — elige «Guardar en Archivos»', 'bk.fail':'No se pudo crear la copia: ',
+  'bk.notOurs':'Este archivo no es una copia de Family Wallet.',
+  'bk.restoreQ':'¿Restaurar {d} documentos y {p} personas de esta copia?\nLo que ya tienes se conserva; lo que coincida se sustituye.',
+  'bk.restoring':'Restaurando…', 'bk.restored':'Copia restaurada', 'bk.restoreFail':'No se pudo restaurar: ',
+  'blocked':'Este navegador bloqueó el almacenamiento local y la cartera no puede funcionar. En el iPhone, ábrela en Safari (no en modo privado).'
+};
+Object.assign(I18N.en, {
+  'pk.share':'Share',
+  's.import':'Import card or backup…',
+  'sh.title':'Share', 'sh.file':'Share file', 'sh.fileSub':'The original PDF or photo',
+  'sh.card':'Share as Wallet card', 'sh.cardSub':'Pictures + details — opens in Family Wallet',
+  'sh.askName':'Your name — it replaces “Me” on cards you share', 'sh.ready':'Card ready to send',
+  'imp.q':'Add “{t}” ({o}) to your wallet?', 'imp.done':'Card added', 'imp.notOurs':'This file is not a Wallet card or backup.',
+  's.myName':'Your name', 's.myNameSub':'Replaces “Me” when you share your cards', 's.notSet':'Not set',
+  's.appearance':'Appearance', 's.layout':'Layout', 'lay.stack':'Wallet stack', 'lay.carousel':'Swipe sideways', 'lay.list':'Compact list', 'lay.grid':'Grid',
+  's.cardStyle':'Card style', 'cs.gloss':'Glossy', 'cs.glass':'Frosted glass', 'cs.flat':'Flat', 'cs.dark':'Dark outline',
+  's.bg':'Background', 'bg.aurora':'Aurora', 'bg.midnight':'Midnight', 'bg.sunset':'Sunset', 'bg.ocean':'Ocean', 'bg.forest':'Forest', 'bg.black':'Black', 'bg.photo':'My photo',
+  's.bgPick':'Choose photo…', 's.bgChange':'Change photo…', 's.bgBlur':'Blur', 's.bgDim':'Darken', 's.bgFoot':'Your photo stays on this iPhone. Hold-and-drag works in the Wallet stack and Compact list layouts.'
+});
+Object.assign(I18N.ka, {
+  'pk.share':'გაზიარება',
+  's.import':'ბარათის ან ასლის იმპორტი…',
+  'sh.title':'გაზიარება', 'sh.file':'ფაილის გაზიარება', 'sh.fileSub':'ორიგინალი PDF ან ფოტო',
+  'sh.card':'გაზიარება საფულის ბარათად', 'sh.cardSub':'სურათები + მონაცემები — იხსნება Family Wallet-ში',
+  'sh.askName':'თქვენი სახელი — ის ჩაანაცვლებს „მე“-ს გაზიარებულ ბარათებზე', 'sh.ready':'ბარათი გასაგზავნად მზადაა',
+  'imp.q':'დავამატოთ „{t}“ ({o}) თქვენს საფულეში?', 'imp.done':'ბარათი დაემატა', 'imp.notOurs':'ეს ფაილი არ არის საფულის ბარათი ან სარეზერვო ასლი.',
+  's.myName':'თქვენი სახელი', 's.myNameSub':'ჩაანაცვლებს „მე“-ს, როცა ბარათებს აზიარებთ', 's.notSet':'არ არის მითითებული',
+  's.appearance':'გარეგნობა', 's.layout':'განლაგება', 'lay.stack':'საფულის დასტა', 'lay.carousel':'გვერდზე გადაფურცვლა', 'lay.list':'კომპაქტური სია', 'lay.grid':'ბადე',
+  's.cardStyle':'ბარათის სტილი', 'cs.gloss':'პრიალა', 'cs.glass':'მქრქალი მინა', 'cs.flat':'ბრტყელი', 'cs.dark':'მუქი კონტური',
+  's.bg':'ფონი', 'bg.aurora':'ავრორა', 'bg.midnight':'შუაღამე', 'bg.sunset':'მზის ჩასვლა', 'bg.ocean':'ოკეანე', 'bg.forest':'ტყე', 'bg.black':'შავი', 'bg.photo':'ჩემი ფოტო',
+  's.bgPick':'ფოტოს არჩევა…', 's.bgChange':'ფოტოს შეცვლა…', 's.bgBlur':'გაბუნდოვნება', 's.bgDim':'დაბნელება', 's.bgFoot':'თქვენი ფოტო მხოლოდ ამ iPhone-ზე რჩება. დაჭერით გადათრევა მუშაობს „საფულის დასტისა“ და „კომპაქტური სიის“ განლაგებაში.'
+});
+Object.assign(I18N.es, {
+  'sh.title':'Compartir', 'sh.file':'Compartir archivo', 'sh.fileSub':'El PDF o la foto original',
+  'sh.card':'Compartir como tarjeta de Cartera', 'sh.cardSub':'Imágenes + datos — se abre en Family Wallet',
+  'sh.askName':'Tu nombre — sustituye a «Yo» en las tarjetas que compartes', 'sh.ready':'Tarjeta lista para enviar',
+  'imp.q':'¿Añadir «{t}» ({o}) a tu cartera?', 'imp.done':'Tarjeta añadida', 'imp.notOurs':'Este archivo no es una tarjeta ni una copia de Cartera.',
+  's.myName':'Tu nombre', 's.myNameSub':'Sustituye a «Yo» cuando compartes tus tarjetas', 's.notSet':'Sin definir',
+  's.appearance':'Apariencia', 's.layout':'Diseño', 'lay.stack':'Pila de cartera', 'lay.carousel':'Deslizar de lado', 'lay.list':'Lista compacta', 'lay.grid':'Cuadrícula',
+  's.cardStyle':'Estilo de tarjeta', 'cs.gloss':'Brillante', 'cs.glass':'Cristal esmerilado', 'cs.flat':'Plano', 'cs.dark':'Contorno oscuro',
+  's.bg':'Fondo', 'bg.aurora':'Aurora', 'bg.midnight':'Medianoche', 'bg.sunset':'Atardecer', 'bg.ocean':'Océano', 'bg.forest':'Bosque', 'bg.black':'Negro', 'bg.photo':'Mi foto',
+  's.bgPick':'Elegir foto…', 's.bgChange':'Cambiar foto…', 's.bgBlur':'Desenfoque', 's.bgDim':'Oscurecer', 's.bgFoot':'Tu foto se queda en este iPhone. Mantener y arrastrar funciona en los diseños Pila de cartera y Lista compacta.'
+});
+
 let LANG = (() => {
-  try { const v = localStorage.getItem('lang'); if (v === 'ka' || v === 'en') return v; } catch {}
-  return /^ka/i.test(navigator.language || '') ? 'ka' : 'en';
+  try { const v = localStorage.getItem('lang'); if (I18N[v]) return v; } catch {}
+  const n = (navigator.language || '').toLowerCase();
+  return n.startsWith('ka') ? 'ka' : n.startsWith('es') ? 'es' : 'en';
 })();
 function L(key, vars) {
   let s = (I18N[LANG] && I18N[LANG][key]) ?? I18N.en[key] ?? key;
@@ -619,7 +800,7 @@ function applyStatic() {
   document.querySelectorAll('[data-i18n-aria]').forEach(e => { e.setAttribute('aria-label', L(e.dataset.i18nAria)); });
 }
 async function setLang(l) {
-  LANG = l === 'ka' ? 'ka' : 'en';
+  LANG = I18N[l] ? l : 'en';
   try { localStorage.setItem('lang', LANG); } catch {}
   try { await kvSet('lang', LANG); } catch {}
   applyStatic(); render();
@@ -634,10 +815,19 @@ const typeOf = id => TYPES.find(t => t.id === id) || TYPES[TYPES.length - 1];
 const member = id => S.members.find(m => m.id === id);
 const grad = c => `linear-gradient(135deg,${PALETTE[(c || 0) % PALETTE.length].join(',')})`;
 const cgrad = k => { const c = COLORS[k] || COLORS.slate; return `radial-gradient(85% 95% at 100% 100%,${c[0]}e6,transparent 68%),linear-gradient(140deg,${c[1]},${c[2]} 78%)`; };
-const cardGrad = d => cgrad(d.color && COLORS[d.color] ? d.color : typeOf(d.type).color);
+const cardKey = d => (d.color && COLORS[d.color] ? d.color : typeOf(d.type).color);
+const cardGrad = d => cgrad(cardKey(d));
+function cardVars(b, d) {
+  const c = COLORS[cardKey(d)];
+  b.style.setProperty('--g', cardGrad(d));
+  b.style.setProperty('--ga', `linear-gradient(140deg,${c[1]}8c,${c[2]}66)`);
+  b.style.setProperty('--t', c[1]); b.style.setProperty('--t2', c[0]);
+}
 const KA_MONTHS = ['იან','თებ','მარ','აპრ','მაი','ივნ','ივლ','აგვ','სექ','ოქტ','ნოე','დეკ'];
+const ES_MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sept','oct','nov','dic'];
 const fmtDateObj = dt => LANG === 'ka'
   ? `${String(dt.getDate()).padStart(2, '0')} ${KA_MONTHS[dt.getMonth()]}. ${dt.getFullYear()}`
+  : LANG === 'es' ? `${String(dt.getDate()).padStart(2, '0')} ${ES_MONTHS[dt.getMonth()]} ${dt.getFullYear()}`
   : dt.toLocaleDateString(undefined, {day:'2-digit', month:'short', year:'numeric'});
 const fmtDate = d => { try { const dt = new Date(d + 'T00:00:00'); return isNaN(dt) ? d : fmtDateObj(dt); } catch { return d; } };
 const fmtStamp = ms => { const dt = new Date(ms); return fmtDateObj(dt) + ', ' + String(dt.getHours()).padStart(2, '0') + ':' + String(dt.getMinutes()).padStart(2, '0'); };
@@ -699,7 +889,56 @@ async function getFiles(docId) {
 }
 
 /* ---------- state ---------- */
-const S = {members:[], docs:[], filter:'all', q:'', locked:false, hasPin:false, bioId:null, lockAfter:60000};
+const S = {members:[], docs:[], filter:'all', q:'', locked:false, hasPin:false, bioId:null, lockAfter:60000,
+  prefs:{layout:'stack', cardStyle:'gloss', bg:'aurora', bgBlur:12, bgDim:35}, myName:''};
+const BG_PREVIEW = {aurora:'radial-gradient(60% 40% at 20% 15%,#6e5cff,transparent),radial-gradient(60% 40% at 90% 30%,#ff4096aa,transparent),radial-gradient(70% 50% at 60% 95%,#00d2c8aa,transparent),#05060c',
+  midnight:'radial-gradient(60% 40% at 20% 15%,#3c5affaa,transparent),radial-gradient(60% 45% at 85% 70%,#783cffaa,transparent),#03040b',
+  sunset:'radial-gradient(60% 40% at 15% 12%,#ff783c,transparent),radial-gradient(60% 40% at 90% 30%,#ff3c82,transparent),radial-gradient(70% 50% at 60% 95%,#8c3cff,transparent),#0d0610',
+  ocean:'radial-gradient(60% 40% at 20% 15%,#00c8ff,transparent),radial-gradient(60% 45% at 85% 45%,#0078ffaa,transparent),radial-gradient(70% 50% at 30% 95%,#00e6be99,transparent),#020a12',
+  forest:'radial-gradient(60% 40% at 18% 15%,#3cdc8caa,transparent),radial-gradient(60% 45% at 88% 35%,#b4dc3c77,transparent),radial-gradient(70% 50% at 40% 95%,#00967899,transparent),#030b07',
+  black:'#000'};
+let bgUrl = null;
+async function applyPrefs() {
+  const P = S.prefs, b = document.body;
+  b.className = b.className.replace(/\b(lay|cs|bg)-[a-z]+\b/g, '').trim();
+  b.classList.add('lay-' + P.layout, 'cs-' + P.cardStyle, 'bg-' + P.bg);
+  const bp = $('#bgphoto');
+  document.documentElement.style.setProperty('--bgBlur', (P.bgBlur || 0) + 'px');
+  document.documentElement.style.setProperty('--bgDim', ((P.bgDim || 0) / 100).toFixed(2));
+  if (P.bg === 'photo') {
+    if (!bgUrl) { const img = await kvGet('bgImage'); if (img) bgUrl = URL.createObjectURL(new Blob([img.data], {type:img.type})); }
+    bp.style.backgroundImage = bgUrl ? `url("${bgUrl}")` : '';
+  }
+}
+async function savePrefs() { await kvSet('prefs', S.prefs); await applyPrefs(); }
+async function pickBackground(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await loadImg(url), max = 1800, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    const blob = await canvasToBlob(c, 0.86); c.width = c.height = 0;
+    await kvSet('bgImage', {type:'image/jpeg', data: await blob.arrayBuffer()});
+    if (bgUrl) URL.revokeObjectURL(bgUrl); bgUrl = null;
+    S.prefs.bg = 'photo'; await savePrefs(); renderSettings();
+  } catch (e) { alert(e.message || e); } finally { URL.revokeObjectURL(url); }
+}
+
+/* ---------- action sheet ---------- */
+function actionSheet(title, options) {
+  return new Promise(res => {
+    const box = $('#acts .as');
+    box.innerHTML = `<div class="as-box">${title ? `<div class="as-t">${esc(title)}</div>` : ''}${options.map((o, i) =>
+      `<button class="as-o" data-i="${i}"><span class="ic">${o.icon || ''}</span><span>${esc(o.label)}${o.sub ? `<small>${esc(o.sub)}</small>` : ''}</span></button>`).join('')}</div>
+      <button class="as-c" data-i="-1">${esc(L('cancel'))}</button>`;
+    const done = v => { hide('#acts'); $('#acts').onclick = null; res(v); };
+    $('#acts').onclick = e => { const b = e.target.closest('[data-i]'); if (b) done(+b.dataset.i < 0 ? null : options[+b.dataset.i].value); else if (e.target.id === 'acts') done(null); };
+    show('#acts');
+  });
+}
+
+/* ---------- people: who is "me" ---------- */
+const isSelf = m => !!m && (m.self || /^(me|მე|yo)$/i.test((m.name || '').trim()));
 async function load() {
   S.members = (await getAll('members')).sort((a, b) => (a.order || 0) - (b.order || 0));
   S.docs = await getAll('docs');
@@ -732,10 +971,14 @@ function render() {
   if (orphans.length && S.filter === 'all') groups.push({m:{name:L('unassigned'), color:6}, docs:orphans});
   for (const g of groups) {
     const sec = el('section', 'group');
-    if (S.filter === 'all' && groups.length > 1) sec.append(el('h2', '', g.m.name));
-    else if (S.filter === 'all') sec.append(el('h2', '', g.m.name));
-    const st = el('div', q || g.docs.length === 1 ? 'stack open' : 'stack');
-    st.dataset.drag = q ? '' : '1';
+    const lay = S.prefs.layout;
+    if (S.filter === 'all' || lay === 'carousel') {
+      const h = el('h2', '', g.m.name);
+      if (lay === 'carousel' && g.docs.length > 1) h.append(el('span', '', String(g.docs.length)));
+      sec.append(h);
+    }
+    const st = el('div', q || g.docs.length === 1 || lay !== 'stack' ? 'stack open' : 'stack');
+    st.dataset.drag = !q && (lay === 'stack' || lay === 'list') ? '1' : '';
     g.docs.forEach(d => st.append(cardEl(d)));
     sec.append(st); list.append(sec);
   }
@@ -814,7 +1057,7 @@ function cardEl(d) {
   const exp = expiryState(d.expiry);
   const b = el('button', 'card');
   b.dataset.id = d.id;
-  b.style.background = cardGrad(d);
+  cardVars(b, d);
   b.style.setProperty('--sd', (Math.random() * 8).toFixed(1) + 's');
   b.innerHTML = `<div class="c-top"><div class="c-head"><div class="c-title">${esc(d.title || t.label)}</div><div class="c-sub">${t.icon} ${esc(t.label)} · ${esc(m.name)}</div></div>${exp ? `<span class="badge ${exp.cls}">${exp.text}</span>` : ''}</div>
     <div class="c-body"><div class="c-meta">${d.number ? `<div class="c-k">${esc(L('card.number'))}</div><div class="c-v">${esc(mask(d.number))}</div>` : ''}${d.expiry ? `<div class="c-k">${esc(L('card.expires'))}</div><div class="c-v">${esc(fmtDate(d.expiry))}</div>` : ''}</div>${d.thumb ? `<img class="c-thumb" src="${d.thumb}" alt="">` : ''}</div>`;
@@ -928,7 +1171,7 @@ async function openPeek(id) {
 function closePeek() { P.token++; hide('#peek'); if (P.url) { URL.revokeObjectURL(P.url); P.url = null; } }
 async function peekAction(act) {
   const d = P.doc; if (!d) return;
-  if (act === 'share') return shareDoc(d);
+  if (act === 'share') { closePeek(); return shareDoc(d); }
   if (act === 'copy') { try { await navigator.clipboard.writeText(d.number); toast(L('copied')); } catch { toast(L('copyFail')); } closePeek(); return; }
   closePeek();
   if (act === 'open') openViewer(d.id);
@@ -1051,6 +1294,55 @@ function setZoom(z, reset) {
 }
 async function shareDoc(d) {
   d = d || V.doc; if (!d) return;
+  const how = await actionSheet(d.title || typeOf(d.type).label, [
+    {value:'file', icon:'📄', label:L('sh.file'), sub:L('sh.fileSub')},
+    {value:'card', icon:'🪪', label:L('sh.card'), sub:L('sh.cardSub')}]);
+  if (how === 'file') return shareFile(d);
+  if (how === 'card') return shareCard(d);
+}
+async function shareOrSave(file, title) {
+  try {
+    if (navigator.canShare && navigator.canShare({files:[file]})) { await navigator.share({files:[file], title}); return true; }
+  } catch (e) { if (e.name === 'AbortError') return false; }
+  downloadFile(file); return true;
+}
+async function shareCard(d) {
+  const m = member(d.memberId);
+  let owner = m ? m.name : '';
+  if (isSelf(m)) {
+    if (!S.myName) {
+      const n = (prompt(L('sh.askName'), '') || '').trim();
+      if (!n) return;
+      S.myName = n.slice(0, 40); await kvSet('myName', S.myName);
+    }
+    owner = S.myName;
+  }
+  const files = await getFiles(d.id);
+  const card = {app:'family-wallet-card', version:1, exported:new Date().toISOString(), owner,
+    doc:{type:d.type, title:d.title || '', number:d.number || '', expiry:d.expiry || '', notes:d.notes || '', color:d.color || null},
+    thumb:d.thumb || null, files:files.map(f => ({name:f.name, type:f.type, data:abToB64(f.data)}))};
+  const safe = s => String(s).replace(/[\\/:*?"<>|]+/g, '').trim();
+  const name = `${safe(d.title || typeOf(d.type).label)}${owner ? ' - ' + safe(owner) : ''}.json`;
+  const file = new File([JSON.stringify(card)], name, {type:'application/json'});
+  if (await shareOrSave(file, name)) toast(L('sh.ready'));
+}
+async function importCard(data) {
+  const owner = (data.owner || '').trim(), dd = data.doc || {};
+  const title = dd.title || typeOf(dd.type).label;
+  if (!confirm(L('imp.q', {t:title, o:owner || L('unassigned')}))) return false;
+  let m = null;
+  if (owner && S.myName && owner.toLowerCase() === S.myName.toLowerCase()) m = S.members.find(isSelf);
+  if (!m && owner) m = S.members.find(x => x.name.trim().toLowerCase() === owner.toLowerCase());
+  if (!m) m = owner ? await addMember(owner) : S.members[0];
+  const id = uid(), now = Date.now();
+  let i = 0;
+  for (const f of data.files || []) await put('files', {id:uid(), docId:id, name:f.name || 'document', type:f.type || guessType(f.name || ''), data:b64ToAb(f.data), order:now + i++});
+  await put('docs', {id, memberId:m.id, type:TYPES.some(t => t.id === dd.type) ? dd.type : 'other', title:dd.title || '', number:dd.number || '',
+    expiry:dd.expiry || '', notes:dd.notes || '', color:dd.color && COLORS[dd.color] ? dd.color : null, thumb:data.thumb || null, created:now, updated:now});
+  await load(); render(); toast(L('imp.done'));
+  return true;
+}
+async function shareFile(d) {
   const files = (await getFiles(d.id)).map(f => new File([f.data], f.name, {type:f.type}));
   if (!files.length) return toast(L('noShare'));
   try {
@@ -1237,9 +1529,31 @@ async function renderSettings() {
   try { persisted = await navigator.storage.persisted(); } catch {}
   const count = id => S.docs.filter(d => d.memberId === id).length;
   const opts = [[0,L('s.now')],[60000,L('s.1')],[300000,L('s.5')],[900000,L('s.15')]];
+  const P = S.prefs;
+  const seg = (act, cur, items) => `<div class="seg">${items.map(([v, k]) => `<button data-act="${act}" data-v="${v}" class="${cur === v ? 'on' : ''}">${esc(L(k))}</button>`).join('')}</div>`;
+  const bgs = ['aurora', 'midnight', 'sunset', 'ocean', 'forest', 'black'];
   $('#s-body').innerHTML = `
+    <h3>${esc(L('s.appearance'))}</h3>
+    <div class="box">
+      <div class="row"><span class="grow">${esc(L('s.layout'))}</span></div>
+      ${seg('layout', P.layout, [['stack','lay.stack'],['carousel','lay.carousel'],['list','lay.list'],['grid','lay.grid']])}
+    </div>
+    <div class="box" style="margin-top:10px">
+      <div class="row"><span class="grow">${esc(L('s.cardStyle'))}</span></div>
+      ${seg('cstyle', P.cardStyle, [['gloss','cs.gloss'],['glass','cs.glass'],['flat','cs.flat'],['dark','cs.dark']])}
+    </div>
+    <div class="box" style="margin-top:10px">
+      <div class="row"><span class="grow">${esc(L('s.bg'))}</span></div>
+      <div class="bgsw">${bgs.map(k => `<button data-act="bg" data-v="${k}" class="${P.bg === k ? 'on' : ''}"><i style="background:${BG_PREVIEW[k]}"></i>${esc(L('bg.' + k))}</button>`).join('')}
+        <button data-act="bgphoto" class="${P.bg === 'photo' ? 'on' : ''}"><i style="${P.bg === 'photo' && bgUrl ? `background-image:url('${bgUrl}')` : 'background:rgba(255,255,255,.08);display:grid;place-items:center;font-size:24px'}">${P.bg === 'photo' && bgUrl ? '' : '🖼️'}</i>${esc(L('bg.photo'))}</button></div>
+      ${P.bg === 'photo' ? `
+      <button class="row link" data-act="bgphoto">${esc(L('s.bgChange'))}</button>
+      <div class="row"><span class="rl">${esc(L('s.bgBlur'))}</span><input type="range" min="0" max="40" value="${P.bgBlur}" data-act="bgblur"></div>
+      <div class="row"><span class="rl">${esc(L('s.bgDim'))}</span><input type="range" min="0" max="85" value="${P.bgDim}" data-act="bgdim"></div>` : ''}
+    </div>
+    <p class="foot">${esc(L('s.bgFoot'))}</p>
     <h3>${esc(L('s.lang'))}</h3>
-    <div class="box"><div class="row"><span class="grow">🌐 ${esc(L('s.lang'))}</span><select class="mini" data-act="lang"><option value="en" ${LANG === 'en' ? 'selected' : ''}>English</option><option value="ka" ${LANG === 'ka' ? 'selected' : ''}>ქართული</option></select></div></div>
+    <div class="box"><div class="row"><span class="grow">🌐 ${esc(L('s.lang'))}</span><select class="mini" data-act="lang"><option value="en" ${LANG === 'en' ? 'selected' : ''}>English</option><option value="ka" ${LANG === 'ka' ? 'selected' : ''}>ქართული</option><option value="es" ${LANG === 'es' ? 'selected' : ''}>Español</option></select></div></div>
     <h3>${esc(L('s.people'))}</h3>
     <div class="box">
       ${S.members.map(m => `<div class="row">
@@ -1247,6 +1561,9 @@ async function renderSettings() {
         <button class="grow" data-act="rename" data-id="${m.id}">${esc(m.name)}<small>${esc(count(m.id) === 1 ? L('s.docCount1') : L('s.docCount', {n:count(m.id)}))}</small></button>
         <button class="red" data-act="delmember" data-id="${m.id}">${esc(L('s.remove'))}</button></div>`).join('')}
       <button class="row link" data-act="addmember">${esc(L('s.addPerson'))}</button>
+    </div>
+    <div class="box" style="margin-top:10px">
+      <button class="row" data-act="myname"><span class="grow">${esc(L('s.myName'))}<small>${esc(L('s.myNameSub'))}</small></span><span class="muted">${esc(S.myName || L('s.notSet'))}</span></button>
     </div>
     <p class="foot">${esc(L('s.peopleFoot'))}</p>
     <h3>${esc(L('s.security'))}</h3>
@@ -1290,6 +1607,15 @@ async function settingsAction(act, id, target) {
     case 'changepin': if (await pinPad('verify', L('pin.current'))) await setPasscode(); renderSettings(); break;
     case 'bio': S.bioId ? (await kvDel('bioId'), S.bioId = null, toast(L('bio.off'))) : await enableBio(); renderSettings(); break;
     case 'lang': await setLang(target.value); renderSettings(); break;
+    case 'layout': S.prefs.layout = target.dataset.v; await savePrefs(); render(); renderSettings(); break;
+    case 'cstyle': S.prefs.cardStyle = target.dataset.v; await savePrefs(); renderSettings(); break;
+    case 'bg': S.prefs.bg = target.dataset.v; await savePrefs(); renderSettings(); break;
+    case 'bgphoto': if (S.prefs.bg === 'photo' && target.tagName === 'BUTTON' && target.classList.contains('row')) { $('#bg-input').click(); break; }
+      if (await kvGet('bgImage') && S.prefs.bg !== 'photo') { S.prefs.bg = 'photo'; await savePrefs(); renderSettings(); } else $('#bg-input').click();
+      break;
+    case 'bgblur': S.prefs.bgBlur = +target.value; await savePrefs(); break;
+    case 'bgdim': S.prefs.bgDim = +target.value; await savePrefs(); break;
+    case 'myname': { const n = prompt(L('s.myName'), S.myName || ''); if (n !== null) { S.myName = n.trim().slice(0, 40); await kvSet('myName', S.myName); renderSettings(); } break; }
     case 'lockafter': S.lockAfter = +target.value; await kvSet('lockAfter', S.lockAfter); break;
     case 'export': exportBackup(); break;
     case 'bkrem': S.backupReminders = S.backupReminders === false; await kvSet('backupReminders', S.backupReminders); S.backupSnooze = 0; await kvSet('backupSnooze', 0); updateBell(); renderSettings(); break;
@@ -1332,7 +1658,8 @@ async function exportBackup() {
 async function importBackup(file) {
   try {
     const data = JSON.parse(await file.text());
-    if (data.app !== 'family-wallet') throw new Error(L('bk.notOurs'));
+    if (data.app === 'family-wallet-card') { if (await importCard(data)) renderSettings(); return; }
+    if (data.app !== 'family-wallet') throw new Error(L('imp.notOurs'));
     if (!confirm(L('bk.restoreQ', {d:data.docs.length, p:data.members.length}))) return;
     toast(L('bk.restoring'));
     for (const m of data.members) await put('members', m);
@@ -1483,8 +1810,16 @@ function bindUI() {
   $('#e-save').onclick = saveDoc;
   $('#e-delete').onclick = deleteDoc;
   $('#e-pick').onclick = () => $('#e-input').click();
-  $('#e-input').onchange = e => {
-    const files = [...e.target.files]; e.target.value = '';
+  $('#e-input').onchange = async e => {
+    let files = [...e.target.files]; e.target.value = '';
+    const cards = files.filter(f => /\.json$/i.test(f.name) || f.type === 'application/json');
+    if (cards.length) {
+      files = files.filter(f => !cards.includes(f));
+      let added = false;
+      for (const f of cards) { try { const data = JSON.parse(await f.text()); if (data.app === 'family-wallet-card') added = (await importCard(data)) || added; else alert(L('imp.notOurs')); } catch { alert(L('imp.notOurs')); } }
+      if (added && !files.length && !E.id && !E.existing.length && !E.newFiles.length) { hide('#editor'); return; }
+      if (!files.length) return;
+    }
     E.newFiles.push(...files); renderEditorFiles();
     if (!$('#e-title').value && files[0] && E.existing.length === 0 && E.newFiles.length === files.length) {
       const base = files[0].name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim();
@@ -1498,8 +1833,12 @@ function bindUI() {
     fillMemberSelect(m ? m.id : e.target.dataset.prev);
   };
   $('#s-done').onclick = () => hide('#settings');
-  $('#s-body').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && b.tagName !== 'SELECT') settingsAction(b.dataset.act, b.dataset.id, b); });
-  $('#s-body').addEventListener('change', e => { const b = e.target.closest('select[data-act]'); if (b) settingsAction(b.dataset.act, null, b); });
+  $('#s-body').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && b.tagName !== 'SELECT' && b.tagName !== 'INPUT') settingsAction(b.dataset.act, b.dataset.id, b); });
+  $('#s-body').addEventListener('change', e => { const b = e.target.closest('select[data-act],input[type=range][data-act]'); if (b) settingsAction(b.dataset.act, null, b); });
+  $('#s-body').addEventListener('input', e => { const r = e.target.closest('input[type=range]'); if (!r) return;
+    if (r.dataset.act === 'bgblur') document.documentElement.style.setProperty('--bgBlur', r.value + 'px');
+    if (r.dataset.act === 'bgdim') document.documentElement.style.setProperty('--bgDim', (r.value / 100).toFixed(2)); });
+  $('#bg-input').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) pickBackground(f); };
   $('#s-import').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) importBackup(f); };
   document.querySelectorAll('.sheet:not(.full)').forEach(s => s.addEventListener('click', e => { if (e.target === s) hide('#' + s.id); }));
 
@@ -1526,10 +1865,13 @@ function bindUI() {
 async function init() {
   try { db = await openDB(); }
   catch (e) { document.body.innerHTML = `<p class="none" style="padding:60px 20px">${esc(L('blocked'))}</p>`; return; }
-  const savedLang = await kvGet('lang'); if (savedLang === 'ka' || savedLang === 'en') { LANG = savedLang; try { localStorage.setItem('lang', LANG); } catch {} }
+  const savedLang = await kvGet('lang'); if (I18N[savedLang]) { LANG = savedLang; try { localStorage.setItem('lang', LANG); } catch {} }
   applyStatic();
+  const pf = await kvGet('prefs'); if (pf) Object.assign(S.prefs, pf);
+  S.myName = (await kvGet('myName')) || '';
+  await applyPrefs();
   await load();
-  if (!S.members.length) { await put('members', {id:uid(), name:L('me'), color:0, order:0}); await load(); }
+  if (!S.members.length) { await put('members', {id:uid(), name:L('me'), color:0, order:0, self:true}); await load(); }
   S.hasPin = !!(await kvGet('pinHash'));
   S.bioId = (await kvGet('bioId')) || null;
   const la = await kvGet('lockAfter'); if (la != null) S.lockAfter = la;
