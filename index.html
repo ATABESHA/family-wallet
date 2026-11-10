@@ -216,9 +216,9 @@ body::before{content:"";position:fixed;inset:-25%;z-index:0;pointer-events:none;
   animation:drift 30s ease-in-out infinite alternate;will-change:transform}
 @keyframes drift{to{transform:translate3d(5%,-4%,0) rotate(8deg) scale(1.06)}}
 #app{z-index:1;display:block}
-.head{position:absolute;top:0;left:0;right:0;background:linear-gradient(180deg,rgba(6,7,14,.72),rgba(6,7,14,.38));-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.head{position:sticky;top:0;margin:0 -16px 6px;background:linear-gradient(180deg,rgba(6,7,14,.72),rgba(6,7,14,.38));-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
 .head.shadow{box-shadow:0 .5px 0 rgba(255,255,255,.14),0 8px 24px rgba(0,0,0,.25)}
-#scroller{position:absolute;inset:0;padding-top:calc(var(--headH,170px) + 4px)}
+#scroller{position:absolute;inset:0;padding-top:0}
 h1{background:linear-gradient(180deg,#fff 30%,#c9d2ff);-webkit-background-clip:text;background-clip:text;color:transparent}
 .iconbtn,.chip,.search input,.notice,#toast,.pk-menu,.vbtn,.v-titles,.v-grab,.keys button:not(.ghost){
   background:var(--gl);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--gedge),0 6px 18px rgba(0,0,0,.22)}
@@ -281,8 +281,8 @@ select.mini{box-shadow:none;background-color:transparent}
 #viewer{background:#000;box-shadow:none}
 #viewer.show{display:block}
 #viewer #v-body{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-#viewer #v-pages{min-height:100%;padding:calc(var(--st) + 60px) 0 calc(var(--sb) + 64px);display:flex;flex-direction:column;justify-content:center;gap:10px;width:100%}
-#viewer #v-pages img.page{border-radius:0}
+#viewer #v-pages{min-height:100%;padding:calc(var(--st) + 12px) 10px calc(var(--sb) + 64px);display:flex;flex-direction:column;justify-content:center;gap:10px;width:100%}
+#viewer #v-pages img.page{border-radius:14px;box-shadow:0 0 0 .5px rgba(255,255,255,.12),0 10px 30px rgba(0,0,0,.5)}
 .v-top{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;align-items:center;gap:8px;padding:calc(var(--st) + 8px) 12px 14px;background:linear-gradient(180deg,rgba(0,0,0,.55),transparent);transition:opacity .25s,transform .25s}
 .vbtn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff}
 .vbtn svg{width:20px;height:20px}
@@ -327,6 +327,7 @@ select.mini{box-shadow:none;background-color:transparent}
 </svg>
 
 <div id="app">
+ <div id="scroller">
  <div class="head" id="head">
   <div class="top">
     <h1 data-i18n="app.title">Wallet</h1>
@@ -339,7 +340,6 @@ select.mini{box-shadow:none;background-color:transparent}
   <div class="search"><svg><use href="#i-search"/></svg><input id="q" type="search" data-i18n-ph="search.ph" placeholder="Search documents" autocomplete="off"></div>
   <div class="chips" id="chips"></div>
  </div>
- <div id="scroller">
   <div id="notices"></div>
   <div id="list"></div>
  </div>
@@ -382,12 +382,6 @@ select.mini{box-shadow:none;background-color:transparent}
 <!-- viewer -->
 <div class="overlay" id="viewer">
   <div id="v-body"><div id="v-pages"></div></div>
-  <div class="v-top">
-    <button class="vbtn" id="v-close" data-i18n-aria="aria.close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
-    <div class="v-titles"><div class="a" id="v-title"></div><div class="b" id="v-sub"></div></div>
-    <button class="vbtn" id="v-share" data-i18n-aria="aria.share" aria-label="Share or open in Files"><svg><use href="#i-share"/></svg></button>
-    <button class="vbtn" id="v-edit" data-i18n-aria="aria.edit" aria-label="Edit"><svg><use href="#i-edit"/></svg></button>
-  </div>
   <button class="v-grab" id="v-grab"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="v.details">Details</span></button>
   <div class="v-sheet" id="v-sheet"><div class="v-handle"></div><div id="v-info"></div></div>
 </div>
@@ -992,8 +986,6 @@ async function openViewer(id) {
   const token = ++V.token;
   cleanupViewer(); V.doc = d; setZoom(1, true);
   const m = member(d.memberId);
-  $('#v-title').textContent = d.title || typeOf(d.type).label;
-  $('#v-sub').textContent = `${typeOf(d.type).label}${m ? ' · ' + m.name : ''}`;
   const vw = $('#viewer'); vw.classList.remove('details', 'chrome-off'); vw.style.transform = ''; vw.style.transition = '';
   const sh = $('#v-sheet'); sh.style.transform = ''; sh.style.transition = ''; sh.scrollTop = 0;
   const ex = d.expiry ? expiryState(d.expiry) : null;
@@ -1121,13 +1113,13 @@ function bindViewerGestures() {
     else if (m === 'sheetDown') { (d > 80 || (fast && d > 25)) ? closeDetails() : reset(sheet); }
   };
   v.addEventListener('touchend', end); v.addEventListener('touchcancel', end);
-  // taps: single = show/hide buttons (or close details), double = zoom
-  let lastTap = 0, tapT = null;
+  // taps: single = close details, double = zoom
+  let lastTap = 0;
   body.addEventListener('click', () => {
     if (v.classList.contains('details')) { closeDetails(); return; }
     const t = Date.now();
-    if (t - lastTap < 320) { clearTimeout(tapT); lastTap = 0; setZoom(V.zoom > 1.2 ? 1 : 2.5); }
-    else { lastTap = t; tapT = setTimeout(() => v.classList.toggle('chrome-off'), 330); }
+    if (t - lastTap < 320) { lastTap = 0; setZoom(V.zoom > 1.2 ? 1 : 2.5); }
+    else lastTap = t;
   });
   $('#v-grab').onclick = openDetails;
   sheet.addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b) return;
@@ -1473,9 +1465,6 @@ function bindUI() {
   $('#btn-add').onclick = () => openEditor();
   $('#btn-settings').onclick = openSettings;
   $('#q').oninput = e => { S.q = e.target.value; render(); };
-  $('#v-close').onclick = closeViewer;
-  $('#v-edit').onclick = () => openEditor(V.doc.id);
-  $('#v-share').onclick = () => shareDoc(V.doc);
   $('#btn-bell').onclick = openAlerts;
   $('#a-done').onclick = () => hide('#alerts');
   $('#peek').addEventListener('click', e => { if ((e.target.id === 'peek' || e.target.classList.contains('pk')) && Date.now() - P.at > 400) closePeek(); });
@@ -1486,8 +1475,7 @@ function bindUI() {
   $('#bo-no').onclick = async () => { hide('#bio-offer'); await kvSet('bioDeclined', true); toast(L('bo.later')); };
   $('#lock').addEventListener('dblclick', e => e.preventDefault());
   bindViewerGestures();
-  const setHeadH = () => document.documentElement.style.setProperty('--headH', $('#head').offsetHeight + 'px');
-  setHeadH(); if (window.ResizeObserver) new ResizeObserver(setHeadH).observe($('#head'));
+
   window.addEventListener('touchmove', e => { if (DR.active) e.preventDefault(); }, {passive:false});
   const sc = $('#scroller');
   sc.addEventListener('scroll', () => $('#head').classList.toggle('shadow', sc.scrollTop > 4), {passive:true});
