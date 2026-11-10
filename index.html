@@ -203,6 +203,111 @@ select.mini{width:auto;background-color:transparent;padding:4px 26px 4px 4px;col
 
 #toast{position:fixed;left:50%;bottom:calc(var(--sb) + 28px);transform:translate(-50%,20px);background:rgba(58,58,60,.96);padding:11px 18px;border-radius:999px;font-size:15px;opacity:0;transition:.25s;z-index:80;pointer-events:none;white-space:nowrap;max-width:90vw;overflow:hidden;text-overflow:ellipsis}
 #toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ================= glass theme ================= */
+:root{--blur:blur(22px) saturate(180%);--gl:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05));
+  --gedge:inset 0 1px 0 rgba(255,255,255,.38),inset 0 0 0 .5px rgba(255,255,255,.2);--line:rgba(255,255,255,.12)}
+html,body{background:#05060c}
+body::before{content:"";position:fixed;inset:-25%;z-index:0;pointer-events:none;
+  background:radial-gradient(38% 30% at 18% 14%,rgba(110,92,255,.55),transparent 70%),
+    radial-gradient(32% 28% at 86% 16%,rgba(255,64,150,.36),transparent 70%),
+    radial-gradient(42% 36% at 72% 84%,rgba(0,210,200,.30),transparent 70%),
+    radial-gradient(36% 30% at 12% 82%,rgba(255,170,50,.22),transparent 70%),#05060c;
+  animation:drift 30s ease-in-out infinite alternate;will-change:transform}
+@keyframes drift{to{transform:translate3d(5%,-4%,0) rotate(8deg) scale(1.06)}}
+#app{z-index:1;display:block}
+.head{position:absolute;top:0;left:0;right:0;background:linear-gradient(180deg,rgba(6,7,14,.72),rgba(6,7,14,.38));-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.head.shadow{box-shadow:0 .5px 0 rgba(255,255,255,.14),0 8px 24px rgba(0,0,0,.25)}
+#scroller{position:absolute;inset:0;padding-top:calc(var(--headH,170px) + 4px)}
+h1{background:linear-gradient(180deg,#fff 30%,#c9d2ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.iconbtn,.chip,.search input,.notice,#toast,.pk-menu,.vbtn,.v-titles,.v-grab,.keys button:not(.ghost){
+  background:var(--gl);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--gedge),0 6px 18px rgba(0,0,0,.22)}
+.iconbtn{width:40px;height:40px}
+.iconbtn:active,.vbtn:active,.chip:active{background:rgba(255,255,255,.28)}
+.search input{border-radius:14px;background:rgba(255,255,255,.08)}
+.chip{color:#fff}
+.chip.on{background:linear-gradient(180deg,#fff,#dfe5f5);color:#0b0c14;box-shadow:inset 0 -1px 0 rgba(0,0,0,.08),0 6px 18px rgba(140,150,255,.35)}
+.notice{border-radius:18px}
+.bell .count{background:linear-gradient(180deg,#ff6b81,#ff2d55);border-color:#0b0c14;box-shadow:0 2px 8px rgba(255,45,85,.6)}
+.btn{background:linear-gradient(135deg,#46b3ff,#5b5cff 55%,#b25cff);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 24px rgba(91,92,255,.45);border-radius:16px}
+.badge{-webkit-backdrop-filter:blur(8px);background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.3)}
+.badge.red{background:linear-gradient(180deg,#ff6b6b,#ff2d55);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 2px 10px rgba(255,45,85,.55)}
+.badge.amber{background:linear-gradient(180deg,#fff27a,#ffb627);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 2px 10px rgba(255,190,40,.5)}
+.sw{background:rgba(255,255,255,.16);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.15)}
+.sw.on{background:linear-gradient(135deg,#3ef0a1,#11b97a);box-shadow:0 0 14px rgba(40,220,140,.45)}
+
+/* sheets & panels */
+.sheet{background:rgba(0,0,0,.35)}
+.panel{background:rgba(26,27,36,.72);-webkit-backdrop-filter:blur(40px) saturate(180%);backdrop-filter:blur(40px) saturate(180%);border-radius:24px 24px 0 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 -10px 40px rgba(0,0,0,.45)}
+.bar{background:transparent}
+.sheet.full{background:radial-gradient(60% 40% at 10% 0%,rgba(110,92,255,.38),transparent 70%),radial-gradient(50% 40% at 100% 30%,rgba(255,64,150,.20),transparent 70%),radial-gradient(60% 45% at 60% 100%,rgba(0,210,200,.20),transparent 70%),#0b0c16}
+.sheet.full .panel{background:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.sheet.full .bar{background:linear-gradient(180deg,rgba(14,14,30,.92),rgba(14,14,30,.7));-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);margin:0 -16px;padding-left:16px;padding-right:16px}
+.box,.file,.addfile,.danger,input,select,textarea{background-color:rgba(255,255,255,.07);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),inset 0 0 0 .5px rgba(255,255,255,.1)}
+.box{border-radius:16px}
+select.mini{box-shadow:none;background-color:transparent}
+.sw-c{width:40px;height:40px;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 0 0 .5px rgba(255,255,255,.3),0 3px 10px rgba(0,0,0,.3)}
+.sw-c.on{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.25),0 0 16px rgba(255,255,255,.35)}
+
+/* cards: glassy, glossy, shining */
+.card{border-radius:20px;color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),inset 0 0 0 .5px rgba(255,255,255,.3),inset 0 -18px 30px rgba(0,0,0,.16),0 -4px 18px rgba(0,0,0,.35),0 14px 30px rgba(0,0,0,.28)}
+.card::after{background:
+  radial-gradient(120% 80% at 0% 0%,rgba(255,255,255,.34),transparent 45%),
+  linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0) 42%),
+  radial-gradient(90% 70% at 100% 110%,rgba(0,0,0,.32),transparent 60%);z-index:0}
+.card::before{content:"";position:absolute;top:-40%;bottom:-40%;left:-60%;width:60%;z-index:0;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.08) 30%,rgba(255,255,255,.42) 50%,rgba(255,255,255,.08) 70%,transparent);
+  transform:translateX(-120%) skewX(-12deg);animation:sheen 8s ease-in-out infinite;animation-delay:var(--sd,0s)}
+@keyframes sheen{0%,72%{transform:translateX(-60%) skewX(-12deg)}100%{transform:translateX(380%) skewX(-12deg)}}
+.card:active::before{animation-duration:1.1s;animation-delay:0s}
+.c-title{text-shadow:0 1px 3px rgba(0,0,0,.35)}
+.c-sub,.c-meta{text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.c-thumb{border-radius:10px;box-shadow:0 0 0 1px rgba(255,255,255,.5),0 8px 20px rgba(0,0,0,.35)}
+.card.lifted{box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 26px 50px rgba(0,0,0,.6),0 0 30px rgba(255,255,255,.12)}
+
+/* peek */
+#peek{background:rgba(5,6,12,.35)}
+.pk-img{border-radius:18px;box-shadow:0 0 0 1px rgba(255,255,255,.25),0 24px 60px rgba(0,0,0,.55)}
+.pk-menu{border-radius:18px;background:rgba(40,42,56,.55)}
+.pk-menu button:active{background:rgba(255,255,255,.14)}
+
+/* lock */
+#lock{background:rgba(5,6,12,.25);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px)}
+.keys button:not(.ghost){font-weight:300}
+.keys button:not(.ghost):active{background:rgba(255,255,255,.45)}
+
+/* full-screen viewer */
+#viewer{background:#000;box-shadow:none}
+#viewer.show{display:block}
+#viewer #v-body{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#viewer #v-pages{min-height:100%;padding:calc(var(--st) + 60px) 0 calc(var(--sb) + 64px);display:flex;flex-direction:column;justify-content:center;gap:10px;width:100%}
+#viewer #v-pages img.page{border-radius:0}
+.v-top{position:absolute;top:0;left:0;right:0;z-index:2;display:flex;align-items:center;gap:8px;padding:calc(var(--st) + 8px) 12px 14px;background:linear-gradient(180deg,rgba(0,0,0,.55),transparent);transition:opacity .25s,transform .25s}
+.vbtn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff}
+.vbtn svg{width:20px;height:20px}
+.v-titles{flex:1;min-width:0;border-radius:21px;padding:5px 14px;min-height:42px;display:flex;flex-direction:column;justify-content:center}
+.v-titles .a{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v-titles .b{font-size:12px;color:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v-grab{position:absolute;left:50%;bottom:calc(var(--sb) + 12px);z-index:2;transform:translateX(-50%);border-radius:18px;padding:7px 16px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:600;color:rgba(255,255,255,.9);transition:opacity .25s}
+.v-grab svg{width:16px;height:16px}
+#viewer.chrome-off .v-top{opacity:0;transform:translateY(-12px);pointer-events:none}
+#viewer.chrome-off .v-grab,#viewer.details .v-grab{opacity:0;pointer-events:none}
+.v-sheet{position:absolute;left:0;right:0;bottom:0;z-index:3;max-height:78%;overflow:auto;-webkit-overflow-scrolling:touch;
+  background:rgba(20,21,32,.84);-webkit-backdrop-filter:blur(40px) saturate(180%);backdrop-filter:blur(40px) saturate(180%);
+  border-radius:28px 28px 0 0;padding:8px 16px calc(var(--sb) + 22px);transform:translateY(105%);transition:transform .34s cubic-bezier(.2,.85,.2,1);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 -12px 40px rgba(0,0,0,.5)}
+#viewer.details .v-sheet{transform:none}
+.v-handle{width:40px;height:5px;border-radius:3px;background:rgba(255,255,255,.4);margin:4px auto 14px}
+.vs-title{font-size:22px;font-weight:700}
+.vs-sub{color:rgba(255,255,255,.65);font-size:14px;margin:2px 0 16px}
+.vs-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.vs-actions button{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:16px;font-weight:600;background:var(--gl);box-shadow:var(--gedge)}
+.vs-actions svg{width:18px;height:18px}
+.vs-note{white-space:pre-wrap}
+.v-sheet .row small,.set .row small{color:rgba(255,255,255,.58)}
+.set .link{color:#5fb2ff}
+@media (prefers-reduced-motion:reduce){body::before,.card::before{animation:none}}
 </style>
 </head>
 <body>
@@ -276,17 +381,15 @@ select.mini{width:auto;background-color:transparent;padding:4px 26px 4px 4px;col
 
 <!-- viewer -->
 <div class="overlay" id="viewer">
-  <div class="v-head">
-    <button class="iconbtn" id="v-close" data-i18n-aria="aria.close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+  <div id="v-body"><div id="v-pages"></div></div>
+  <div class="v-top">
+    <button class="vbtn" id="v-close" data-i18n-aria="aria.close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
     <div class="v-titles"><div class="a" id="v-title"></div><div class="b" id="v-sub"></div></div>
-    <button class="iconbtn" id="v-share" data-i18n-aria="aria.share" aria-label="Share or open in Files"><svg><use href="#i-share"/></svg></button>
-    <button class="iconbtn" id="v-edit" data-i18n-aria="aria.edit" aria-label="Edit"><svg><use href="#i-edit"/></svg></button>
+    <button class="vbtn" id="v-share" data-i18n-aria="aria.share" aria-label="Share or open in Files"><svg><use href="#i-share"/></svg></button>
+    <button class="vbtn" id="v-edit" data-i18n-aria="aria.edit" aria-label="Edit"><svg><use href="#i-edit"/></svg></button>
   </div>
-  <div id="v-body">
-    <div class="v-info" id="v-info"></div>
-    <div id="v-pages"></div>
-    <div class="hint v-info" style="padding-top:0" data-i18n="v.zoom">Pinch or double-tap to zoom</div>
-  </div>
+  <button class="v-grab" id="v-grab"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="v.details">Details</span></button>
+  <div class="v-sheet" id="v-sheet"><div class="v-handle"></div><div id="v-info"></div></div>
 </div>
 
 <!-- editor -->
@@ -340,16 +443,19 @@ select.mini{width:auto;background-color:transparent;padding:4px 26px 4px 4px;col
 const PIN_LEN = 6;
 const PDFJS = 'pdf.min.js', PDFJS_WORKER = 'pdf.worker.min.js';
 const PALETTE = [
-  ['#0a84ff','#5e5ce6'],['#ff375f','#ff9f0a'],['#30d158','#0a7d6a'],['#bf5af2','#5e5ce6'],
-  ['#ff9f0a','#d64a00'],['#64d2ff','#0a5bd6'],['#8e8e93','#3a3a3c'],['#e6b800','#a35f00'],['#ff6482','#a2195f']
+  ['#7ab8ff','#4f6bff','#6d3df0'],['#ff8fb1','#ff4f7b','#ff9a3d'],['#6ff0b8','#1fc98a','#0a7d67'],['#d8a6ff','#a259ff','#5b2bd9'],
+  ['#ffd36e','#ff8a3d','#e2412f'],['#8ff4ff','#22b8e6','#0b5fbf'],['#d6dae3','#8b92a1','#3f4450'],['#ffe27a','#f2a91e','#b9650c'],['#ffa8d9','#ff5fb0','#a2195f']
 ];
 const COLORS = {
-  green:['#34c759','#0a7d55'], navy:['#3a5fd9','#151f5c'], teal:['#40c8e0','#0a5bd6'], orange:['#ff9f0a','#d14900'],
-  red:['#ff453a','#a3122a'], pink:['#ff6482','#a2195f'], purple:['#bf5af2','#5b3cc4'], blue:['#0a84ff','#3634a3'],
-  gold:['#e6b800','#9c5a00'], graphite:['#8e8e93','#3a3a3c'], slate:['#5e6b7d','#232a35'], black:['#48484a','#0d0d0f']
+  green:['#6ff0b8','#1fc98a','#0a7d67'], navy:['#6f9bff','#2f52e0','#151d66'], teal:['#7ff3ff','#22b8e6','#0b5fbf'],
+  orange:['#ffc46b','#ff7a3d','#d9342b'], red:['#ff8a8a','#ff3b5c','#a8103c'], pink:['#ffaee0','#ff5fb0','#b01f74'],
+  purple:['#d8a6ff','#a259ff','#5326cc'], blue:['#8fd3ff','#3a8bff','#3330c4'], gold:['#ffd86b','#f2a91e','#b0600b'],
+  graphite:['#c9ced8','#7f8694','#363b46'], slate:['#9fb3c8','#5d7290','#232d42'], black:['#62626e','#25252c','#060609'],
+  aurora:['#6ff7d0','#4f8dff','#a24dff'], sunset:['#ffd06b','#ff5e7e','#8a3dff'], lime:['#d4f56a','#5fcf3e','#16804a'],
+  peach:['#ffc29a','#ff7a7a','#c93a78'], ocean:['#4ff0ff','#1a7cff','#1b1f8f'], berry:['#ff7ad5','#b83cff','#4a1ca8']
 };
 const TYPES = [
-  {id:'id',label:'ID card',icon:'🪪',color:'green'},
+  {id:'id',label:'ID card',icon:'🪪',color:'aurora'},
   {id:'passport',label:'Passport',icon:'🛂',color:'navy'},
   {id:'residence',label:'Residence permit',icon:'🏠',color:'teal'},
   {id:'driving',label:'Driving licence',icon:'🚗',color:'orange'},
@@ -357,7 +463,7 @@ const TYPES = [
   {id:'medical',label:'Medical record',icon:'💊',color:'pink'},
   {id:'insurance',label:'Insurance',icon:'🛡️',color:'purple'},
   {id:'vehicle',label:'Vehicle papers',icon:'📋',color:'graphite'},
-  {id:'travel',label:'Travel / tickets',icon:'✈️',color:'blue'},
+  {id:'travel',label:'Travel / tickets',icon:'✈️',color:'sunset'},
   {id:'education',label:'Certificates',icon:'🎓',color:'gold'},
   {id:'other',label:'Other',icon:'📄',color:'slate'}
 ];
@@ -376,7 +482,7 @@ en: {
   'bo.text':'Open Wallet with a glance instead of typing your passcode. iOS will ask to save a passkey for Wallet — tap Continue.',
   'bo.yes':'Turn on Face ID', 'bo.no':'Not now', 'bo.later':'You can turn it on later in Settings',
   'alerts.title':'Needs attention', 'done':'Done', 'cancel':'Cancel', 'save':'Save', 'saving':'Saving…',
-  'v.zoom':'Pinch or double-tap to zoom',
+  'v.zoom':'Pinch or double-tap to zoom', 'v.details':'Details', 'v.files':'Files', 'v.share':'Share', 'v.edit':'Edit',
   'e.new':'New document', 'e.edit':'Edit document', 'e.document':'Document', 'e.pick':'＋ Choose PDF or photo',
   'e.pickMore':'＋ Add another page or file', 'e.owner':'Belongs to', 'e.type':'Type', 'e.color':'Card colour',
   'e.auto':'Auto', 'e.name':'Name on card', 'e.number':'Number', 'e.optional':'Optional', 'e.expires':'Expires',
@@ -445,7 +551,7 @@ ka: {
   'bo.text':'გახსენით საფულე ერთი შეხედვით, კოდის აკრეფის გარეშე. iOS შემოგთავაზებთ წვდომის გასაღების (passkey) შენახვას — დააჭირეთ Continue-ს.',
   'bo.yes':'Face ID-ის ჩართვა', 'bo.no':'ახლა არა', 'bo.later':'მოგვიანებით შეგიძლიათ ჩართოთ პარამეტრებში',
   'alerts.title':'შეტყობინებები', 'done':'მზადაა', 'cancel':'გაუქმება', 'save':'შენახვა', 'saving':'ინახება…',
-  'v.zoom':'გასადიდებლად გაშალეთ თითები ან ორჯერ შეეხეთ',
+  'v.zoom':'გასადიდებლად გაშალეთ თითები ან ორჯერ შეეხეთ', 'v.details':'დეტალები', 'v.files':'ფაილები', 'v.share':'გაზიარება', 'v.edit':'რედაქტირება',
   'e.new':'ახალი დოკუმენტი', 'e.edit':'რედაქტირება', 'e.document':'დოკუმენტი', 'e.pick':'＋ აირჩიეთ PDF ან ფოტო',
   'e.pickMore':'＋ კიდევ ერთი გვერდის ან ფაილის დამატება', 'e.owner':'მფლობელი', 'e.type':'ტიპი', 'e.color':'ბარათის ფერი',
   'e.auto':'ავტო', 'e.name':'სახელი ბარათზე', 'e.number':'ნომერი', 'e.optional':'არასავალდებულო', 'e.expires':'მოქმედების ვადა',
@@ -532,8 +638,8 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
 const typeOf = id => TYPES.find(t => t.id === id) || TYPES[TYPES.length - 1];
 const member = id => S.members.find(m => m.id === id);
-const grad = c => { const [a, b] = PALETTE[(c || 0) % PALETTE.length]; return `linear-gradient(135deg,${a},${b})`; };
-const cgrad = k => { const [a, b] = COLORS[k] || COLORS.slate; return `linear-gradient(135deg,${a},${b})`; };
+const grad = c => `linear-gradient(135deg,${PALETTE[(c || 0) % PALETTE.length].join(',')})`;
+const cgrad = k => { const c = COLORS[k] || COLORS.slate; return `radial-gradient(85% 95% at 100% 100%,${c[0]}e6,transparent 68%),linear-gradient(140deg,${c[1]},${c[2]} 78%)`; };
 const cardGrad = d => cgrad(d.color && COLORS[d.color] ? d.color : typeOf(d.type).color);
 const KA_MONTHS = ['იან','თებ','მარ','აპრ','მაი','ივნ','ივლ','აგვ','სექ','ოქტ','ნოე','დეკ'];
 const fmtDateObj = dt => LANG === 'ka'
@@ -715,6 +821,7 @@ function cardEl(d) {
   const b = el('button', 'card');
   b.dataset.id = d.id;
   b.style.background = cardGrad(d);
+  b.style.setProperty('--sd', (Math.random() * 8).toFixed(1) + 's');
   b.innerHTML = `<div class="c-top"><div class="c-head"><div class="c-title">${esc(d.title || t.label)}</div><div class="c-sub">${t.icon} ${esc(t.label)} · ${esc(m.name)}</div></div>${exp ? `<span class="badge ${exp.cls}">${exp.text}</span>` : ''}</div>
     <div class="c-body"><div class="c-meta">${d.number ? `<div class="c-k">${esc(L('card.number'))}</div><div class="c-v">${esc(mask(d.number))}</div>` : ''}${d.expiry ? `<div class="c-k">${esc(L('card.expires'))}</div><div class="c-v">${esc(fmtDate(d.expiry))}</div>` : ''}</div>${d.thumb ? `<img class="c-thumb" src="${d.thumb}" alt="">` : ''}</div>`;
   attachPress(b, d.id);
@@ -773,7 +880,8 @@ function autoScroll() {
   if (!DR.active) return;
   if (DR.moved && DR.canMove) {
     const sc = $('#scroller'), r = sc.getBoundingClientRect(); let v = 0;
-    if (DR.y < r.top + 70) v = -Math.min(14, (r.top + 70 - DR.y) / 4);
+    const top = r.top + $('#head').offsetHeight;
+    if (DR.y < top + 70) v = -Math.min(14, (top + 70 - DR.y) / 4);
     else if (DR.y > r.bottom - 70) v = Math.min(14, (DR.y - (r.bottom - 70)) / 4);
     if (v) { sc.scrollTop += v; placeDrag(); }
   }
@@ -886,14 +994,24 @@ async function openViewer(id) {
   const m = member(d.memberId);
   $('#v-title').textContent = d.title || typeOf(d.type).label;
   $('#v-sub').textContent = `${typeOf(d.type).label}${m ? ' · ' + m.name : ''}`;
-  const info = $('#v-info'); info.innerHTML = '';
-  if (d.number) {
-    const p = el('button', 'pill selectable'); p.innerHTML = `<b>${esc(L('v.numberCopy'))}</b>${esc(d.number)}`;
-    p.onclick = async () => { try { await navigator.clipboard.writeText(d.number); toast(L('copied')); } catch { toast(L('copyFail')); } };
-    info.append(p);
-  }
-  if (d.expiry) { const ex = expiryState(d.expiry); const p = el('div', 'pill'); p.innerHTML = `<b>${esc(L('e.expires'))}</b>${esc(fmtDate(d.expiry))}${ex ? ` <span class="badge ${ex.cls}" style="margin-left:6px">${ex.text}</span>` : ''}`; info.append(p); }
-  if (d.notes) { const p = el('div', 'pill note selectable'); p.innerHTML = `<b>${esc(L('v.notes'))}</b>${esc(d.notes)}`; info.append(p); }
+  const vw = $('#viewer'); vw.classList.remove('details', 'chrome-off'); vw.style.transform = ''; vw.style.transition = '';
+  const sh = $('#v-sheet'); sh.style.transform = ''; sh.style.transition = ''; sh.scrollTop = 0;
+  const ex = d.expiry ? expiryState(d.expiry) : null;
+  const nFiles = (await getFiles(id)).length;
+  if (token !== V.token) return;
+  const info = $('#v-info');
+  info.innerHTML = `<div class="vs-title">${esc(d.title || typeOf(d.type).label)}</div>
+    <div class="vs-sub">${typeOf(d.type).icon} ${esc(typeOf(d.type).label)}${m ? ' · ' + esc(m.name) : ''}</div>
+    <div class="box">
+      ${d.number ? `<button class="row selectable" id="vs-num"><span class="grow">${esc(d.number)}<small>${esc(L('v.numberCopy'))}</small></span><svg style="width:20px;height:20px;opacity:.7"><use href="#i-copy"/></svg></button>` : ''}
+      ${d.expiry ? `<div class="row"><span class="grow">${esc(fmtDate(d.expiry))}<small>${esc(L('e.expires'))}</small></span>${ex ? `<span class="badge ${ex.cls}">${ex.text}</span>` : ''}</div>` : ''}
+      <div class="row"><span class="grow">${esc(m ? m.name : L('unassigned'))}<small>${esc(L('e.owner'))}</small></span></div>
+      ${d.notes ? `<div class="row"><span class="grow vs-note selectable">${esc(d.notes)}<small>${esc(L('v.notes'))}</small></span></div>` : ''}
+      <div class="row"><span class="grow">${nFiles}<small>${esc(L('v.files'))}</small></span></div>
+    </div>
+    <div class="vs-actions"><button data-v="share"><svg><use href="#i-share"/></svg>${esc(L('v.share'))}</button><button data-v="edit"><svg><use href="#i-edit"/></svg>${esc(L('v.edit'))}</button></div>`;
+  const num = $('#vs-num');
+  if (num) num.onclick = async () => { try { await navigator.clipboard.writeText(d.number); toast(L('copied')); } catch { toast(L('copyFail')); } };
   const pages = $('#v-pages'); pages.innerHTML = '<div class="spinner"></div>';
   $('#v-body').scrollTo(0, 0);
   show('#viewer');
@@ -922,7 +1040,12 @@ async function openViewer(id) {
 }
 function addPageImg(url) { V.urls.push(url); const img = el('img', 'page'); img.src = url; img.alt = ''; $('#v-pages').append(img); }
 function cleanupViewer() { V.urls.forEach(u => URL.revokeObjectURL(u)); V.urls = []; $('#v-pages').innerHTML = ''; }
-function closeViewer() { V.token++; hide('#viewer'); cleanupViewer(); V.doc = null; }
+function closeViewer() {
+  V.token++; const v = $('#viewer'); hide('#viewer'); cleanupViewer(); V.doc = null;
+  v.classList.remove('details', 'chrome-off'); v.style.transform = ''; v.style.transition = ''; v.style.opacity = '';
+}
+function openDetails() { const v = $('#viewer'), sh = $('#v-sheet'); sh.style.transition = ''; sh.style.transform = ''; v.classList.add('details'); }
+function closeDetails() { const v = $('#viewer'), sh = $('#v-sheet'); sh.style.transition = ''; sh.style.transform = ''; v.classList.remove('details'); }
 function setZoom(z, reset) {
   const body = $('#v-body'), pages = $('#v-pages');
   z = Math.max(1, Math.min(5, z));
@@ -948,35 +1071,67 @@ function downloadFile(file) {
   document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
-function bindSwipeBack() {
-  const v = $('#viewer'); let sx = 0, sy = 0, mode = null, dx = 0, t0 = 0;
+function bindViewerGestures() {
+  const v = $('#viewer'), body = $('#v-body'), sheet = $('#v-sheet');
+  let sx = 0, sy = 0, t0 = 0, mode = null, d = 0, inSheet = false, sheetH = 0;
+  const reset = el => { el.style.transition = ''; el.style.transform = ''; el.style.opacity = ''; };
   v.addEventListener('touchstart', e => {
     if (e.touches.length !== 1) { mode = 'no'; return; }
-    const t = e.touches[0]; sx = t.clientX; sy = t.clientY; dx = 0; t0 = Date.now();
-    mode = (V.zoom <= 1.01 || sx < 30) ? null : 'no';
+    const t = e.touches[0]; sx = t.clientX; sy = t.clientY; t0 = Date.now(); d = 0;
+    inSheet = !!e.target.closest('#v-sheet');
+    mode = (V.zoom > 1.01 && sx >= 30 && !inSheet) ? 'no' : null;
   }, {passive:true});
   v.addEventListener('touchmove', e => {
-    if (mode === 'no' || e.touches.length !== 1) { mode = mode === 'swipe' ? 'swipe' : 'no'; return; }
+    if (mode === 'no') return;
+    if (e.touches.length !== 1) { mode = 'no'; return; }
     const t = e.touches[0], mx = t.clientX - sx, my = t.clientY - sy;
     if (mode === null) {
       if (Math.abs(mx) < 10 && Math.abs(my) < 10) return;
-      mode = (mx > 0 && Math.abs(mx) > Math.abs(my) * 1.2) ? 'swipe' : 'no';
+      const horiz = Math.abs(mx) > Math.abs(my) * 1.2, details = v.classList.contains('details');
+      if (horiz) mode = (mx > 0 && !details) ? 'back' : 'no';
+      else if (details) mode = (my > 0 && (!inSheet || sheet.scrollTop <= 0)) ? 'sheetDown' : 'no';
+      else if (V.zoom > 1.01) mode = 'no';
+      else {
+        const atTop = body.scrollTop <= 1, atBottom = body.scrollTop + body.clientHeight >= body.scrollHeight - 2;
+        mode = my > 0 && atTop ? 'dismiss' : my < 0 && atBottom ? 'sheetUp' : 'no';
+      }
       if (mode === 'no') return;
-      v.style.transition = 'none';
+      if (mode === 'sheetUp') { sheetH = sheet.offsetHeight; sheet.style.transition = 'none'; }
+      else if (mode === 'sheetDown') sheet.style.transition = 'none';
+      else v.style.transition = 'none';
     }
-    e.preventDefault(); dx = Math.max(0, mx); v.style.transform = `translateX(${dx}px)`;
+    e.preventDefault();
+    if (mode === 'back') { d = Math.max(0, mx); v.style.transform = `translateX(${d}px)`; }
+    else if (mode === 'dismiss') { d = Math.max(0, my); v.style.transform = `translateY(${d}px) scale(${Math.max(.85, 1 - d / 1600)})`; v.style.opacity = Math.max(.4, 1 - d / 700); }
+    else if (mode === 'sheetUp') { d = Math.max(0, -my); sheet.style.transform = `translateY(${Math.max(0, sheetH - d)}px)`; }
+    else if (mode === 'sheetDown') { d = Math.max(0, my); sheet.style.transform = `translateY(${d}px)`; }
   }, {passive:false});
   const end = () => {
-    if (mode !== 'swipe') { mode = null; return; }
-    mode = null;
-    const fast = dx / Math.max(1, Date.now() - t0) > 0.5;
-    v.style.transition = 'transform .22s ease-out';
-    if (dx > innerWidth * 0.33 || (fast && dx > 40)) {
-      v.style.transform = 'translateX(100%)';
-      setTimeout(() => { closeViewer(); v.style.transition = 'none'; v.style.transform = ''; }, 220);
-    } else v.style.transform = '';
+    const m = mode; mode = null;
+    if (!m || m === 'no') return;
+    const fast = d / Math.max(1, Date.now() - t0) > 0.5;
+    if (m === 'back' || m === 'dismiss') {
+      const go = m === 'back' ? (d > innerWidth * 0.33 || (fast && d > 40)) : (d > 110 || (fast && d > 40));
+      v.style.transition = 'transform .24s ease-out, opacity .24s ease-out';
+      if (go) {
+        v.style.transform = m === 'back' ? 'translateX(100%)' : 'translateY(100%) scale(.85)'; v.style.opacity = m === 'back' ? '' : '0';
+        setTimeout(() => { closeViewer(); reset(v); }, 240);
+      } else { v.style.transform = ''; v.style.opacity = ''; setTimeout(() => { v.style.transition = ''; }, 260); }
+    } else if (m === 'sheetUp') { (d > 60 || (fast && d > 20)) ? openDetails() : reset(sheet); }
+    else if (m === 'sheetDown') { (d > 80 || (fast && d > 25)) ? closeDetails() : reset(sheet); }
   };
   v.addEventListener('touchend', end); v.addEventListener('touchcancel', end);
+  // taps: single = show/hide buttons (or close details), double = zoom
+  let lastTap = 0, tapT = null;
+  body.addEventListener('click', () => {
+    if (v.classList.contains('details')) { closeDetails(); return; }
+    const t = Date.now();
+    if (t - lastTap < 320) { clearTimeout(tapT); lastTap = 0; setZoom(V.zoom > 1.2 ? 1 : 2.5); }
+    else { lastTap = t; tapT = setTimeout(() => v.classList.toggle('chrome-off'), 330); }
+  });
+  $('#v-grab').onclick = openDetails;
+  sheet.addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b) return;
+    if (b.dataset.v === 'share') shareDoc(V.doc); else openEditor(V.doc.id); });
 }
 
 /* ---------- editor ---------- */
@@ -1330,7 +1485,9 @@ function bindUI() {
   $('#bo-yes').onclick = async () => { hide('#bio-offer'); await enableBio(); };
   $('#bo-no').onclick = async () => { hide('#bio-offer'); await kvSet('bioDeclined', true); toast(L('bo.later')); };
   $('#lock').addEventListener('dblclick', e => e.preventDefault());
-  bindSwipeBack();
+  bindViewerGestures();
+  const setHeadH = () => document.documentElement.style.setProperty('--headH', $('#head').offsetHeight + 'px');
+  setHeadH(); if (window.ResizeObserver) new ResizeObserver(setHeadH).observe($('#head'));
   window.addEventListener('touchmove', e => { if (DR.active) e.preventDefault(); }, {passive:false});
   const sc = $('#scroller');
   sc.addEventListener('scroll', () => $('#head').classList.toggle('shadow', sc.scrollTop > 4), {passive:true});
@@ -1359,11 +1516,10 @@ function bindUI() {
   document.querySelectorAll('.sheet:not(.full)').forEach(s => s.addEventListener('click', e => { if (e.target === s) hide('#' + s.id); }));
 
   // zoom in viewer
-  const vb = $('#v-body'); let z0 = 1, lastTap = 0;
+  const vb = $('#v-body'); let z0 = 1;
   vb.addEventListener('gesturestart', e => { e.preventDefault(); z0 = V.zoom; });
   vb.addEventListener('gesturechange', e => { e.preventDefault(); setZoom(z0 * e.scale); });
   vb.addEventListener('gestureend', e => e.preventDefault());
-  $('#v-pages').addEventListener('click', () => { const t = Date.now(); if (t - lastTap < 320) { setZoom(V.zoom > 1.2 ? 1 : 2.5); lastTap = 0; } else lastTap = t; });
   // stop whole-page pinch zoom elsewhere (keeps the app feel)
   document.addEventListener('gesturestart', e => { if (!e.target.closest('#v-body')) e.preventDefault(); });
 
