@@ -67,6 +67,8 @@ h1{margin:0;font-size:30px;font-weight:700;white-space:nowrap;overflow:hidden;te
 .row{display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:48px;width:100%;position:relative;-webkit-user-select:text;user-select:text}
 .row+.row::before{content:"";position:absolute;top:0;left:14px;right:0;border-top:.5px solid rgba(255,255,255,.12)}
 .row .g{flex:1;min-width:0;white-space:pre-wrap}
+button.row .g{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+button.row .g small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row small{display:block;color:rgba(255,255,255,.58);font-size:13px}
 .spinner{width:28px;height:28px;border:3px solid #3a3a3c;border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin:60px auto}
 @keyframes spin{to{transform:rotate(360deg)}}

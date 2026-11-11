@@ -75,7 +75,7 @@ h1{font-size:34px;font-weight:700;margin:0;letter-spacing:.2px}
 .card{position:relative;isolation:isolate;width:100%;aspect-ratio:1.586;border-radius:16px;padding:15px 18px;overflow:hidden;color:#fff;display:flex;flex-direction:column;
   box-shadow:0 -1px 0 rgba(255,255,255,.18) inset,0 -6px 18px rgba(0,0,0,.45);transition:transform .18s ease;-webkit-touch-callout:none;touch-action:manipulation}
 .card::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 100% 0%,rgba(255,255,255,.22),transparent 55%),radial-gradient(90% 80% at 0% 100%,rgba(0,0,0,.25),transparent 60%);pointer-events:none}
-.card{transform:perspective(900px) translate3d(0,calc(var(--sv,0px) * var(--i,0)),0) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(calc(var(--sc,1) * var(--sp,1)));transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.card{transform:perspective(900px) translate3d(0,calc(var(--sv,0px) * var(--i,0) + var(--py,0px)),0) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) scale(calc(var(--sc,1) * var(--sp,1)));transition:transform .28s cubic-bezier(.2,.8,.2,1)}
 .card:active{--sp:.985}
 #list.moving .card,.lay-carousel .stack .card{transition:none}
 .lay-carousel .stack .card:active,.lay-carousel .stack .card.holding{transition:transform .25s ease}
@@ -614,6 +614,10 @@ body.sp-comfy .stack:not(.open) .card:last-child .c-line,body.sp-spacious .stack
 body.light .chip.lst.on{color:#fff}
 .c-top{height:auto!important;min-height:32px}
 .c-v{white-space:nowrap}
+.c-meta{min-width:0;flex:1}
+.c-row{min-width:0}
+.c-row>div{min-width:0;max-width:100%}
+.c-v{overflow:hidden;text-overflow:ellipsis}
 .chip.addl{opacity:.75}
 body.light .chip.lst{color:#1f6fff}
 .listbar{margin:4px 0 14px;border-radius:18px;padding:14px;background:var(--gl);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);box-shadow:var(--gedge)}
@@ -701,6 +705,21 @@ body.light .xf button{background:rgba(0,0,0,.05)}
 .tp-btns button{flex:1;padding:12px 6px;border-radius:14px;font-size:14px;font-weight:600;text-align:center;background:rgba(255,255,255,.12)}
 .tp-btns .go{flex:1.6;background:linear-gradient(135deg,#46b3ff,#5b5cff 55%,#b25cff)}
 .tp-btns button:disabled{opacity:.35}
+
+/* ===== details rows: long values never cover the copy button ===== */
+.v-sheet .row.bkrow .grow,#vs-num .grow{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v-sheet .row.bkrow .grow small,#vs-num .grow small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v-sheet .row>svg{flex:none}
+.v-sheet .row .grow{min-width:0}
+
+/* ===== tall details sheet for bank cards / Other ===== */
+#viewer.tall .v-sheet{top:calc(var(--st) + 8px);max-height:none;border-radius:28px 28px 0 0}
+.vs-card{margin:0 auto 14px;width:86%;pointer-events:none}
+.vs-card .card{box-shadow:0 14px 34px rgba(0,0,0,.45)}
+.vs-card .card .c-body{display:flex}
+
+/* ===== card pull-out ===== */
+.card.pulled{z-index:6;box-shadow:0 26px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.6)}
 
 /* ===== status badges, favourites ===== */
 .badge.green{background:linear-gradient(180deg,#5af0a5,#13b873);color:#04220f;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 10px rgba(30,200,120,.45)}
@@ -2191,7 +2210,7 @@ function attachPress(b, id) {
     t = setTimeout(() => { t = null; clear(); b.dataset.lifted = '1'; startDrag(b, id, sx, sy); }, 450);
   });
   b.addEventListener('contextmenu', e => e.preventDefault());
-  b.addEventListener('click', e => { if (b.dataset.lifted) { delete b.dataset.lifted; e.preventDefault(); return; } openViewer(id, false, b.getBoundingClientRect()); });
+  b.addEventListener('click', e => { if (b.dataset.lifted) { delete b.dataset.lifted; e.preventDefault(); return; } pullCard(b, true); V.card = b; setTimeout(() => openViewer(id, false, b.getBoundingClientRect()), 150); });
 }
 
 /* ---------- hold → lift → drag to reorder (or release for menu) ---------- */
@@ -2370,14 +2389,32 @@ async function openViewer(id, onlyDetails, from) {
   V.from = from ? [from.left + from.width / 2, from.top + from.height / 2] : null;
   openViewerPages(d, token);   // shows the viewer synchronously, then loads pages
   if (d.openMode === 'details') setTimeout(() => { if (V.doc && V.doc.id === d.id) openDetails(); }, from ? 320 : 60);
-  if (V.from && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    vw.style.transformOrigin = `${V.from[0]}px ${V.from[1]}px`;
-    vw.classList.remove('zin'); void vw.offsetWidth; vw.classList.add('zin');
-    vw.addEventListener('animationend', function f(e) { if (e.target === vw) { vw.classList.remove('zin'); vw.removeEventListener('animationend', f); } });
+  if (from && vw.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // the document grows out of the card's own shape
+    vw.animate([{clipPath:rectInset(from, 20), opacity:.55}, {clipPath:'inset(0px 0px 0px 0px round 0px)', opacity:1}], {duration:460, easing:'cubic-bezier(.2,.9,.25,1)'});
+    $('#v-pages').animate([{transform:'scale(1.07) translateY(-14px)'}, {transform:'none'}], {duration:500, easing:'cubic-bezier(.2,.9,.25,1)'});
   }
+}
+function rectInset(r, rad) {
+  return `inset(${Math.max(0, r.top)}px ${Math.max(0, innerWidth - r.right)}px ${Math.max(0, innerHeight - r.bottom)}px ${Math.max(0, r.left)}px round ${rad}px)`;
+}
+function pulledCard() {
+  if (V.card && V.card.isConnected) return V.card;
+  const id = V.doc && V.doc.id;
+  return id ? document.querySelector(`#list .card[data-id="${id}"]`) : null;
+}
+function pullCard(c, out) {
+  clearTimeout(c._pt);
+  c.style.transition = 'transform .38s cubic-bezier(.2,.9,.25,1), box-shadow .38s ease';
+  c.classList.toggle('pulled', out);
+  c.style.setProperty('--sp', out ? '1.06' : '1');
+  c.style.setProperty('--py', out ? '-12px' : '0px');
+  if (!out) c._pt = setTimeout(() => { c.style.transition = ''; c.style.removeProperty('--sp'); c.style.removeProperty('--py'); }, 420);
 }
 async function fillDetails(d) {
   const id = d.id, m = member(d.memberId);
+  const tall = d.type === 'bank' || d.type === 'other';
+  $('#viewer').classList.toggle('tall', tall);
   const ex = docBadge(d);
   const nFiles = (await getFiles(id)).length;
   const info = $('#v-info');
@@ -2400,6 +2437,7 @@ async function fillDetails(d) {
     <div class="vs-actions"><button data-v="share"><svg><use href="#i-share"/></svg>${esc(L('v.share'))}</button><button data-v="edit"><svg><use href="#i-edit"/></svg>${esc(L('v.edit'))}</button>
       <button data-v="fav" class="${d.fav ? 'on' : ''}"><b>${d.fav ? '★' : '☆'}</b>${esc(L('fav.short'))}</button><button data-v="cal">📅 ${esc(L('cal.add'))}</button></div>
     ${d.calAt ? `<div class="vs-cal">✓ ${esc(L('cal.added', {d: fmtDateObj(new Date(d.calAt))}))}</div>` : ''}`;
+  if (tall) { const w = el('div', 'vs-card'); w.append(cardEl(d)); info.prepend(w); }
   info.querySelectorAll('[data-bk]').forEach(r => r.onclick = () => bankTap(d, r.dataset.bk));
   info.querySelectorAll('[data-fx]').forEach(r => r.onclick = () => fieldTap(d, +r.dataset.fx));
   const num = $('#vs-num');
@@ -2436,7 +2474,14 @@ async function openViewerPages(d, token) {
 function addPageImg(url) { V.urls.push(url); const img = el('img', 'page'); img.src = url; img.alt = ''; $('#v-pages').append(img); }
 function cleanupViewer() { V.urls.forEach(u => URL.revokeObjectURL(u)); V.urls = []; $('#v-pages').innerHTML = ''; }
 function closeViewer() {
-  V.token++; const v = $('#viewer'); hide('#viewer'); cleanupViewer(); V.doc = null;
+  const c = pulledCard();
+  V.token++; const v = $('#viewer'); hide('#viewer'); cleanupViewer(); V.doc = null; V.card = null;
+  if (c) {
+    // the card slides back into its place in the wallet
+    if (!c.classList.contains('pulled')) { c.style.transition = 'none'; c.classList.add('pulled'); c.style.setProperty('--sp', '1.06'); c.style.setProperty('--py', '-12px'); void c.offsetWidth; }
+    requestAnimationFrame(() => requestAnimationFrame(() => pullCard(c, false)));
+  }
+  v.classList.remove('tall');
   v.classList.remove('details', 'chrome-off', 'zin'); v.style.transform = ''; v.style.transition = ''; v.style.opacity = ''; v.style.transformOrigin = ''; v.style.borderRadius = '';
 }
 function openDetails() { const v = $('#viewer'), sh = $('#v-sheet'); sh.style.transition = ''; sh.style.transform = ''; v.classList.add('details'); }
@@ -2560,11 +2605,14 @@ function bindViewerGestures() {
       const go = m === 'back' ? (d > innerWidth * 0.33 || (fast && d > 40)) : (d > 110 || (fast && d > 40));
       v.style.transition = 'transform .24s ease-out, opacity .24s ease-out';
       if (go) {
-        if (m === 'dismiss' && V.from) {
-          // shrink back into the card it came from
-          v.style.transition = 'transform .3s cubic-bezier(.3,.7,.2,1), opacity .3s ease-out, border-radius .3s';
-          v.style.transformOrigin = `${innerWidth / 2}px ${innerHeight / 2}px`;
-          v.style.transform = `translate(${V.from[0] - innerWidth / 2}px,${V.from[1] - innerHeight / 2}px) scale(.3)`; v.style.opacity = '0'; v.style.borderRadius = '40px';
+        const pc = m === 'dismiss' ? pulledCard() : null;
+        if (pc && v.animate) {
+          // shrink back into the shape of the card it came from
+          const cur = v.style.transform || 'none', r = pc.getBoundingClientRect();
+          v.style.transition = 'none';
+          const a = v.animate([{transform:cur, clipPath:'inset(0px 0px 0px 0px round 0px)', opacity:1}, {transform:'none', clipPath:rectInset(r, 20), opacity:.25}], {duration:360, easing:'cubic-bezier(.3,.7,.2,1)', fill:'forwards'});
+          a.onfinish = () => { closeViewer(); a.cancel(); reset(v); };
+          return;
         } else { v.style.transform = m === 'back' ? 'translateX(100%)' : 'translateY(100%) scale(.85)'; v.style.opacity = m === 'back' ? '' : '0'; }
         setTimeout(() => { closeViewer(); reset(v); v.style.borderRadius = ''; v.style.transformOrigin = ''; }, m === 'dismiss' && V.from ? 300 : 240);
       } else { v.style.transform = ''; v.style.opacity = ''; setTimeout(() => { v.style.transition = ''; }, 260); }
