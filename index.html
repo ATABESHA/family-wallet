@@ -719,7 +719,8 @@ body.light .xf button{background:rgba(0,0,0,.05)}
 .vs-card .card .c-body{display:flex}
 
 /* ===== card pull-out ===== */
-.card.ghost{transform-origin:center center}
+#v-pages,.v-pills{transition:opacity .3s ease}
+#viewer.opening #v-pages,#viewer.opening .v-pills{opacity:0;transition:none}
 .card.pulled{z-index:6;box-shadow:0 26px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.6)}
 
 /* ===== status badges, favourites ===== */
@@ -2442,12 +2443,13 @@ async function fillDetails(d) {
 async function openViewerPages(d, token) {
   const id = d.id;
   const pages = $('#v-pages'); pages.innerHTML = '<div class="spinner"></div>';
+  V.firstReady = new Promise(res => { V._fr = res; });
   $('#v-body').scrollTo(0, 0);
   show('#viewer');
   const files = await getFiles(id);
   if (token !== V.token) return;
   pages.innerHTML = '';
-  if (!files.length) { const w = el('div', 'v-cardonly'); w.append(cardEl(d)); pages.append(w); return; }
+  if (!files.length) { const w = el('div', 'v-cardonly'); w.append(cardEl(d)); pages.append(w); readyFirst(w.firstChild); return; }
   const width = Math.min(2200, Math.round(pages.clientWidth * (window.devicePixelRatio || 2) * 1.6));
   for (const f of files) {
     if (isPdf(f)) {
@@ -2466,8 +2468,13 @@ async function openViewerPages(d, token) {
       addPageImg(URL.createObjectURL(new Blob([f.data], {type:f.type})));
     }
   }
+  readyFirst(null);
 }
-function addPageImg(url) { V.urls.push(url); const img = el('img', 'page'); img.src = url; img.alt = ''; $('#v-pages').append(img); }
+function readyFirst(node) { if (V._fr) { const f = V._fr; V._fr = null; f(node); } }
+function addPageImg(url) {
+  V.urls.push(url); const img = el('img', 'page'); img.src = url; img.alt = ''; $('#v-pages').append(img);
+  if (V._fr) (img.decode ? img.decode() : Promise.resolve()).then(() => readyFirst(img), () => readyFirst(img));
+}
 function cleanupViewer() { V.urls.forEach(u => URL.revokeObjectURL(u)); V.urls = []; $('#v-pages').innerHTML = ''; }
 const isFast = d => !!d && d.openMode === 'details' && (d.type === 'bank' || d.type === 'other');
 const noMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches || !document.body.animate;
@@ -2476,13 +2483,12 @@ function makeGhost(card, r) {
   const g = card.cloneNode(true);
   g.classList.remove('pulled', 'holding', 'lifted'); g.classList.add('ghost');
   Object.assign(g.style, {position:'fixed', left:r.left + 'px', top:r.top + 'px', width:r.width + 'px', height:r.height + 'px', margin:'0',
-    zIndex:'36', pointerEvents:'none', transition:'none', transform:'none', willChange:'transform, opacity'});
+    zIndex:'36', pointerEvents:'none', transition:'none', transform:'none', transformOrigin:'0 0', willChange:'transform, opacity'});
   document.body.append(g); return g;
 }
-function ghostTarget(r) {
-  const s = Math.max(1.1, Math.min(innerWidth - 20, 540) / r.width);
-  return `translate(${innerWidth / 2 - (r.left + r.width / 2)}px,${innerHeight * 0.4 - (r.top + r.height / 2)}px) scale(${s})`;
-}
+function ghostPose(r, s, cx, cy) { return `translate(${cx - r.left - r.width * s / 2}px,${cy - r.top - r.height * s / 2}px) scale(${s})`; }
+function ghostTarget(r) { return ghostPose(r, Math.max(1.08, Math.min(innerWidth - 20, 540) / r.width), innerWidth / 2, innerHeight * 0.42); }
+function poseOn(r, tr) { return ghostPose(r, tr.width / r.width, tr.left + tr.width / 2, tr.top + tr.height / 2); }
 async function openFromCard(card, id) {
   const d = S.docs.find(x => x.id === id); if (!d) return;
   V.card = card;
@@ -2497,24 +2503,32 @@ async function openFromCard(card, id) {
   }
   const r = card.getBoundingClientRect(), g = makeGhost(card, r);
   card.style.opacity = '0';
-  v.style.opacity = '0';
+  v.classList.add('opening'); v.style.opacity = '0';
   const shown = openViewer(id);
-  const ga = g.animate([{transform:'none', boxShadow:'0 8px 20px rgba(0,0,0,.3)'}, {transform:ghostTarget(r), boxShadow:'0 30px 60px rgba(0,0,0,.55)'}], {duration:400, easing:EASE_OUT, fill:'forwards'});
-  await new Promise(res => setTimeout(res, 220));
+  const lift = g.animate([{transform:'none', boxShadow:'0 8px 20px rgba(0,0,0,.25)'}, {transform:ghostTarget(r), boxShadow:'0 34px 70px rgba(0,0,0,.6)'}], {duration:380, easing:EASE_OUT, fill:'forwards'});
+  const bg = v.animate([{opacity:0}, {opacity:1}], {duration:320, easing:'ease-out', fill:'forwards'});
+  bg.onfinish = () => { v.style.opacity = ''; bg.cancel(); };
   await shown;
-  const va = v.animate([{opacity:0}, {opacity:1}], {duration:240, easing:'ease-out', fill:'forwards'});
-  va.onfinish = () => { v.style.opacity = ''; va.cancel(); };
-  ga.onfinish = () => { const f = g.animate([{opacity:1}, {opacity:0}], {duration:180, easing:'ease-out', fill:'forwards'}); f.onfinish = () => g.remove(); };
+  const target = await Promise.race([V.firstReady || Promise.resolve(null), new Promise(res => setTimeout(() => res(null), 1800))]);
+  try { await lift.finished; } catch {}
+  const tr = target && target.isConnected ? target.getBoundingClientRect() : null;
+  const end = tr && tr.width ? poseOn(r, tr) : ghostTarget(r);
+  v.classList.remove('opening');                       // pages + buttons fade in (CSS)
+  const morph = g.animate([{transform:ghostTarget(r), opacity:1}, {transform:end, opacity:1, offset:.55}, {transform:end, opacity:0}], {duration:420, easing:EASE_OUT, fill:'forwards'});
+  morph.onfinish = () => g.remove();
 }
 function flyBack() {
-  // the document fades while a copy of the card flies back into its slot
+  // start from where the document is on screen now, then glide into the card's slot
   const v = $('#viewer'), c = pulledCard();
   if (!c || noMotion() || isFast(V.doc)) return fadeClose();
-  const r = c.getBoundingClientRect(), g = makeGhost(c, r), t = ghostTarget(r);
+  const r = c.getBoundingClientRect();
+  const page = [...document.querySelectorAll('#v-pages img.page, #v-pages .v-cardonly .card')].find(x => { const b = x.getBoundingClientRect(); return b.width && b.bottom > 40 && b.top < innerHeight - 40; });
+  const start = page ? poseOn(r, page.getBoundingClientRect()) : ghostTarget(r);
+  const g = makeGhost(c, r);
   c.style.opacity = '0';
   v.style.transition = 'none';
-  const va = v.animate([{opacity:1}, {opacity:0}], {duration:220, easing:'ease-in', fill:'forwards'});
-  const ga = g.animate([{transform:t, opacity:0, offset:0}, {transform:t, opacity:1, offset:.18}, {transform:'none', opacity:1}], {duration:440, easing:'cubic-bezier(.3,.75,.25,1)', fill:'forwards'});
+  const va = v.animate([{opacity:1}, {opacity:0}], {duration:280, easing:'ease-in', fill:'forwards'});
+  const ga = g.animate([{transform:start, opacity:0}, {transform:start, opacity:1, offset:.2}, {transform:'none', opacity:1}], {duration:480, easing:'cubic-bezier(.3,.75,.25,1)', fill:'forwards'});
   va.onfinish = () => { closeViewer(true); va.cancel(); v.style.transform = ''; v.style.opacity = ''; };
   ga.onfinish = () => { c.style.opacity = ''; g.remove(); };
 }
@@ -2528,7 +2542,8 @@ function fadeClose() {
 }
 function closeViewer(cardDone) {
   const c = pulledCard();
-  V.token++; const v = $('#viewer'); hide('#viewer'); cleanupViewer(); V.doc = null; V.card = null;
+  V.token++; const v = $('#viewer'); hide('#viewer'); cleanupViewer(); V.doc = null; V.card = null; v.classList.remove('opening');
+  document.querySelectorAll('.card.ghost').forEach(x => x.remove());
   if (c && !cardDone && c.style.opacity === '0') {
     c.style.opacity = '';
     if (!noMotion()) c.animate([{opacity:0, transform:'scale(.96)'}, {opacity:1, transform:'none'}], {duration:280, easing:EASE_OUT});
