@@ -607,10 +607,6 @@ body.sp-comfy .stack:not(.open) .card:last-child .c-line,body.sp-spacious .stack
 
 /* ===== show the document itself on Grid / Swipe sideways cards ===== */
 .c-face,.c-shade{display:none}
-body.docface:is(.lay-grid,.lay-carousel) .card.hasthumb .c-face{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;z-index:0;pointer-events:none}
-body.docface:is(.lay-grid,.lay-carousel) .card.hasthumb .c-shade{display:block;position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.62),rgba(0,0,0,.15) 48%,transparent 70%)}
-body.docface:is(.lay-grid,.lay-carousel) .card.hasthumb .c-thumb,body.docface:is(.lay-grid,.lay-carousel) .card.hasthumb .c-deco{display:none}
-body.docface:is(.lay-grid,.lay-carousel) .card.hasthumb{box-shadow:inset 0 0 0 2px var(--t),0 10px 26px rgba(0,0,0,.35)}
 
 /* ===== lists ===== */
 .chip.lst{color:#9fd0ff}
@@ -640,6 +636,33 @@ body.light .ck{box-shadow:inset 0 0 0 2px rgba(0,0,0,.2)}
 body.light .hs-steps .hb button{background:rgba(0,0,0,.06)}
 #settings .panel{transition:transform .3s cubic-bezier(.2,.85,.2,1)}
 #s-body{transition:transform .22s ease,opacity .22s ease}
+
+/* ===== animated settings tabs ===== */
+.stabs{position:relative}
+.stab-ind{position:absolute;top:4px;bottom:4px;left:0;width:0;border-radius:10px;background:rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 10px rgba(0,0,0,.25);transition:transform .34s cubic-bezier(.2,.85,.2,1),width .34s cubic-bezier(.2,.85,.2,1)}
+.stabs.noanim .stab-ind{transition:none}
+.stabs button{position:relative;z-index:1;transition:color .25s}
+.stabs button.on{background:transparent!important;box-shadow:none!important}
+.stabs button b{transition:transform .3s cubic-bezier(.2,.85,.2,1)}
+.stabs button.on b{transform:scale(1.15)}
+body.light .stab-ind{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+
+/* ===== one-line option rows with "Show all" ===== */
+.set h3.hrow{display:flex;justify-content:space-between;align-items:baseline}
+.set h3 .more{font-size:13px;font-weight:600;color:#5fb2ff;text-transform:none;letter-spacing:0}
+body.light .set h3 .more{color:#1f6fff}
+.tiles.one:not(.all){display:flex;overflow-x:auto;gap:10px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tiles.one:not(.all)::-webkit-scrollbar{display:none}
+.tiles.one:not(.all)>.tile{flex:0 0 72px;scroll-snap-align:start}
+.tiles.one.all{animation:tilesIn .3s ease}
+@keyframes tilesIn{from{opacity:.4;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* ===== document picture on Grid / Swipe sideways cards (card-shaped, not full-bleed) ===== */
+body.docface.lay-grid .card .c-body{display:flex;justify-content:flex-end;align-items:flex-end;margin-top:4px;min-height:0}
+body.docface.lay-grid .card .c-meta{display:none}
+body.docface:is(.lay-grid,.lay-carousel) .card .c-thumb{aspect-ratio:1.586;object-fit:cover;object-position:top;border-radius:9px}
+body.docface.lay-grid .card .c-thumb{height:100%;width:auto;max-width:62%}
+body.docface.lay-carousel .card .c-thumb{width:50%;max-width:50%;height:auto;max-height:none}
 
 /* ===== status badges, favourites ===== */
 .badge.green{background:linear-gradient(180deg,#5af0a5,#13b873);color:#04220f;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 10px rgba(30,200,120,.45)}
@@ -1178,6 +1201,7 @@ Object.assign(I18N.es, {
 });
 
 Object.assign(I18N.en, {
+  'more.all':'Show all', 'more.less':'Show less', 'df.subG':'Shows a small picture of the document on each grid card', 'df.subC':'Shows the document as a card-shaped picture',
   'ls.new':'＋ List', 'ls.newT':'New list', 'ls.editT':'Edit list', 'ls.name':'List name', 'ls.namePh':'e.g. Concert Friday, Trip to Tbilisi',
   'ls.until':'Temporary — until', 'ls.autoDelS':'Auto-delete', 'ls.after':'After the date', 'ls.pick':'Documents in this list', 'ls.count':'{n} documents',
   'ls.needName':'Give the list a name', 'ls.needDocs':'Choose at least one document', 'ls.delete':'Delete list',
@@ -1228,6 +1252,7 @@ Object.assign(I18N.en, {
   'bk.unlock':'Unlock to see card details', 'bk.revealed':'Visible for 60 seconds', 'bk.badNum':'This card number doesn’t look right — please check it.'
 });
 Object.assign(I18N.ka, {
+  'more.all':'ყველა', 'more.less':'ნაკლები', 'df.subG':'ბადის თითოეულ ბარათზე დოკუმენტის პატარა სურათი ჩანს', 'df.subC':'დოკუმენტი ბარათის ფორმის სურათად ჩანს',
   'ls.new':'＋ სია', 'ls.newT':'ახალი სია', 'ls.editT':'სიის რედაქტირება', 'ls.name':'სიის სახელი', 'ls.namePh':'მაგ.: კონცერტი პარასკევს, მოგზაურობა თბილისში',
   'ls.until':'დროებითი — თარიღამდე', 'ls.autoDelS':'ავტოწაშლა', 'ls.after':'თარიღის შემდეგ', 'ls.pick':'ამ სიის დოკუმენტები', 'ls.count':'{n} დოკუმენტი',
   'ls.needName':'მიუთითეთ სიის სახელი', 'ls.needDocs':'აირჩიეთ მინიმუმ ერთი დოკუმენტი', 'ls.delete':'სიის წაშლა',
@@ -1278,6 +1303,7 @@ Object.assign(I18N.ka, {
   'bk.unlock':'ბარათის მონაცემების სანახავად განბლოკეთ', 'bk.revealed':'ჩანს 60 წამის განმავლობაში', 'bk.badNum':'ბარათის ნომერი არასწორი ჩანს — გთხოვთ, შეამოწმოთ.'
 });
 Object.assign(I18N.es, {
+  'more.all':'Ver todo', 'more.less':'Ver menos', 'df.subG':'Muestra una imagen pequeña del documento en cada tarjeta', 'df.subC':'Muestra el documento como una imagen con forma de tarjeta',
   'ls.new':'＋ Lista', 'ls.newT':'Nueva lista', 'ls.editT':'Editar lista', 'ls.name':'Nombre de la lista', 'ls.namePh':'p. ej. Concierto viernes, Viaje a Tiflis',
   'ls.until':'Temporal — hasta', 'ls.autoDelS':'Borrado automático', 'ls.after':'Tras la fecha', 'ls.pick':'Documentos de esta lista', 'ls.count':'{n} documentos',
   'ls.needName':'Ponle un nombre a la lista', 'ls.needDocs':'Elige al menos un documento', 'ls.delete':'Eliminar lista',
@@ -1614,7 +1640,7 @@ function bindScanner() {
     const x = r.getContext('2d'); x.translate(r.width, 0); x.rotate(Math.PI / 2); x.drawImage(c, 0, 0);
     SC.pts = SC.pts.map(([px, py]) => [c.height - py, px]); SC.pts = [SC.pts[3], SC.pts[0], SC.pts[1], SC.pts[2]]; SC.src = r; layoutScan(); };
   $('#sc-use').onclick = finishScan;
-  window.addEventListener('resize', () => { if ($('#scan').classList.contains('show')) layoutScan(); });
+  window.addEventListener('resize', () => { if ($('#scan').classList.contains('show')) layoutScan(); if ($('#settings').classList.contains('show')) { $('#stabs').classList.add('noanim'); moveTabInd(); } });
 }
 function homography(src, dst) {
   // solve for H mapping dst → src (8 unknowns)
@@ -1889,7 +1915,7 @@ function cardEl(d) {
   if (SH.expiry && d.expiry) metaL.push(kv(L('card.expires'), fmtDate(d.expiry)));
   if (SH.issuer && d.issuer) metaR.push(kv(L('e.issuer'), d.issuer));
   if (SH.issued && d.issued) metaR.push(kv(L('e.issued'), fmtDate(d.issued)));
-  const thumb = SH.thumb && d.thumb;
+  const thumb = (SH.thumb || (S.prefs.docFace && S.prefs.layout !== 'stack' && S.prefs.layout !== 'list')) && d.thumb;
   if (d.type === 'bank') {
     const bk = d.bank || {}, last4 = bk.number ? bk.number.replace(/\D/g, '').slice(-4) : (bk.last4 || '');
     b.innerHTML = `<div class="c-deco"><div class="c-pat"></div></div>
@@ -1903,7 +1929,7 @@ function cardEl(d) {
   const big = SH.bigicon && !thumb;
   if (thumb) b.classList.add('hasthumb');
   const line = [d.number ? `<span><b>№</b>${esc(mask(d.number))}</span>` : '', d.expiry ? `<span><b>⏳</b>${esc(fmtDate(d.expiry))}</span>` : '', d.issuer ? `<span>${esc(d.issuer)}</span>` : ''].filter(Boolean).join('');
-  b.innerHTML = `${thumb ? `<img class="c-face" src="${d.thumb}" alt=""><div class="c-shade"></div>` : ''}${pat !== 'none' || big ? `<div class="c-deco">${pat !== 'none' ? `<div class="c-pat pt-${pat}"></div>` : ''}${big ? `<div class="c-big">${t.icon}</div>` : ''}</div>` : ''}
+  b.innerHTML = `${pat !== 'none' || big ? `<div class="c-deco">${pat !== 'none' ? `<div class="c-pat pt-${pat}"></div>` : ''}${big ? `<div class="c-big">${t.icon}</div>` : ''}</div>` : ''}
     <div class="c-top"><div class="c-head"><div class="c-title">${d.fav ? '<span class="c-star">★</span>' : ''}${esc(d.title || t.label)}</div><div class="c-sub">${t.icon} ${esc(t.label)}${SH.owner ? ' · ' + esc(m.name) : ''}</div>${line ? `<div class="c-line">${line}</div>` : ''}</div>${exp ? `<span class="badge ${exp.cls}">${exp.text}</span>` : ''}</div>
     ${chip ? '<div class="c-chip"></div>' : ''}
     <div class="c-body"><div class="c-meta"><div class="c-row">${metaL.join('')}</div><div class="c-row">${metaR.join('')}</div></div>${thumb ? `<img class="c-thumb" src="${d.thumb}" alt="">` : ''}</div>`;
@@ -2476,7 +2502,32 @@ async function addMember(name) {
 }
 
 /* ---------- settings ---------- */
-async function openSettings() { await renderSettings(); $('#settings .panel').scrollTop = 0; show('#settings'); }
+async function openSettings() { await renderSettings(); $('#settings .panel').scrollTop = 0; show('#settings'); $('#stabs').classList.add('noanim'); moveTabInd(); }
+function moveTabInd() {
+  const box = $('#stabs'), b = box.querySelector(`[data-v="${S.stab}"]`), ind = box.querySelector('.stab-ind');
+  box.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  if (!b || !ind || !b.offsetWidth) return;
+  ind.style.width = b.offsetWidth + 'px'; ind.style.transform = `translateX(${b.offsetLeft}px)`;
+  if (box.classList.contains('noanim')) requestAnimationFrame(() => requestAnimationFrame(() => box.classList.remove('noanim')));
+}
+let tabBusy = false;
+async function switchTab(t, dir) {
+  if (t === S.stab || tabBusy) return;
+  tabBusy = true;
+  const body = $('#s-body'), panel = $('#settings .panel');
+  dir = dir || (STABS.indexOf(t) > STABS.indexOf(S.stab) ? 1 : -1);
+  S.stab = t; moveTabInd();
+  body.style.transition = 'transform .16s ease-in, opacity .16s ease-in';
+  body.style.transform = `translateX(${-dir * 35}%)`; body.style.opacity = '0';
+  await sleep(150);
+  await renderSettings(); panel.scrollTop = 0;
+  body.style.transition = 'none'; body.style.transform = `translateX(${dir * 35}%)`; body.style.opacity = '0';
+  void body.offsetWidth;
+  body.style.transition = 'transform .32s cubic-bezier(.2,.85,.2,1), opacity .24s ease-out';
+  body.style.transform = ''; body.style.opacity = '';
+  if (navigator.vibrate) navigator.vibrate(6);
+  setTimeout(() => { body.style.transition = ''; tabBusy = false; }, 330);
+}
 function previewHTML() {
   const P = S.prefs;
   let docs = S.docs.slice().sort((a, b) => (typeof a.pos === 'number' ? a.pos : 1e9) - (typeof b.pos === 'number' ? b.pos : 1e9)).slice(0, 4);
@@ -2507,8 +2558,12 @@ async function renderSettings() {
   const count = id => S.docs.filter(d => d.memberId === id).length;
   const opts = [[0,L('s.now')],[60000,L('s.1')],[300000,L('s.5')],[900000,L('s.15')]];
   const P = S.prefs, tab = S.stab;
+  S.expand = S.expand || {};
+  const hrow = (k, title) => `<h3 class="hrow"><span>${esc(title)}</span><button class="more" data-act="expand" data-v="${k}">${esc(L(S.expand[k] ? 'more.less' : 'more.all'))}</button></h3>`;
+  const oneCls = k => 'one' + (S.expand[k] ? ' all' : '');
   const tabs = [['look','🎨','st.look'],['cards','🪪','st.cards'],['people','👥','st.people'],['security','🔒','st.security'],['general','⚙️','st.general']];
-  $('#stabs').innerHTML = tabs.map(([k, i, l]) => `<button data-act="tab" data-v="${k}" class="${tab === k ? 'on' : ''}"><b>${i}</b><span>${esc(L(l))}</span></button>`).join('');
+  const tb = $('#stabs');
+  if (tb.dataset.lang !== LANG) { tb.innerHTML = '<span class="stab-ind"></span>' + tabs.map(([k, i, l]) => `<button data-act="tab" data-v="${k}"><b>${i}</b><span>${esc(L(l))}</span></button>`).join(''); tb.dataset.lang = LANG; tb.classList.add('noanim'); }
   const sw = (key, label, sub) => `<div class="row"><span class="grow">${esc(label)}${sub ? `<small>${esc(sub)}</small>` : ''}</span><button class="sw ${P.show[key] ? 'on' : ''}" data-act="show" data-v="${key}" aria-label="${esc(label)}"></button></div>`;
   let html = '';
   if (tab === 'look') {
@@ -2519,14 +2574,14 @@ async function renderSettings() {
     const bgs = ['aurora', 'midnight', 'sunset', 'ocean', 'forest', 'black', 'light', 'pastel', 'dreamy'];
     html = `<h3>${esc(L('s.layout'))}</h3>
     <div class="box"><div class="tiles">${lays.map(([v, k, art]) => `<button class="tile ${P.layout === v ? 'on' : ''}" data-act="layout" data-v="${v}"><div class="art ${v}">${art}</div>${esc(L(k))}</button>`).join('')}</div></div>
-    <div class="box" style="margin-top:10px"><div class="row"><span class="grow">${esc(L('df.title'))}<small>${esc(L('df.sub'))}</small></span><button class="sw ${P.docFace ? 'on' : ''}" data-act="docface" aria-label="${esc(L('df.title'))}"></button></div></div>
-    <h3>${esc(L('sp.title'))}</h3>
+    ${P.layout === 'grid' || P.layout === 'carousel' ? `<div class="box" style="margin-top:10px"><div class="row"><span class="grow">${esc(L('df.title'))}<small>${esc(L(P.layout === 'grid' ? 'df.subG' : 'df.subC'))}</small></span><button class="sw ${P.docFace ? 'on' : ''}" data-act="docface" aria-label="${esc(L('df.title'))}"></button></div></div>` : ''}
+    ${P.layout === 'stack' ? `<h3>${esc(L('sp.title'))}</h3>
     <div class="box"><div class="tiles">${[['compact', '-30px'], ['comfy', '-18px'], ['spacious', '-6px'], ['full', '4px']].map(([v, m]) => `<button class="tile ${(P.peek || 'compact') === v ? 'on' : ''}" data-act="peek" data-v="${v}"><div class="art sp" style="--m:${m}"><div class="mc"></div><div class="mc b"></div><div class="mc c"></div></div>${esc(L('sp.' + v))}</button>`).join('')}</div></div>
-    <p class="foot">${esc(L('sp.foot'))}</p>
-    <h3>${esc(L('s.cardStyle'))}</h3>
-    <div class="box"><div class="tiles">${['gloss','glass','liquid','clay','neu','flat','dark'].map(v => `<button class="tile ${P.cardStyle === v ? 'on' : ''}" data-act="cstyle" data-v="${v}"><div class="art" style="background:${v === 'neu' ? BG_PREVIEW.light : v === 'clay' ? BG_PREVIEW.pastel : BG_PREVIEW.aurora}"><div class="sty ${v}"><i></i></div></div>${esc(L('cs.' + v))}</button>`).join('')}</div></div>
-    <h3>${esc(L('s.bg'))}</h3>
-    <div class="box"><div class="tiles">${bgs.map(k => `<button class="tile ${P.bg === k ? 'on' : ''}" data-act="bg" data-v="${k}"><div class="art sbg" style="background:${BG_PREVIEW[k]}"><div class="sty gloss"><i></i></div></div>${esc(L('bg.' + k))}</button>`).join('')}
+    <p class="foot">${esc(L('sp.foot'))}</p>` : ''}
+    ${hrow('cstyle', L('s.cardStyle'))}
+    <div class="box"><div class="tiles ${oneCls('cstyle')}">${['gloss','glass','liquid','clay','neu','flat','dark'].map(v => `<button class="tile ${P.cardStyle === v ? 'on' : ''}" data-act="cstyle" data-v="${v}"><div class="art" style="background:${v === 'neu' ? BG_PREVIEW.light : v === 'clay' ? BG_PREVIEW.pastel : BG_PREVIEW.aurora}"><div class="sty ${v}"><i></i></div></div>${esc(L('cs.' + v))}</button>`).join('')}</div></div>
+    ${hrow('bg', L('s.bg'))}
+    <div class="box"><div class="tiles ${oneCls('bg')}">${bgs.map(k => `<button class="tile ${P.bg === k ? 'on' : ''}" data-act="bg" data-v="${k}"><div class="art sbg" style="background:${BG_PREVIEW[k]}"><div class="sty gloss"><i></i></div></div>${esc(L('bg.' + k))}</button>`).join('')}
       <label class="tile ${P.bg === 'photo' ? 'on' : ''}"><input type="file" accept="image/*" data-act="bgfile" hidden><div class="art sbg" style="${bgUrl ? `background:center/cover url('${bgUrl}')` : ''}">${bgUrl ? '<div class="sty gloss"><i></i></div>' : '<span class="ph">🖼️</span>'}</div>${esc(L('bg.photo'))}</label>
       ${bgUrl && P.bg !== 'photo' ? '' : ''}</div>
       ${P.bg === 'photo' ? `
@@ -2535,13 +2590,13 @@ async function renderSettings() {
       <div class="row"><span class="rl">${esc(L('s.bgDim'))}</span><input type="range" min="0" max="85" value="${P.bgDim}" data-act="bgdim"></div>` : (bgUrl ? `<button class="row link" data-act="bgusephoto">${esc(L('s.bgUse'))}</button>` : '')}
     </div>
     <p class="foot">${esc(L('s.bgFoot'))}</p>
-    <h3>${esc(L('s.btn'))}</h3>
-    <div class="box"><div class="tiles">${['glass','solid','tint','outline','soft','minimal'].map(v => `<button class="tile ${(P.btn || 'glass') === v ? 'on' : ''}" data-act="btn" data-v="${v}"><div class="art"><div class="bsp ${v}"><div class="r"><b></b><b></b><b></b></div><div class="r"><i></i><i></i></div></div></div>${esc(L('btn.' + v))}</button>`).join('')}</div></div>
+    ${hrow('btn', L('s.btn'))}
+    <div class="box"><div class="tiles ${oneCls('btn')}">${['glass','solid','tint','outline','soft','minimal'].map(v => `<button class="tile ${(P.btn || 'glass') === v ? 'on' : ''}" data-act="btn" data-v="${v}"><div class="art"><div class="bsp ${v}"><div class="r"><b></b><b></b><b></b></div><div class="r"><i></i><i></i></div></div></div>${esc(L('btn.' + v))}</button>`).join('')}</div></div>
     <p class="foot">${esc(L('s.btnFoot'))}</p>`;
   } else if (tab === 'cards') {
     const pats = ['waves', 'dots', 'grid', 'diag', 'rings', 'topo', 'hex', 'none'];
-    html = `<h3>${esc(L('cf.deco'))}</h3>
-    <div class="box"><div class="tiles">${pats.map(v => `<button class="tile ${(P.show.pattern || 'waves') === v ? 'on' : ''}" data-act="pattern" data-v="${v}"><div class="art pat" style="background:${cgrad('navy')}">${v === 'none' ? '' : `<div class="c-pat pt-${v}"></div>`}</div>${esc(L('pt.' + v))}</button>`).join('')}</div></div>
+    html = `${hrow('pat', L('cf.deco'))}
+    <div class="box"><div class="tiles ${oneCls('pat')}">${pats.map(v => `<button class="tile ${(P.show.pattern || 'waves') === v ? 'on' : ''}" data-act="pattern" data-v="${v}"><div class="art pat" style="background:${cgrad('navy')}">${v === 'none' ? '' : `<div class="c-pat pt-${v}"></div>`}</div>${esc(L('pt.' + v))}</button>`).join('')}</div></div>
     <h3>${esc(L('cf.title'))}</h3>
     <div class="box">
       ${sw('chip', L('cf.chip'))}
@@ -2609,6 +2664,8 @@ async function renderSettings() {
     <p class="foot">Family Wallet 1.1${persisted ? ' · ' + esc(L('s.protected')) : ''}</p>`;
   }
   $('#s-body').innerHTML = html;
+  moveTabInd();
+  requestAnimationFrame(() => document.querySelectorAll('#s-body .tiles.one:not(.all)').forEach(r => { const on = r.querySelector('.tile.on'); if (on) r.scrollLeft = Math.max(0, on.offsetLeft - r.offsetLeft - 14); }));
   $('#s-pv').innerHTML = tab === 'look' || tab === 'cards' ? previewHTML() : '';
   fillPreview();
 }
@@ -2643,7 +2700,8 @@ async function settingsAction(act, id, target) {
     case 'bg': S.prefs.bg = target.dataset.v; await savePrefs(); renderSettings(); break;
     case 'remdef': S.prefs.rem[+target.dataset.i] = +target.value; await savePrefs(); break;
     case 'calall': calendarAll(); break;
-    case 'tab': S.stab = target.dataset.v; await renderSettings(); $('#settings .panel').scrollTop = 0; break;
+    case 'tab': switchTab(target.dataset.v); break;
+    case 'expand': S.expand[target.dataset.v] = !S.expand[target.dataset.v]; renderSettings(); break;
     case 'show': S.prefs.show[target.dataset.v] = !S.prefs.show[target.dataset.v]; await savePrefs(); render(); renderSettings(); break;
     case 'bgusephoto': S.prefs.bg = 'photo'; await savePrefs(); renderSettings(); break;
     case 'bgblur': S.prefs.bgBlur = +target.value; await savePrefs(); renderSettings(); break;
@@ -2809,7 +2867,7 @@ function bindSettingsGestures() {
     if (e.touches.length !== 1) { mode = 'no'; return; }
     const t = e.touches[0]; sx = t.clientX; sy = t.clientY; t0 = Date.now(); d = 0; mode = null;
     edge = sx < 26 ? -1 : sx > innerWidth - 26 ? 1 : 0;
-    if (e.target.closest('input[type=range],select,.bgsw')) mode = 'no';
+    if (e.target.closest('input[type=range],select,.bgsw') || (!edge && e.target.closest('.tiles.one:not(.all)'))) mode = 'no';
   }, {passive:true});
   ov.addEventListener('touchmove', e => {
     if (mode === 'no') return;
@@ -2833,11 +2891,9 @@ function bindSettingsGestures() {
         setTimeout(() => { hide('#settings'); panel.style.transition = 'none'; panel.style.transform = ''; requestAnimationFrame(() => panel.style.transition = ''); }, 280);
       } else panel.style.transform = '';
     } else if (m === 'tab') {
-      body.style.transition = ''; body.style.transform = ''; body.style.opacity = '';
-      if (Math.abs(d) > 60) {
-        const i = STABS.indexOf(S.stab) + (d > 0 ? -1 : 1);
-        if (i >= 0 && i < STABS.length) { S.stab = STABS[i]; renderSettings(); panel.scrollTop = 0; if (navigator.vibrate) navigator.vibrate(8); }
-      }
+      const i = STABS.indexOf(S.stab) + (d > 0 ? -1 : 1);
+      if (Math.abs(d) > 60 && i >= 0 && i < STABS.length) switchTab(STABS[i], d > 0 ? -1 : 1);
+      else { body.style.transition = 'transform .25s cubic-bezier(.2,.85,.2,1), opacity .2s'; body.style.transform = ''; body.style.opacity = ''; }
     }
   });
 }
