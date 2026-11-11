@@ -719,6 +719,7 @@ body.light .xf button{background:rgba(0,0,0,.05)}
 .vs-card .card .c-body{display:flex}
 
 /* ===== card pull-out ===== */
+.card.ghost{transform-origin:center center}
 .card.pulled{z-index:6;box-shadow:0 26px 50px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.6)}
 
 /* ===== status badges, favourites ===== */
@@ -2210,7 +2211,7 @@ function attachPress(b, id) {
     t = setTimeout(() => { t = null; clear(); b.dataset.lifted = '1'; startDrag(b, id, sx, sy); }, 450);
   });
   b.addEventListener('contextmenu', e => e.preventDefault());
-  b.addEventListener('click', e => { if (b.dataset.lifted) { delete b.dataset.lifted; e.preventDefault(); return; } pullCard(b, true); V.card = b; setTimeout(() => openViewer(id, false, b.getBoundingClientRect()), 150); });
+  b.addEventListener('click', e => { if (b.dataset.lifted) { delete b.dataset.lifted; e.preventDefault(); return; } openFromCard(b, id); });
 }
 
 /* ---------- hold → lift → drag to reorder (or release for menu) ---------- */
@@ -2386,14 +2387,9 @@ async function openViewer(id, onlyDetails, from) {
   const sh = $('#v-sheet'); sh.style.transform = ''; sh.style.transition = ''; sh.scrollTop = 0;
   await fillDetails(d);
   if (token !== V.token) return;
+  if (isFast(d)) { sh.style.transition = 'none'; vw.classList.add('details'); requestAnimationFrame(() => requestAnimationFrame(() => { sh.style.transition = ''; })); }
   V.from = from ? [from.left + from.width / 2, from.top + from.height / 2] : null;
   openViewerPages(d, token);   // shows the viewer synchronously, then loads pages
-  if (d.openMode === 'details') setTimeout(() => { if (V.doc && V.doc.id === d.id) openDetails(); }, from ? 320 : 60);
-  if (from && vw.animate && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // the document grows out of the card's own shape
-    vw.animate([{clipPath:rectInset(from, 20), opacity:.55}, {clipPath:'inset(0px 0px 0px 0px round 0px)', opacity:1}], {duration:460, easing:'cubic-bezier(.2,.9,.25,1)'});
-    $('#v-pages').animate([{transform:'scale(1.07) translateY(-14px)'}, {transform:'none'}], {duration:500, easing:'cubic-bezier(.2,.9,.25,1)'});
-  }
 }
 function rectInset(r, rad) {
   return `inset(${Math.max(0, r.top)}px ${Math.max(0, innerWidth - r.right)}px ${Math.max(0, innerHeight - r.bottom)}px ${Math.max(0, r.left)}px round ${rad}px)`;
@@ -2437,7 +2433,7 @@ async function fillDetails(d) {
     <div class="vs-actions"><button data-v="share"><svg><use href="#i-share"/></svg>${esc(L('v.share'))}</button><button data-v="edit"><svg><use href="#i-edit"/></svg>${esc(L('v.edit'))}</button>
       <button data-v="fav" class="${d.fav ? 'on' : ''}"><b>${d.fav ? '★' : '☆'}</b>${esc(L('fav.short'))}</button><button data-v="cal">📅 ${esc(L('cal.add'))}</button></div>
     ${d.calAt ? `<div class="vs-cal">✓ ${esc(L('cal.added', {d: fmtDateObj(new Date(d.calAt))}))}</div>` : ''}`;
-  if (tall) { const w = el('div', 'vs-card'); w.append(cardEl(d)); info.prepend(w); }
+  if (tall && !isFast(d)) { const w = el('div', 'vs-card'); w.append(cardEl(d)); info.prepend(w); }
   info.querySelectorAll('[data-bk]').forEach(r => r.onclick = () => bankTap(d, r.dataset.bk));
   info.querySelectorAll('[data-fx]').forEach(r => r.onclick = () => fieldTap(d, +r.dataset.fx));
   const num = $('#vs-num');
@@ -2473,13 +2469,69 @@ async function openViewerPages(d, token) {
 }
 function addPageImg(url) { V.urls.push(url); const img = el('img', 'page'); img.src = url; img.alt = ''; $('#v-pages').append(img); }
 function cleanupViewer() { V.urls.forEach(u => URL.revokeObjectURL(u)); V.urls = []; $('#v-pages').innerHTML = ''; }
-function closeViewer() {
+const isFast = d => !!d && d.openMode === 'details' && (d.type === 'bank' || d.type === 'other');
+const noMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches || !document.body.animate;
+const EASE_OUT = 'cubic-bezier(.2,.9,.25,1)';
+function makeGhost(card, r) {
+  const g = card.cloneNode(true);
+  g.classList.remove('pulled', 'holding', 'lifted'); g.classList.add('ghost');
+  Object.assign(g.style, {position:'fixed', left:r.left + 'px', top:r.top + 'px', width:r.width + 'px', height:r.height + 'px', margin:'0',
+    zIndex:'36', pointerEvents:'none', transition:'none', transform:'none', willChange:'transform, opacity'});
+  document.body.append(g); return g;
+}
+function ghostTarget(r) {
+  const s = Math.max(1.1, Math.min(innerWidth - 20, 540) / r.width);
+  return `translate(${innerWidth / 2 - (r.left + r.width / 2)}px,${innerHeight * 0.4 - (r.top + r.height / 2)}px) scale(${s})`;
+}
+async function openFromCard(card, id) {
+  const d = S.docs.find(x => x.id === id); if (!d) return;
+  V.card = card;
+  const v = $('#viewer');
+  if (noMotion()) return openViewer(id);
+  if (isFast(d)) {
+    // straight to the details sheet — no card
+    await openViewer(id);
+    v.animate([{opacity:0}, {opacity:1}], {duration:200, easing:'ease-out'});
+    $('#v-sheet').animate([{transform:'translateY(40px)'}, {transform:'none'}], {duration:340, easing:EASE_OUT});
+    return;
+  }
+  const r = card.getBoundingClientRect(), g = makeGhost(card, r);
+  card.style.opacity = '0';
+  v.style.opacity = '0';
+  const shown = openViewer(id);
+  const ga = g.animate([{transform:'none', boxShadow:'0 8px 20px rgba(0,0,0,.3)'}, {transform:ghostTarget(r), boxShadow:'0 30px 60px rgba(0,0,0,.55)'}], {duration:400, easing:EASE_OUT, fill:'forwards'});
+  await new Promise(res => setTimeout(res, 220));
+  await shown;
+  const va = v.animate([{opacity:0}, {opacity:1}], {duration:240, easing:'ease-out', fill:'forwards'});
+  va.onfinish = () => { v.style.opacity = ''; va.cancel(); };
+  ga.onfinish = () => { const f = g.animate([{opacity:1}, {opacity:0}], {duration:180, easing:'ease-out', fill:'forwards'}); f.onfinish = () => g.remove(); };
+}
+function flyBack() {
+  // the document fades while a copy of the card flies back into its slot
+  const v = $('#viewer'), c = pulledCard();
+  if (!c || noMotion() || isFast(V.doc)) return fadeClose();
+  const r = c.getBoundingClientRect(), g = makeGhost(c, r), t = ghostTarget(r);
+  c.style.opacity = '0';
+  v.style.transition = 'none';
+  const va = v.animate([{opacity:1}, {opacity:0}], {duration:220, easing:'ease-in', fill:'forwards'});
+  const ga = g.animate([{transform:t, opacity:0, offset:0}, {transform:t, opacity:1, offset:.18}, {transform:'none', opacity:1}], {duration:440, easing:'cubic-bezier(.3,.75,.25,1)', fill:'forwards'});
+  va.onfinish = () => { closeViewer(true); va.cancel(); v.style.transform = ''; v.style.opacity = ''; };
+  ga.onfinish = () => { c.style.opacity = ''; g.remove(); };
+}
+function fadeClose() {
+  const v = $('#viewer');
+  if (noMotion()) return closeViewer();
+  v.style.transition = 'none';
+  const a = v.animate([{opacity:1}, {opacity:0}], {duration:220, easing:'ease-in', fill:'forwards'});
+  if (isFast(V.doc)) $('#v-sheet').animate([{transform:'none'}, {transform:'translateY(60px)'}], {duration:220, easing:'ease-in', fill:'forwards'});
+  a.onfinish = () => { closeViewer(); a.cancel(); v.style.transform = ''; v.style.opacity = ''; $('#v-sheet').getAnimations().forEach(x => x.cancel()); };
+}
+function closeViewer(cardDone) {
   const c = pulledCard();
   V.token++; const v = $('#viewer'); hide('#viewer'); cleanupViewer(); V.doc = null; V.card = null;
-  if (c) {
-    // the card slides back into its place in the wallet
-    if (!c.classList.contains('pulled')) { c.style.transition = 'none'; c.classList.add('pulled'); c.style.setProperty('--sp', '1.06'); c.style.setProperty('--py', '-12px'); void c.offsetWidth; }
-    requestAnimationFrame(() => requestAnimationFrame(() => pullCard(c, false)));
+  if (c && !cardDone && c.style.opacity === '0') {
+    c.style.opacity = '';
+    if (!noMotion()) c.animate([{opacity:0, transform:'scale(.96)'}, {opacity:1, transform:'none'}], {duration:280, easing:EASE_OUT});
   }
   v.classList.remove('tall');
   v.classList.remove('details', 'chrome-off', 'zin'); v.style.transform = ''; v.style.transition = ''; v.style.opacity = ''; v.style.transformOrigin = ''; v.style.borderRadius = '';
@@ -2605,19 +2657,16 @@ function bindViewerGestures() {
       const go = m === 'back' ? (d > innerWidth * 0.33 || (fast && d > 40)) : (d > 110 || (fast && d > 40));
       v.style.transition = 'transform .24s ease-out, opacity .24s ease-out';
       if (go) {
-        const pc = m === 'dismiss' ? pulledCard() : null;
-        if (pc && v.animate) {
-          // shrink back into the shape of the card it came from
-          const cur = v.style.transform || 'none', r = pc.getBoundingClientRect();
-          v.style.transition = 'none';
-          const a = v.animate([{transform:cur, clipPath:'inset(0px 0px 0px 0px round 0px)', opacity:1}, {transform:'none', clipPath:rectInset(r, 20), opacity:.25}], {duration:360, easing:'cubic-bezier(.3,.7,.2,1)', fill:'forwards'});
-          a.onfinish = () => { closeViewer(); a.cancel(); reset(v); };
-          return;
-        } else { v.style.transform = m === 'back' ? 'translateX(100%)' : 'translateY(100%) scale(.85)'; v.style.opacity = m === 'back' ? '' : '0'; }
+        if (m === 'dismiss') { flyBack(); return; }
+        else { v.style.transform = m === 'back' ? 'translateX(100%)' : 'translateY(100%) scale(.85)'; v.style.opacity = m === 'back' ? '' : '0'; }
         setTimeout(() => { closeViewer(); reset(v); v.style.borderRadius = ''; v.style.transformOrigin = ''; }, m === 'dismiss' && V.from ? 300 : 240);
       } else { v.style.transform = ''; v.style.opacity = ''; setTimeout(() => { v.style.transition = ''; }, 260); }
     } else if (m === 'sheetUp') { (d > 60 || (fast && d > 20)) ? openDetails() : reset(sheet); }
-    else if (m === 'sheetDown') { (d > 80 || (fast && d > 25)) ? closeDetails() : reset(sheet); }
+    else if (m === 'sheetDown') {
+      if (!(d > 80 || (fast && d > 25))) reset(sheet);
+      else if (isFast(V.doc)) { sheet.style.transition = 'transform .24s ease-in'; sheet.style.transform = 'translateY(100%)'; const vv = $('#viewer'); vv.animate([{opacity:1}, {opacity:0}], {duration:240, fill:'forwards'}).onfinish = function () { closeViewer(); this.cancel(); reset(sheet); }; }
+      else closeDetails();
+    }
   };
   v.addEventListener('touchend', end); v.addEventListener('touchcancel', end);
   // taps: single = close details, double = zoom
