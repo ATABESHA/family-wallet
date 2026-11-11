@@ -362,7 +362,7 @@ body.bg-photo #bgphoto{display:block}
 .cs-dark .c-title{color:var(--t2)}
 
 /* ===== action sheet ===== */
-#acts{z-index:70;background:rgba(0,0,0,.4)}
+#acts{z-index:78;background:rgba(0,0,0,.4)}
 #acts .as{position:absolute;left:10px;right:10px;bottom:calc(var(--sb) + 10px);max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:8px;animation:up .26s cubic-bezier(.2,.8,.2,1)}
 #acts .as-box{border-radius:18px;overflow:hidden;background:rgba(40,42,56,.72);-webkit-backdrop-filter:blur(30px) saturate(180%);backdrop-filter:blur(30px) saturate(180%);box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
 #acts .as-t{color:rgba(255,255,255,.6);font-size:13px;text-align:center;padding:12px 16px 10px}
@@ -664,6 +664,44 @@ body.docface:is(.lay-grid,.lay-carousel) .card .c-thumb{aspect-ratio:1.586;objec
 body.docface.lay-grid .card .c-thumb{height:100%;width:auto;max-width:62%}
 body.docface.lay-carousel .card .c-thumb{width:50%;max-width:50%;height:auto;max-height:none}
 
+/* ===== editor: one-row colours, extra fields ===== */
+#e-colors{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:4px 2px 6px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+#e-colors::-webkit-scrollbar{display:none}
+#e-colors .sw-c{flex:none;scroll-snap-align:start}
+.xf{display:grid;grid-template-columns:1fr 1.4fr auto auto;gap:6px;align-items:center;margin-bottom:8px}
+.xf input{padding:11px 12px;font-size:15px}
+.xf button{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:17px;background:rgba(255,255,255,.07)}
+.xf button.lk.on{background:linear-gradient(135deg,#46b3ff,#5b5cff)}
+.xf button.rm{color:#ff6b6b}
+body.light .xf button{background:rgba(0,0,0,.05)}
+
+/* ===== viewer pills: Edit + Details ===== */
+.v-pills{position:absolute;left:50%;bottom:calc(var(--sb) + 12px);transform:translateX(-50%);display:flex;gap:10px;z-index:2;transition:opacity .25s}
+.v-pills .v-grab{position:static;transform:none;flex-direction:row;gap:6px;padding:10px 16px;font-size:13px}
+.v-pills .v-grab svg{width:15px;height:15px}
+#viewer.details .v-pills{opacity:0;pointer-events:none}
+
+/* ===== text picker ===== */
+#tpick{z-index:72;background:#05060c;flex-direction:column}
+#tpick.show{display:flex}
+.tp-top{display:flex;align-items:center;gap:10px;padding:calc(var(--st) + 12px) 16px 6px}
+.tp-top .t{flex:1;font-weight:600;text-align:center}
+.tp-top .pg{min-width:44px;text-align:right;font-size:13px;opacity:.6}
+.tp-hint{font-size:13px;text-align:center;color:rgba(255,255,255,.65);padding:0 16px 8px;min-height:24px}
+.tp-stage{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:0 10px}
+.tp-wrap{position:relative;width:100%;margin:0 auto;transition:width .25s}
+.tp-wrap.z2{width:200%}
+.tp-wrap img{width:100%;display:block;border-radius:10px;background:#fff}
+.tp-w{position:absolute;border-radius:3px;background:rgba(91,92,255,.22);box-shadow:inset 0 0 0 1.5px rgba(91,92,255,.75)}
+.tp-w.on{background:rgba(255,200,40,.45);box-shadow:inset 0 0 0 2px #ffb627}
+.tp-bar{padding:10px 12px calc(var(--sb) + 12px);background:rgba(20,21,32,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.tp-sel{min-height:22px;font-size:15px;font-weight:600;padding:2px 4px 10px;word-break:break-word}
+.tp-sel:empty::before{content:attr(data-ph);opacity:.45;font-weight:400}
+.tp-btns{display:flex;gap:8px}
+.tp-btns button{flex:1;padding:12px 6px;border-radius:14px;font-size:14px;font-weight:600;text-align:center;background:rgba(255,255,255,.12)}
+.tp-btns .go{flex:1.6;background:linear-gradient(135deg,#46b3ff,#5b5cff 55%,#b25cff)}
+.tp-btns button:disabled{opacity:.35}
+
 /* ===== status badges, favourites ===== */
 .badge.green{background:linear-gradient(180deg,#5af0a5,#13b873);color:#04220f;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 10px rgba(30,200,120,.45)}
 .badge.blue{background:linear-gradient(180deg,#7cc4ff,#2f7bff);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 10px rgba(47,123,255,.45)}
@@ -798,7 +836,7 @@ body.docface.lay-carousel .card .c-thumb{width:50%;max-width:50%;height:auto;max
 <!-- viewer -->
 <div class="overlay" id="viewer">
   <div id="v-body"><div id="v-pages"></div></div>
-  <button class="v-grab" id="v-grab"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="v.details">Details</span></button>
+  <div class="v-pills"><button class="v-grab" id="v-edit"><svg><use href="#i-edit"/></svg><span data-i18n="v.edit">Edit</span></button><button class="v-grab" id="v-grab"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="v.details">Details</span></button></div>
   <div class="v-sheet" id="v-sheet"><div class="v-handle"></div><div id="v-info"></div></div>
 </div>
 
@@ -810,6 +848,7 @@ body.docface.lay-carousel .card .c-thumb{width:50%;max-width:50%;height:auto;max
       <div class="files" id="e-files"></div>
       <button class="addfile" id="e-pick">＋ Choose PDF or photo</button>
       <button class="addfile scan" id="e-scan" data-i18n="sc.btn">📷 Scan with camera</button>
+      <button class="addfile scan" id="e-picktext" data-i18n="pt2.btn" hidden>🔍 Pick text from document</button>
       <input type="file" id="e-cam" accept="image/*" capture="environment" hidden>
       <input type="file" id="e-input" accept="application/pdf,image/*,application/json,.json" multiple hidden>
     </div>
@@ -838,6 +877,11 @@ body.docface.lay-carousel .card .c-thumb{width:50%;max-width:50%;height:auto;max
       <div class="field"><label for="e-issuer" data-i18n="e.issuer">Issued by</label><input id="e-issuer" data-i18n-ph="e.issuerPh" placeholder="e.g. Spain, Sanitas" autocomplete="off"></div>
       <div class="field"><label for="e-issued" data-i18n="e.issued">Issue date</label><input id="e-issued" type="date"></div>
     </div>
+    <div class="field"><label data-i18n="cf2.title">Extra fields</label>
+      <div id="e-fields"></div>
+      <button class="addfile" id="e-addfield" data-i18n="cf2.add">＋ Add field</button>
+    </div>
+    <div class="field" id="e-om-w"><label for="e-openmode" data-i18n="om.title">When opened</label><select id="e-openmode"></select></div>
     <div class="row2">
       <div class="field"><label for="e-rem1" data-i18n="rm.first">First reminder</label><select id="e-rem1"></select></div>
       <div class="field"><label for="e-rem2" data-i18n="rm.second">Second reminder</label><select id="e-rem2"></select></div>
@@ -892,6 +936,13 @@ body.docface.lay-carousel .card .c-thumb{width:50%;max-width:50%;height:auto;max
     <div class="box"><ol class="hs-steps" id="hs-steps"></ol></div>
     <p class="foot" data-i18n="hs.note"></p>
   </div>
+</div>
+<div class="overlay" id="tpick">
+  <div class="tp-top"><button class="link b" id="tp-close" data-i18n="done">Done</button><span class="t" data-i18n="pt2.title">Pick text</span><span class="pg" id="tp-page"></span></div>
+  <div class="tp-hint" id="tp-hint"></div>
+  <div class="tp-stage" id="tp-stage"><div class="tp-wrap" id="tp-wrap"><img id="tp-img" alt=""><div id="tp-boxes"></div></div></div>
+  <div class="tp-bar"><div class="tp-sel" id="tp-sel"></div>
+    <div class="tp-btns"><button id="tp-prev">‹</button><button id="tp-zoom">🔍</button><button id="tp-lang">EN·ES</button><button id="tp-clear" data-i18n="pt2.clear">Clear</button><button class="go" id="tp-use" data-i18n="pt2.use">Use ▸</button><button id="tp-next">›</button></div></div>
 </div>
 <div class="overlay" id="acts"><div class="as"></div></div>
 <div class="overlay" id="scan">
@@ -1354,6 +1405,31 @@ Object.assign(I18N.es, {
   'bk.unlock':'Desbloquea para ver los datos de la tarjeta', 'bk.revealed':'Visible durante 60 segundos', 'bk.badNum':'Este número de tarjeta no parece correcto; revísalo.'
 });
 
+Object.assign(I18N.en, {
+  'cf2.title':'Extra fields', 'cf2.add':'＋ Add field', 'cf2.label':'Label (e.g. IBAN)', 'cf2.value':'Value', 'cf2.secret':'Hide behind Face ID',
+  'om.title':'When opened', 'om.card':'Show the card', 'om.details':'Show details (faster copy)',
+  'pt2.btn':'🔍 Pick text from document', 'pt2.title':'Pick text', 'pt2.hint':'Tap words to select them, then tap Use.',
+  'pt2.reading':'Reading text… {p}%', 'pt2.loading':'Preparing text recognition (first time only)…', 'pt2.none':'No text found on this page.',
+  'pt2.use':'Use ▸', 'pt2.clear':'Clear', 'pt2.newField':'＋ New field…', 'pt2.newLabel':'Field name', 'pt2.set':'Added to “{f}”',
+  'pt2.badDate':'That doesn’t look like a date', 'pt2.noFiles':'Add a PDF or photo first', 'pt2.where':'Put the text into…', 'pt2.ka':'Georgian'
+});
+Object.assign(I18N.ka, {
+  'cf2.title':'დამატებითი ველები', 'cf2.add':'＋ ველის დამატება', 'cf2.label':'სახელი (მაგ.: IBAN)', 'cf2.value':'მნიშვნელობა', 'cf2.secret':'დამალვა Face ID-ით',
+  'om.title':'გახსნისას', 'om.card':'ბარათის ჩვენება', 'om.details':'დეტალების ჩვენება (სწრაფი კოპირება)',
+  'pt2.btn':'🔍 ტექსტის არჩევა დოკუმენტიდან', 'pt2.title':'ტექსტის არჩევა', 'pt2.hint':'შეეხეთ სიტყვებს მოსანიშნად, შემდეგ დააჭირეთ „გამოყენებას“.',
+  'pt2.reading':'ტექსტი იკითხება… {p}%', 'pt2.loading':'ტექსტის ამოცნობა მზადდება (მხოლოდ პირველად)…', 'pt2.none':'ამ გვერდზე ტექსტი ვერ მოიძებნა.',
+  'pt2.use':'გამოყენება ▸', 'pt2.clear':'გასუფთავება', 'pt2.newField':'＋ ახალი ველი…', 'pt2.newLabel':'ველის სახელი', 'pt2.set':'დაემატა: „{f}“',
+  'pt2.badDate':'ეს თარიღს არ ჰგავს', 'pt2.noFiles':'ჯერ დაამატეთ PDF ან ფოტო', 'pt2.where':'ტექსტის ჩასმა ველში…', 'pt2.ka':'ქართული'
+});
+Object.assign(I18N.es, {
+  'cf2.title':'Campos adicionales', 'cf2.add':'＋ Añadir campo', 'cf2.label':'Nombre (p. ej. IBAN)', 'cf2.value':'Valor', 'cf2.secret':'Ocultar con Face ID',
+  'om.title':'Al abrir', 'om.card':'Mostrar la tarjeta', 'om.details':'Mostrar detalles (copiar más rápido)',
+  'pt2.btn':'🔍 Elegir texto del documento', 'pt2.title':'Elegir texto', 'pt2.hint':'Toca las palabras para seleccionarlas y luego toca Usar.',
+  'pt2.reading':'Leyendo el texto… {p}%', 'pt2.loading':'Preparando el reconocimiento de texto (solo la primera vez)…', 'pt2.none':'No se encontró texto en esta página.',
+  'pt2.use':'Usar ▸', 'pt2.clear':'Borrar', 'pt2.newField':'＋ Campo nuevo…', 'pt2.newLabel':'Nombre del campo', 'pt2.set':'Añadido a «{f}»',
+  'pt2.badDate':'Eso no parece una fecha', 'pt2.noFiles':'Primero añade un PDF o una foto', 'pt2.where':'Poner el texto en…', 'pt2.ka':'Georgiano'
+});
+
 let LANG = (() => {
   try { const v = localStorage.getItem('lang'); if (I18N[v]) return v; } catch {}
   const n = (navigator.language || '').toLowerCase();
@@ -1563,6 +1639,20 @@ function bankRows(d) {
     bk.cvv ? row('cvv', L('bk.cvv'), bk.cvv, true) : '',
     bk.holder ? row('holder', L('bk.holder'), bk.holder, false) : ''].join('');
 }
+function fieldRows(d) {
+  const open = bankShown === d.id && Date.now() < authUntil;
+  return (d.fields || []).map((f, i) => `<button class="row bkrow ${f.secret && !open ? 'locked' : ''}" data-fx="${i}"><span class="grow">${esc(f.secret && !open ? '🔒 ' + L('bk.locked') : f.value)}<small>${esc(f.label)}</small></span><svg style="width:20px;height:20px;opacity:.7"><use href="#i-copy"/></svg></button>`).join('');
+}
+async function fieldTap(d, i) {
+  const f = (d.fields || [])[i]; if (!f) return;
+  if (f.secret && !(bankShown === d.id && Date.now() < authUntil)) {
+    if (!(await requireAuth())) return;
+    bankShown = d.id; authUntil = Math.max(authUntil, Date.now() + 60000); toast(L('bk.revealed')); openViewer(d.id, true);
+    setTimeout(() => { if (V.doc && V.doc.id === d.id && Date.now() >= authUntil) openViewer(d.id, true); }, 60500);
+    return;
+  }
+  try { await navigator.clipboard.writeText(f.value); toast(L('copied')); } catch { toast(L('copyFail')); }
+}
 async function bankTap(d, key) {
   const bk = d.bank || {};
   if ((key === 'number' || key === 'cvv') && !(bankShown === d.id && Date.now() < authUntil)) {
@@ -1574,6 +1664,128 @@ async function bankTap(d, key) {
   const val = key === 'number' ? (bk.number || '').replace(/\D/g, '') : bk[key];
   if (!val) return;
   try { await navigator.clipboard.writeText(val); toast(L('copied')); } catch { toast(L('copyFail')); }
+}
+
+/* ---------- pick text from a document (PDF text layer, or on-device OCR) ---------- */
+const TP = {pages:[], i:0, words:[], sel:[], langs:'eng+spa', workers:{}, url:null, token:0};
+async function openTextPicker() {
+  const ex = E.existing.filter(f => !E.removed.has(f.id));
+  const stored = E.id ? (await getFiles(E.id)).filter(f => ex.some(x => x.id === f.id)) : [];
+  const files = [...stored.map(f => ({name:f.name, type:f.type, data:f.data})), ...await Promise.all(E.newFiles.map(async f => ({name:f.name, type:f.type || guessType(f.name), data:await f.arrayBuffer()})))];
+  if (!files.length) return toast(L('pt2.noFiles'));
+  TP.pages = [];
+  for (const f of files) {
+    if (isPdf(f)) {
+      try { await loadPdfJs(); const pdf = await pdfjsLib.getDocument({data:new Uint8Array(f.data.slice(0))}).promise; for (let n = 1; n <= pdf.numPages; n++) TP.pages.push({f, pdf, n}); }
+      catch { }
+    } else TP.pages.push({f});
+  }
+  TP.i = 0; TP.sel = []; TP.langs = LANG === 'ka' ? 'eng+kat' : 'eng+spa';
+  $('#tp-lang').textContent = TP.langs === 'eng+kat' ? 'EN·ქა' : 'EN·ES';
+  $('#tp-wrap').classList.remove('z2');
+  show('#tpick'); showTpPage();
+}
+async function showTpPage() {
+  const tk = ++TP.token, pg = TP.pages[TP.i];
+  $('#tp-page').textContent = TP.pages.length > 1 ? `${TP.i + 1}/${TP.pages.length}` : '';
+  $('#tp-prev').disabled = TP.i === 0; $('#tp-next').disabled = TP.i >= TP.pages.length - 1;
+  $('#tp-boxes').innerHTML = ''; TP.words = []; renderTpSel();
+  $('#tp-hint').textContent = L('pt2.reading', {p:0});
+  let canvas, words = [];
+  if (pg.pdf) {
+    const page = await pg.pdf.getPage(pg.n), vp1 = page.getViewport({scale:1}), scale = 1600 / vp1.width, vp = page.getViewport({scale});
+    canvas = await renderPage(page, 1600);
+    try {
+      const tc = await page.getTextContent();
+      for (const it of tc.items) {
+        const str = (it.str || '').trim(); if (!str) continue;
+        const t = pdfjsLib.Util.transform(vp.transform, it.transform), h = Math.hypot(t[2], t[3]), w = it.width * scale;
+        const parts = it.str.split(/(\s+)/); let x = t[4]; const total = it.str.length || 1;
+        for (const part of parts) { const pw = w * part.length / total; if (part.trim()) words.push({text:part.trim(), x, y:t[5] - h, w:pw, h:h * 1.15}); x += pw; }
+      }
+    } catch {}
+  } else {
+    const url = URL.createObjectURL(new Blob([pg.f.data], {type:pg.f.type}));
+    const img = await loadImg(url); URL.revokeObjectURL(url);
+    const k = Math.min(1, 1800 / Math.max(img.naturalWidth, img.naturalHeight));
+    canvas = document.createElement('canvas'); canvas.width = Math.round(img.naturalWidth * k); canvas.height = Math.round(img.naturalHeight * k);
+    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+  }
+  if (tk !== TP.token) return;
+  const blob = await canvasToBlob(canvas, 0.9);
+  if (TP.url) URL.revokeObjectURL(TP.url); TP.url = URL.createObjectURL(blob); $('#tp-img').src = TP.url;
+  TP.W = canvas.width; TP.H = canvas.height;
+  if (words.join ? words.map(w => w.text).join('').length < 4 : true) {
+    try { words = await ocrWords(canvas, tk); } catch (e) { console.warn(e); words = []; }
+  }
+  if (tk !== TP.token) return;
+  TP.words = words; drawTpWords();
+  $('#tp-hint').textContent = words.length ? L('pt2.hint') : L('pt2.none');
+}
+async function ocrWords(canvas, tk) {
+  $('#tp-hint').textContent = L('pt2.loading');
+  if (!window.Tesseract) await new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = 'tess/tesseract.min.js'; sc.onload = res; sc.onerror = rej; document.head.append(sc); });
+  let w = TP.workers[TP.langs];
+  if (!w) {
+    w = await Tesseract.createWorker(TP.langs.split('+'), 1, {workerPath:'tess/worker.min.js', corePath:'tess', langPath:'tess/lang', gzip:true, workerBlobURL:false,
+      logger: m => { if (tk === TP.token && m.status === 'recognizing text') $('#tp-hint').textContent = L('pt2.reading', {p:Math.round(m.progress * 100)}); }});
+    TP.workers[TP.langs] = w;
+  }
+  const {data} = await w.recognize(canvas);
+  return (data.words || []).filter(x => x.text.trim() && x.confidence > 35).map(x => ({text:x.text.trim(), x:x.bbox.x0, y:x.bbox.y0, w:x.bbox.x1 - x.bbox.x0, h:x.bbox.y1 - x.bbox.y0}));
+}
+function drawTpWords() {
+  const box = $('#tp-boxes'); box.innerHTML = '';
+  TP.words.forEach((w, i) => {
+    const b = el('button', 'tp-w' + (TP.sel.includes(i) ? ' on' : ''));
+    Object.assign(b.style, {left:(w.x / TP.W * 100) + '%', top:(w.y / TP.H * 100) + '%', width:(w.w / TP.W * 100) + '%', height:(w.h / TP.H * 100) + '%'});
+    b.onclick = () => { const k = TP.sel.indexOf(i); k >= 0 ? TP.sel.splice(k, 1) : TP.sel.push(i); b.classList.toggle('on', k < 0); renderTpSel(); };
+    box.append(b);
+  });
+}
+function renderTpSel() { const t = TP.sel.map(i => TP.words[i] && TP.words[i].text).filter(Boolean).join(' '); $('#tp-sel').textContent = t; $('#tp-sel').dataset.ph = L('pt2.hint'); $('#tp-use').disabled = !t; return t; }
+function parseDateText(t) {
+  const M = {jan:1,ene:1,feb:2,mar:3,apr:4,abr:4,may:5,jun:6,jul:7,aug:8,ago:8,sep:9,set:9,oct:10,okt:10,nov:11,dec:12,dic:12,dez:12};
+  t = t.toLowerCase().replace(/[,]/g, ' ');
+  let m = t.match(/(\d{4})[.\/\- ](\d{1,2})[.\/\- ](\d{1,2})/); if (m) return iso(+m[1], +m[2], +m[3]);
+  m = t.match(/(\d{1,2})[.\/\- ](\d{1,2})[.\/\- ](\d{2,4})/); if (m) return iso(+m[3] < 100 ? 2000 + +m[3] : +m[3], +m[2], +m[1]);
+  m = t.match(/(\d{1,2})\s*([a-zñ]{3})[a-zñ]*\.?\s*(\d{2,4})/); if (m && M[m[2]]) return iso(+m[3] < 100 ? 2000 + +m[3] : +m[3], M[m[2]], +m[1]);
+  return null;
+  function iso(y, mo, d) { if (mo < 1 || mo > 12 || d < 1 || d > 31) return null; return `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`; }
+}
+async function useTpText() {
+  const text = renderTpSel(); if (!text) return;
+  const bank = $('#e-type').value === 'bank';
+  const opts = bank
+    ? [['#e-bname', 'bk.bank', '🏦'], ['#e-bholder', 'bk.holder', '👤'], ['#e-bnum', 'bk.number', '💳'], ['#e-bexp', 'bk.expShort', '⏳'], ['#e-bcvv', 'bk.cvv', '🔢']]
+    : [['#e-title', 'e.name', '🏷️'], ['#e-number', 'e.number', '#️⃣'], ['#e-expiry', 'e.expires', '⏳'], ['#e-issuer', 'e.issuer', '🏛️'], ['#e-issued', 'e.issued', '📅']];
+  const choices = [...opts.map(([sel, k, ic]) => ({value:'f:' + sel, icon:ic, label:L(k)})),
+    ...E.fields.map((f, i) => ({value:'x:' + i, icon:'🧩', label:f.label || L('cf2.value'), sub:f.value})),
+    {value:'new', icon:'➕', label:L('pt2.newField')}, {value:'notes', icon:'📝', label:L('e.notes')}];
+  const v = await actionSheet(L('pt2.where') + '  “' + (text.length > 40 ? text.slice(0, 40) + '…' : text) + '”', choices);
+  if (!v) return;
+  let label;
+  if (v.startsWith('f:')) {
+    const sel = v.slice(2), inp = $(sel);
+    if (inp.type === 'date') { const dt = parseDateText(text); if (!dt) return toast(L('pt2.badDate')); inp.value = dt; }
+    else if (sel === '#e-bnum') inp.value = fmtCard(text);
+    else if (sel === '#e-bexp') { const m = text.match(/(\d{1,2})\s*[\/\-.]\s*(\d{2,4})/); inp.value = m ? `${m[1].padStart(2, '0')}/${m[2].slice(-2)}` : text; }
+    else inp.value = text;
+    label = L(opts.find(o => o[0] === sel)[1]);
+  } else if (v.startsWith('x:')) { const f = E.fields[+v.slice(2)]; f.value = text; renderFields(); label = f.label; }
+  else if (v === 'new') { const n = (prompt(L('pt2.newLabel'), '') || '').trim(); if (!n) return; E.fields.push({label:n, value:text, secret:false}); renderFields(); label = n; }
+  else { const nt = $('#e-notes'); nt.value = (nt.value ? nt.value + '\n' : '') + text; label = L('e.notes'); }
+  toast(L('pt2.set', {f:label})); TP.sel = []; drawTpWords(); renderTpSel();
+}
+function bindTextPicker() {
+  $('#e-picktext').onclick = openTextPicker;
+  $('#tp-close').onclick = () => { TP.token++; hide('#tpick'); };
+  $('#tp-prev').onclick = () => { if (TP.i > 0) { TP.i--; TP.sel = []; showTpPage(); } };
+  $('#tp-next').onclick = () => { if (TP.i < TP.pages.length - 1) { TP.i++; TP.sel = []; showTpPage(); } };
+  $('#tp-clear').onclick = () => { TP.sel = []; drawTpWords(); renderTpSel(); };
+  $('#tp-use').onclick = useTpText;
+  $('#tp-zoom').onclick = () => $('#tp-wrap').classList.toggle('z2');
+  $('#tp-lang').onclick = () => { TP.langs = TP.langs === 'eng+spa' ? 'eng+kat' : 'eng+spa'; $('#tp-lang').textContent = TP.langs === 'eng+kat' ? 'EN·ქა' : 'EN·ES'; TP.sel = []; showTpPage(); };
 }
 
 /* ---------- camera scanner: corners → straightened scan ---------- */
@@ -1771,7 +1983,7 @@ function render() {
   if (curList) list.append(listBar(curList));
   let docs = curList ? curList.docIds.map(id => S.docs.find(d => d.id === id)).filter(Boolean)
     : S.docs.filter(d => S.filter === 'all' || (S.filter === 'fav' ? d.fav : d.memberId === S.filter));
-  if (q) docs = docs.filter(d => [d.title, typeOf(d.type).label, member(d.memberId)?.name, d.number, d.notes, d.issuer, d.bank && d.bank.bank, d.bank && d.bank.holder].join(' ').toLowerCase().includes(q));
+  if (q) docs = docs.filter(d => [d.title, typeOf(d.type).label, member(d.memberId)?.name, d.number, d.notes, d.issuer, d.bank && d.bank.bank, d.bank && d.bank.holder, ...(d.fields || []).map(f => f.label + ' ' + (f.secret ? '' : f.value))].join(' ').toLowerCase().includes(q));
   if (!docs.length) { list.append(el('p', 'none', q ? L('none.search') : L('none.person'))); return; }
   if (curList) { /* list order is the list's own order */ }
   const tOrder = d => TYPES.findIndex(t => t.id === d.type);
@@ -1915,6 +2127,7 @@ function cardEl(d) {
   if (SH.expiry && d.expiry) metaL.push(kv(L('card.expires'), fmtDate(d.expiry)));
   if (SH.issuer && d.issuer) metaR.push(kv(L('e.issuer'), d.issuer));
   if (SH.issued && d.issued) metaR.push(kv(L('e.issued'), fmtDate(d.issued)));
+  if (!(SH.thumb && d.thumb)) (d.fields || []).filter(f => !f.secret && f.value).slice(0, 2 - metaR.length).forEach(f => metaR.push(kv(f.label, f.value)));
   const thumb = (SH.thumb || (S.prefs.docFace && S.prefs.layout !== 'stack' && S.prefs.layout !== 'list')) && d.thumb;
   if (d.type === 'bank') {
     const bk = d.bank || {}, last4 = bk.number ? bk.number.replace(/\D/g, '').slice(-4) : (bk.last4 || '');
@@ -2156,6 +2369,7 @@ async function openViewer(id, onlyDetails, from) {
   if (token !== V.token) return;
   V.from = from ? [from.left + from.width / 2, from.top + from.height / 2] : null;
   openViewerPages(d, token);   // shows the viewer synchronously, then loads pages
+  if (d.openMode === 'details') setTimeout(() => { if (V.doc && V.doc.id === d.id) openDetails(); }, from ? 320 : 60);
   if (V.from && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     vw.style.transformOrigin = `${V.from[0]}px ${V.from[1]}px`;
     vw.classList.remove('zin'); void vw.offsetWidth; vw.classList.add('zin');
@@ -2171,6 +2385,7 @@ async function fillDetails(d) {
     <div class="vs-sub">${typeOf(d.type).icon} ${esc(typeOf(d.type).label)}${m ? ' · ' + esc(m.name) : ''}</div>
     <div class="box">
       ${d.type === 'bank' ? bankRows(d) : ''}
+      ${fieldRows(d)}
       ${d.number ? `<button class="row selectable" id="vs-num"><span class="grow">${esc(d.number)}<small>${esc(L('v.numberCopy'))}</small></span><svg style="width:20px;height:20px;opacity:.7"><use href="#i-copy"/></svg></button>` : ''}
       ${d.expiry && d.type !== 'bank' ? `<div class="row"><span class="grow">${esc(fmtDate(d.expiry))}<small>${esc(L('e.expires'))}</small></span>${ex ? `<span class="badge ${ex.cls}">${ex.text}</span>` : ''}</div>` : ''}
       ${d.issuer ? `<div class="row"><span class="grow">${esc(d.issuer)}<small>${esc(L('e.issuer'))}</small></span></div>` : ''}
@@ -2186,6 +2401,7 @@ async function fillDetails(d) {
       <button data-v="fav" class="${d.fav ? 'on' : ''}"><b>${d.fav ? '★' : '☆'}</b>${esc(L('fav.short'))}</button><button data-v="cal">📅 ${esc(L('cal.add'))}</button></div>
     ${d.calAt ? `<div class="vs-cal">✓ ${esc(L('cal.added', {d: fmtDateObj(new Date(d.calAt))}))}</div>` : ''}`;
   info.querySelectorAll('[data-bk]').forEach(r => r.onclick = () => bankTap(d, r.dataset.bk));
+  info.querySelectorAll('[data-fx]').forEach(r => r.onclick = () => fieldTap(d, +r.dataset.fx));
   const num = $('#vs-num');
   if (num) num.onclick = async () => { try { await navigator.clipboard.writeText(d.number); toast(L('copied')); } catch { toast(L('copyFail')); } };
 }
@@ -2264,7 +2480,8 @@ async function shareCard(d) {
   const files = await getFiles(d.id);
   const card = {app:'family-wallet-card', version:1, exported:new Date().toISOString(), owner,
     doc:{type:d.type, title:d.title || '', number:d.number || '', expiry:d.expiry || '', notes:d.notes || '', color:d.color || null, issuer:d.issuer || '', issued:d.issued || '',
-      bank: d.bank ? {bank:d.bank.bank || '', holder:d.bank.holder || '', exp:d.bank.exp || '', design:d.bank.design || 'waves', last4:(d.bank.number || '').slice(-4) || d.bank.last4 || '', net:cardNetwork(d.bank.number)} : null},
+      bank: d.bank ? {bank:d.bank.bank || '', holder:d.bank.holder || '', exp:d.bank.exp || '', design:d.bank.design || 'waves', last4:(d.bank.number || '').slice(-4) || d.bank.last4 || '', net:cardNetwork(d.bank.number)} : null,
+      fields:(d.fields || []).map(f => ({label:f.label, value:f.secret ? '' : f.value, secret:!!f.secret})), openMode:d.openMode || ''},
     thumb:d.thumb || null, files:files.map(f => ({name:f.name, type:f.type, data:abToB64(f.data)}))};
   const safe = s => String(s).replace(/[\\/:*?"<>|]+/g, '').trim();
   const name = `${safe(d.title || typeOf(d.type).label)}${owner ? ' - ' + safe(owner) : ''}.json`;
@@ -2283,7 +2500,7 @@ async function importCard(data) {
   let i = 0;
   for (const f of data.files || []) await put('files', {id:uid(), docId:id, name:f.name || 'document', type:f.type || guessType(f.name || ''), data:b64ToAb(f.data), order:now + i++});
   await put('docs', {id, memberId:m.id, type:TYPES.some(t => t.id === dd.type) ? dd.type : 'other', title:dd.title || '', number:dd.number || '',
-    expiry:dd.expiry || '', notes:dd.notes || '', issuer:dd.issuer || '', issued:dd.issued || '', bank:dd.bank ? {...dd.bank, number:'', cvv:''} : null, color:dd.color && COLORS[dd.color] ? dd.color : null, thumb:data.thumb || null, created:now, updated:now});
+    expiry:dd.expiry || '', notes:dd.notes || '', issuer:dd.issuer || '', issued:dd.issued || '', bank:dd.bank ? {...dd.bank, number:'', cvv:''} : null, fields:(dd.fields || []).filter(f => f.value), openMode:dd.openMode || '', color:dd.color && COLORS[dd.color] ? dd.color : null, thumb:data.thumb || null, created:now, updated:now});
   await load(); render(); toast(L('imp.done'));
   return true;
 }
@@ -2374,7 +2591,7 @@ function bindViewerGestures() {
 let E = null;
 async function openEditor(id) {
   const d = id ? S.docs.find(x => x.id === id) : null;
-  if (d && d.type === 'bank' && d.bank && (d.bank.number || d.bank.cvv) && !(await requireAuth())) return;
+  if (d && ((d.type === 'bank' && d.bank && (d.bank.number || d.bank.cvv)) || (d.fields || []).some(f => f.secret)) && !(await requireAuth())) return;
   E = {id: d ? d.id : null, newFiles: [], removed: new Set(),
        existing: d ? (await getFiles(d.id)).map(f => ({id:f.id, name:f.name, size:f.data.byteLength})) : []};
   $('#e-heading').textContent = d ? L('e.edit') : L('e.new');
@@ -2396,6 +2613,11 @@ async function openEditor(id) {
   $('#e-bname').value = bk.bank || ''; $('#e-bholder').value = bk.holder || ''; $('#e-bnum').value = fmtCard(bk.number || ''); $('#e-bexp').value = bk.exp || ''; $('#e-bcvv').value = bk.cvv || '';
   $('#e-bdesign').innerHTML = ['waves', 'mesh', 'lines', 'plain'].map(v => `<option value="${v}">${esc(L('bk.d.' + v))}</option>`).join('');
   $('#e-bdesign').value = bk.design || 'waves';
+  E.fields = (d && d.fields || []).map(f => ({...f}));
+  renderFields();
+  $('#e-openmode').innerHTML = [['card', L('om.card')], ['details', L('om.details')]].map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join('');
+  E.omSet = !!(d && d.openMode);
+  $('#e-openmode').value = d && d.openMode ? d.openMode : 'card';
   toggleBankFields();
   $('#e-delete').hidden = !d;
   E.color = d && d.color ? d.color : null;
@@ -2405,11 +2627,12 @@ async function openEditor(id) {
   $('#editor .panel').scrollTop = 0;
   show('#editor');
 }
-function editorSnapshot() { return JSON.stringify(['#e-member','#e-type','#e-title','#e-number','#e-expiry','#e-issuer','#e-issued','#e-notes','#e-rem1','#e-rem2','#e-status','#e-bname','#e-bholder','#e-bnum','#e-bexp','#e-bcvv','#e-bdesign'].map(s => $(s).value).concat(E.color || '')); }
+function editorSnapshot() { return JSON.stringify(['#e-member','#e-type','#e-title','#e-number','#e-expiry','#e-issuer','#e-issued','#e-notes','#e-rem1','#e-rem2','#e-status','#e-bname','#e-bholder','#e-bnum','#e-bexp','#e-bcvv','#e-bdesign','#e-openmode'].map(s => $(s).value).concat(E.color || '', JSON.stringify(E.fields || []))); }
 function editorDirty() { return E && (E.newFiles.length || E.removed.size || editorSnapshot() !== E.snap); }
 function cancelEditor() { if (editorDirty() && !confirm(L('discard'))) return; hide('#editor'); }
 function renderSwatches() {
-  const box = $('#e-colors'); box.innerHTML = '';
+  const box = $('#e-colors'), keep = box.scrollLeft; box.innerHTML = '';
+  requestAnimationFrame(() => { const on = box.querySelector('.sw-c.on'); box.scrollLeft = keep || (on ? Math.max(0, on.offsetLeft - box.offsetLeft - 20) : 0); });
   const auto = el('button', 'sw-c sw-auto' + (!E.color ? ' on' : ''), L('e.auto'));
   auto.style.background = cgrad(typeOf($('#e-type').value).color);
   auto.onclick = () => { E.color = null; renderSwatches(); };
@@ -2422,9 +2645,24 @@ function renderSwatches() {
   });
 }
 function toggleBankFields() {
-  const bank = $('#e-type').value === 'bank';
+  const ty = $('#e-type').value, bank = ty === 'bank';
   $('#e-bank').hidden = !bank; document.querySelectorAll('#editor .nobank').forEach(x => x.hidden = bank);
+  $('#e-om-w').hidden = !(bank || ty === 'other');
+  if (E && !E.omSet) $('#e-openmode').value = (bank || ty === 'other') ? 'details' : 'card';
 }
+function renderFields() {
+  const box = $('#e-fields'); box.innerHTML = '';
+  E.fields.forEach((f, i) => {
+    const r = el('div', 'xf');
+    r.innerHTML = `<input data-k="label" placeholder="${esc(L('cf2.label'))}" value="${esc(f.label)}"><input data-k="value" placeholder="${esc(L('cf2.value'))}" value="${esc(f.value)}" autocomplete="off">
+      <button class="lk ${f.secret ? 'on' : ''}" aria-label="${esc(L('cf2.secret'))}">${f.secret ? '🔒' : '🔓'}</button><button class="rm" aria-label="${esc(L('aria.remove'))}">⊖</button>`;
+    r.querySelectorAll('input').forEach(inp => inp.oninput = () => { f[inp.dataset.k] = inp.value; });
+    r.querySelector('.lk').onclick = () => { f.secret = !f.secret; renderFields(); };
+    r.querySelector('.rm').onclick = () => { E.fields.splice(i, 1); renderFields(); };
+    box.append(r);
+  });
+}
+function updatePickBtn() { $('#e-picktext').hidden = !(E.newFiles.length || E.existing.some(f => !E.removed.has(f.id))); }
 function fillMemberSelect(selected) {
   const s = $('#e-member');
   s.innerHTML = S.members.map(m => `<option value="${m.id}">${esc(m.name)}</option>`).join('') + `<option value="__new">${esc(L('e.addPerson'))}</option>`;
@@ -2444,6 +2682,7 @@ function renderEditorFiles() {
     box.append(row);
   });
   $('#e-pick').textContent = rows.length ? L('e.pickMore') : L('e.pick');
+  updatePickBtn();
 }
 async function saveDoc() {
   const memberId = $('#e-member').value;
@@ -2479,6 +2718,8 @@ async function saveDoc() {
       id, memberId, type: $('#e-type').value, title: $('#e-title').value.trim(),
       number: isBank ? '' : $('#e-number').value.trim(), expiry, notes: $('#e-notes').value.trim(), color: E.color || null, bank,
       rem1: +$('#e-rem1').value, rem2: +$('#e-rem2').value, status,
+      fields: E.fields.filter(f => (f.label || '').trim() || (f.value || '').trim()).map(f => ({label:(f.label || '').trim(), value:(f.value || '').trim(), secret:!!f.secret})),
+      openMode: $('#e-openmode').value,
       issuer: $('#e-issuer').value.trim(), issued: $('#e-issued').value,
       thumb, created: old ? old.created : now, updated: now
     });
@@ -2965,6 +3206,7 @@ async function listFile(l) {
       owner: m ? (isSelf(m) && S.myName ? S.myName : m.name) : '', number:d.number || '', expiry:d.expiry || '', status:d.status || '',
       notes:d.notes || '', issuer:d.issuer || '', grad:COLORS[cardKey(d)], thumb:d.thumb || null,
       bank: d.bank ? {bank:d.bank.bank || '', holder:d.bank.holder || '', exp:d.bank.exp || '', last4:(d.bank.number || '').slice(-4) || d.bank.last4 || ''} : null,
+      fields:(d.fields || []).filter(f => !f.secret && f.value).map(f => ({label:f.label, value:f.value})), openMode:d.openMode || '',
       files: files.map(f => ({name:f.name, type:f.type, data:abToB64(f.data)}))});
   }
   const data = {app:'family-wallet-list', version:1, lang:LANG, exported:new Date().toISOString(), list:{id:l.id, name:l.name, until:l.until || ''}, docs};
@@ -3027,6 +3269,10 @@ function bindUI() {
   $('#e-scan').onclick = () => $('#e-cam').click();
   $('#e-cam').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f) startScan(f); };
   bindScanner();
+  bindTextPicker();
+  $('#e-openmode').onchange = () => { E.omSet = true; };
+  $('#e-addfield').onclick = () => { E.fields.push({label:'', value:'', secret:false}); renderFields(); const ins = $('#e-fields').querySelectorAll('.xf input[data-k=label]'); if (ins.length) ins[ins.length - 1].focus(); };
+  $('#v-edit').onclick = () => { if (V.doc) openEditor(V.doc.id); };
   $('#e-member').onchange = async e => {
     if (e.target.value !== '__new') { e.target.dataset.prev = e.target.value; return; }
     const m = await addMember(prompt(L('p.newName')));

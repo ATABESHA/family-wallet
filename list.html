@@ -181,7 +181,10 @@ async function openViewer(i) {
     <div class="box">${d.number ? `<button class="row" id="cp"><span class="g">${esc(d.number)}<small>${esc(L('number'))}</small></span>⧉</button>` : ''}
     ${d.expiry ? `<div class="row"><span class="g">${esc(fmt(d.expiry))}<small>${esc(L('expires'))}</small></span></div>` : ''}
     ${d.bank ? `<div class="row"><span class="g">${esc(d.bank.holder || '')} · •••• ${esc(d.bank.last4 || '')}<small>${esc(d.bank.bank || '')}</small></span></div>` : ''}
+    ${(d.fields || []).map((f, i) => `<button class="row" data-fx="${i}"><span class="g">${esc(f.value)}<small>${esc(f.label)}</small></span>⧉</button>`).join('')}
     ${d.notes ? `<div class="row"><span class="g">${esc(d.notes)}<small>${esc(L('notes'))}</small></span></div>` : ''}</div>`;
+  document.querySelectorAll('#v-info [data-fx]').forEach(b => b.onclick = async () => { try { await navigator.clipboard.writeText(d.fields[+b.dataset.fx].value); toast(L('copied')); } catch {} });
+  if (d.openMode === 'details') setTimeout(() => v.classList.add('details'), 250);
   const cp = $('#cp'); if (cp) cp.onclick = async () => { try { await navigator.clipboard.writeText(d.number); toast(L('copied')); } catch {} };
   v.classList.add('show'); $('#v-body').scrollTo(0, 0);
   urls.forEach(u => URL.revokeObjectURL(u)); urls = [];
